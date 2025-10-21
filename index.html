@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Portal Interativo de Ensaios de Solos – Volume 1</title>
+  <meta name="description" content="Curso interativo para iniciantes em ensaios de solos (ABNT). Volume 1: Umidade Natural e Granulometria (peneiramento + sedimentação).">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    :root{
+      --blue:#013C5A; --gray:#666666; --green:#28a745; --white:#FFFFFF;
+      --bg:#f6f8fb; --radius:16px; --shadow: 0 10px 30px rgba(1,60,90,.12);
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;background:var(--bg);color:#1b1f23;font-family:'Open Sans',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;line-height:1.6}
+    /* Top nav */
+    header.site{
+      position:sticky; top:0; z-index:1000;
+      background:linear-gradient(0deg, rgba(255,255,255,.75), rgba(255,255,255,.9));
+      border-bottom:1px solid rgba(1,60,90,.08);
+      backdrop-filter:saturate(160%) blur(8px);
+    }
+    .topbar{max-width:1100px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:16px}
+    .brand{display:flex;align-items:center;gap:10px;font-weight:800;color:var(--blue);letter-spacing:.2px}
+    .brand svg{width:28px;height:28px}
+    nav{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
+    nav a{padding:8px 12px;border-radius:12px;text-decoration:none;color:var(--blue);font-weight:700;font-size:.94rem}
+    nav a:hover{background:rgba(1,60,90,.08)}
+    nav a.active{background:var(--blue);color:#fff}
+    /* Hero */
+    .hero{max-width:1100px;margin:24px auto 0;padding:0 16px 8px}
+    .hero .card{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);padding:22px;display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+    .hero h1{margin:0;font-family:Montserrat,sans-serif;color:var(--blue)}
+    .hero p{margin:.25rem 0 0;color:var(--gray)}
+    .badge{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;background:#e8f5ee;color:var(--green);border-radius:999px;font-weight:800;font-size:.82rem}
+    /* Sections */
+    section.module{max-width:1100px;margin:18px auto;padding:0 16px}
+    .panel{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);padding:24px}
+    header.module-head{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+    header.module-head h2{margin:0;font-family:Montserrat,sans-serif;color:var(--blue)}
+    .tag{display:inline-flex;gap:6px;align-items:center;padding:4px 8px;background:rgba(1,60,90,.06);color:var(--blue);border-radius:8px;font-weight:700;font-size:.8rem}
+    .grid{display:grid;grid-template-columns:1fr;gap:16px}
+    @media(min-width: 900px){ .grid{grid-template-columns:1.2fr .8fr} }
+    .steps{display:flex;flex-direction:column;gap:10px}
+    .step{position:relative;display:flex;gap:12px;align-items:flex-start;padding:12px;border:1px dashed rgba(1,60,90,.15);border-radius:12px}
+    .step .num{min-width:28px;height:28px;border-radius:999px;background:var(--blue);color:#fff;display:grid;place-items:center;font-weight:800;font-size:.9rem}
+    .note{background:#fff9e6;border:1px solid #ffe5a3;border-radius:12px;padding:12px;font-size:.95rem}
+    .actions{display:flex;justify-content:space-between;gap:10px;margin-top:16px;flex-wrap:wrap}
+    .btn{appearance:none;border:none;cursor:pointer;font-weight:800;padding:10px 14px;border-radius:12px;display:inline-flex;align-items:center;gap:8px;box-shadow:0 6px 20px rgba(0,0,0,.08);text-decoration:none}
+    .btn-prev{background:#eef4f7;color:var(--blue)}
+    .btn-next{background:var(--green);color:#fff}
+    footer.site{max-width:1100px;margin:10px auto 24px;padding:0 16px;color:var(--gray);font-size:.9rem}
+    /* Forms / tables */
+    .ck{margin-left:auto;width:20px;height:20px}
+    .calc label{display:block;margin:6px 0}
+    .calc input{width:100%;padding:8px 10px;border:1px solid rgba(1,60,90,.25);border-radius:10px}
+    .calc button{margin-top:8px}
+    table.data{width:100%;border-collapse:collapse;font-size:.95rem}
+    table.data th, table.data td{padding:8px;border:1px solid rgba(1,60,90,.15)}
+    table.data thead tr{background:#eef4f7}
+    /* Visual placeholder */
+    .visual{border:1px solid rgba(1,60,90,.1);border-radius:12px;padding:12px;display:grid;place-items:center;min-height:180px;background:linear-gradient(180deg,#fff,#f8fbff)}
+    /* Accessibility */
+    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+    /* Chart container */
+    .chart-wrap{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);padding:16px}
+    .chart-svg{width:100%;height:360px;display:block;border:1px solid rgba(1,60,90,.15);border-radius:12px;background:linear-gradient(180deg,#fff,#f9fbff)}
+    .chart-legend{display:flex;gap:12px;align-items:center;margin-top:8px;font-size:.9rem}
+    .chip{display:inline-flex;align-items:center;gap:6px;padding:4px 8px;border-radius:999px;background:#eef4f7;color:var(--blue);font-weight:700}
+  </style>
+</head>
+<body>
+  <!-- SVG sprite -->
+  <svg class="sr-only" xmlns="http://www.w3.org/2000/svg">
+    <symbol id="ico-lab" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M10 2v6l-6 10a3 3 0 0 0 2.6 4.5h10.8A3 3 0 0 0 20 18L14 8V2"/>
+      <path d="M8 14h8"/>
+    </symbol>
+    <symbol id="ico-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 10.5 12 3l9 7.5V21a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>
+    </symbol>
+    <symbol id="ico-index" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 8h10M7 12h10M7 16h6"/>
+    </symbol>
+    <symbol id="ico-arrow-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M15 18l-6-6 6-6"/>
+    </symbol>
+    <symbol id="ico-arrow-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M9 6l6 6-6 6"/>
+    </symbol>
+    <symbol id="ico-droplet" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 2s6 7 6 11a6 6 0 0 1-12 0c0-4 6-11 6-11z"/>
+    </symbol>
+    <symbol id="ico-sieve" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="9"/><path d="M5 12h14M12 5v14M7.5 7.5l9 9M16.5 7.5l-9 9"/>
+    </symbol>
+    <symbol id="ico-whatsapp" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M20.5 3.4A10.4 10.4 0 0 0 3.6 20.3L2 22l1.9-.5A10.4 10.4 0 1 0 20.5 3.4Zm-4.1 12.2c-.2.6-1.1 1-1.6 1-1.3.1-2.4-.5-3.8-1.6-1.3-1-2.2-2.3-2.4-3.8 0-.5.2-1 .6-1.3.2-.1.4-.3.6-.3h.4l.4.9c.2.5.4.9.4 1 0 .3-.3.6-.4.7l-.2.3c-.1.1-.1.2 0 .3.3.5.8 1.1 1.4 1.6.6.5 1.3.9 1.8 1.1.1.1.2 0 .3 0l.5-.5c.3-.3.6-.4.9-.3l1.4.4c.2 0 .4.1.5.2.1.1.1.3 0 .5Z"/>
+    </symbol>
+  </svg>
+
+  <header class="site">
+    <div class="topbar" role="navigation" aria-label="Navegação principal">
+      <div class="brand" aria-label="Portal Interativo">
+        <svg aria-hidden="true"><use href="#ico-lab"/></svg>
+        <span>Ensaios de Solos — Vol. 1</span>
+      </div>
+      <nav>
+        <a href="#home" class="nav-link" data-target="#home"><svg width="16" height="16" aria-hidden="true"><use href="#ico-home"/></svg> Início</a>
+        <a href="#index" class="nav-link" data-target="#index"><svg width="16" height="16" aria-hidden="true"><use href="#ico-index"/></svg> Índice</a>
+        <a href="#mod0" class="nav-link" data-target="#mod0">Módulo 0</a>
+        <a href="#mod1" class="nav-link" data-target="#mod1">Módulo 1</a>
+        <a href="#mod2" class="nav-link" data-target="#mod2">Módulo 2</a>
+        <a href="#mod3" class="nav-link" data-target="#mod3">Módulo 3</a>
+        <a href="#mod4" class="nav-link" data-target="#mod4">Módulo 4</a>
+      </nav>
+    </div>
+  </header>
+
+  <div id="home" class="hero" tabindex="-1">
+    <div class="card">
+      <div class="badge"><svg width="16" height="16" aria-hidden="true"><use href="#ico-lab"/></svg> Portal Interativo</div>
+      <div style="flex:1 1 420px">
+        <h1>Curso Interativo – Ensaios de Solos (Volume 1)</h1>
+        <p>Aprenda na prática: Umidade Natural, Granulometria (peneiramento + sedimentação) e mais. Conteúdo didático para iniciantes, com passo a passo ilustrado.</p>
+      </div>
+    </div>
+  </div>
+
+  <section id="index" class="module" aria-labelledby="indice-title">
+    <div class="panel">
+      <header class="module-head"><svg width="22" height="22" aria-hidden="true"><use href="#ico-index"/></svg><h2 id="indice-title">Índice</h2></header>
+      <div class="grid">
+        <div>
+          <ol class="steps" style="margin:0">
+            <li class="step"><span class="num">0</span><div><strong>Introdução e contexto</strong><br/>O que faz um laboratorista de solos. Mercado e oportunidades.</div></li>
+            <li class="step"><span class="num">1</span><div><strong>Teor de Umidade Natural</strong><br/>Coleta, pesagem, secagem em estufa e cálculo.</div></li>
+            <li class="step"><span class="num">2</span><div><strong>Granulometria</strong><br/>Peneiramento (areia/pedregulho) e sedimentação (silte/argila).</div></li>
+            <li class="step"><span class="num">3</span><div><strong>Aula ao Vivo</strong><br/>Mentoria e agendamento via WhatsApp.</div></li>
+            <li class="step"><span class="num">4</span><div><strong>Conclusão + Próximos Passos</strong><br/>CTA para Volume 2 (Massa Específica Real dos Grãos e Limites de Atterberg).</div></li>
+          </ol>
+        </div>
+        <div class="visual" aria-hidden="true">
+          <svg viewBox="0 0 600 300" xmlns="http://www.w3.org/2000/svg">
+            <defs><linearGradient id="g1" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#e6f2f9"/><stop offset="1" stop-color="#f7fbff"/></linearGradient></defs>
+            <rect width="600" height="300" rx="16" fill="url(#g1)"/>
+            <g stroke="#013C5A" stroke-width="3" fill="none" opacity=".5">
+              <rect x="30" y="30" width="240" height="100" rx="12"/>
+              <rect x="330" y="30" width="240" height="100" rx="12"/>
+              <rect x="30" y="170" width="240" height="100" rx="12"/>
+              <rect x="330" y="170" width="240" height="100" rx="12"/>
+            </g>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== MÓDULO 0 ===================== -->
+  <section id="mod0" class="module" aria-labelledby="mod0-title">
+    <div class="panel" id="content-mod-0">
+      <header class="module-head">
+        <span class="tag"><svg width="16" height="16" aria-hidden="true"><use href="#ico-home"/></svg> Módulo 0</span>
+        <h2 id="mod0-title">Introdução e contexto da profissão</h2>
+      </header>
+      <div class="grid">
+        <div>
+          <div class="steps">
+            <div class="step"><span class="num">1</span><div><strong>O papel do laboratorista</strong><br/>Entenda responsabilidades, rotina e impacto dos ensaios na obra.</div></div>
+            <div class="step"><span class="num">2</span><div><strong>Onde você pode atuar</strong><br/>Terraplenagem, pavimentação, geotecnia, controle tecnológico.</div></div>
+            <div class="step"><span class="num">3</span><div><strong>Boas práticas iniciais</strong><br/>Segurança, organização e rastreabilidade dos resultados.</div></div>
+          </div>
+          <div class="note" role="note" aria-label="Dica">Dica: mantenha um caderno de campo ou registro digital dos ensaios (amostra, data, massa, resultados e observações).</div>
+          <div class="actions">
+            <a class="btn btn-prev" href="#index"><svg width="18" height="18" aria-hidden="true"><use href="#ico-arrow-left"/></svg> Voltar</a>
+            <a class="btn btn-next" href="#mod1">Avançar <svg width="18" height="18" aria-hidden="true"><use href="#ico-arrow-right"/></svg></a>
+          </div>
+        </div>
+        <div class="visual" aria-hidden="true">
+          <svg viewBox="0 0 600 360" xmlns="http://www.w3.org/2000/svg">
+            <rect width="600" height="360" rx="16" fill="#e9f2f6"/>
+            <g transform="translate(90,60)" stroke="#013C5A" stroke-width="3" fill="none">
+              <rect x="0" y="0" width="420" height="240" rx="14" fill="#fff"/>
+              <circle cx="80" cy="90" r="42" fill="#f5fbff"/>
+              <path d="M150 140h210M150 110h180M150 170h180"/>
+            </g>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== MÓDULO 1 ===================== -->
+  <section id="mod1" class="module" aria-labelledby="mod1-title">
+    <div class="panel" id="content-mod-1">
+      <header class="module-head">
+        <span class="tag"><svg width="16" height="16" aria-hidden="true"><use href="#ico-droplet"/></svg> Módulo 1</span>
+        <h2 id="mod1-title">Ensaio de Teor de Umidade Natural</h2>
+      </header>
+      <div class="grid">
+        <div>
+          <div class="steps">
+            <div class="step"><span class="num">1</span><div><strong>Preparar a amostra e identificar</strong><br/>Separe a lata identificada (código da amostra) e registre a <em>tara</em> (massa da lata vazia).</div><input type="checkbox" class="ck" data-key="m1_ck1"></div>
+            <div class="step"><span class="num">2</span><div><strong>Pesagem úmida</strong><br/>Pese <em>lata + solo úmido</em> evitando perdas por evaporação. Registre imediatamente.</div><input type="checkbox" class="ck" data-key="m1_ck2"></div>
+            <div class="step"><span class="num">3</span><div><strong>Secagem em estufa (105–110 °C)</strong><br/>Até massa constante; resfrie em dessecador antes da pesagem final.</div><input type="checkbox" class="ck" data-key="m1_ck3"></div>
+            <div class="step"><span class="num">4</span><div><strong>Pesagem seca</strong><br/>Pese <em>lata + solo seco</em>. Calcule o teor de umidade <em>w</em> usando a calculadora ao lado.</div><input type="checkbox" class="ck" data-key="m1_ck4"></div>
+          </div>
+
+          <div class="note" role="note">Boas práticas: usar luvas, evitar correntes de ar durante pesagens e sempre registrar código da amostra, data e operador.</div>
+          <div class="actions">
+            <a class="btn btn-prev" href="#mod0"><svg width="18" height="18" aria-hidden="true"><use href="#ico-arrow-left"/></svg> Voltar</a>
+            <a class="btn btn-next" href="#mod2">Avançar <svg width="18" height="18" aria-hidden="true"><use href="#ico-arrow-right"/></svg></a>
+          </div>
+        </div>
+        <div>
+          <div class="panel" style="padding:16px">
+            <h3 style="margin-top:0;color:#0f2532;font-family:Montserrat">Calculadora — Teor de Umidade (w)</h3>
+            <form class="calc" onsubmit="return false;">
+              <label>Tara (lata vazia) — <code>m<sub>lata</sub></code>
+                <input type="number" step="0.01" id="m_lata" placeholder="g" />
+              </label>
+              <label>Lata + solo úmido — <code>m<sub>úmida</sub></code>
+                <input type="number" step="0.01" id="m_umida" placeholder="g" />
+              </label>
+              <label>Lata + solo seco — <code>m<sub>seca</sub></code>
+                <input type="number" step="0.01" id="m_seca" placeholder="g" />
+              </label>
+              <div class="note" style="margin:10px 0">Fórmula: <strong>w = (m<sub>água</sub> / m<sub>solo seco</sub>) × 100%</strong><br>Onde m<sub>água</sub> = m<sub>úmida</sub> − m<sub>seca</sub>; m<sub>solo seco</sub> = m<sub>seca</sub> − m<sub>lata</sub>.</div>
+              <button class="btn btn-next" onclick="calcUmidade()">Calcular w</button>
+              <p id="w_result" style="font-weight:800; margin-top:10px"></p>
+            </form>
+            <hr style="border:none;border-top:1px solid rgba(1,60,90,.1);margin:14px 0"/>
+            <h4 style="margin:8px 0 6px;color:#0f2532;font-family:Montserrat">Tripla determinação (opcional)</h4>
+            <p style="margin:0">Repita o ensaio 3× e registre <em>w₁, w₂, w₃</em>. A calculadora pode estimar a média e o desvio.</p>
+            <form class="calc" onsubmit="return false;" style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-top:8px">
+              <input type="number" step="0.01" id="w1" placeholder="w1 %"/>
+              <input type="number" step="0.01" id="w2" placeholder="w2 %"/>
+              <input type="number" step="0.01" id="w3" placeholder="w3 %"/>
+              <button class="btn btn-prev" style="grid-column:1/4" onclick="calcTripla()">Calcular média</button>
+            </form>
+            <p id="w_stats" style="font-weight:800; margin-top:6px"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== MÓDULO 2 ===================== -->
+  <section id="mod2" class="module" aria-labelledby="mod2-title">
+    <div class="panel" id="content-mod-2">
+      <header class="module-head">
+        <span class="tag"><svg width="16" height="16" aria-hidden="true"><use href="#ico-sieve"/></svg> Módulo 2</span>
+        <h2 id="mod2-title">Granulometria (NBR 7181) — Peneiramento + Sedimentação</h2>
+      </header>
+      <div class="grid">
+        <div>
+          <div class="steps">
+            <div class="step"><span class="num">A1</span><div><strong>Amostra e preparo</strong><br/>Quarteie e determine a massa de ensaio. Para fração grossa, monte a coluna de peneiras padronizadas; para fração fina, prepare a suspensão com dispersante.</div><input type="checkbox" class="ck" data-key="m2_ck1"></div>
+            <div class="step"><span class="num">A2</span><div><strong>Peneiramento (fração grossa)</strong><br/>Vibração controlada; pese a massa <em>retida</em> em cada peneira; calcule % retido e % passante acumulado.</div><input type="checkbox" class="ck" data-key="m2_ck2"></div>
+            <div class="step"><span class="num">B1</span><div><strong>Sedimentação — preparação</strong><br/><strong>Amostra:</strong> 1 kg passante em 2 mm → separe 70 g (argiloso) ou 120 g (arenoso). Prepare solução de hexametafosfato + carbonato (pH 8–9).</div><input type="checkbox" class="ck" data-key="m2_ck3"></div>
+            <div class="step"><span class="num">B2</span><div><strong>Sedimentação — execução</strong><br/>Imersão 12–24 h → dispersor ~15 min → transferir para proveta de 1000 mL → completar a 1 L → agitar 1 min → iniciar leituras (30 s, 1, 2, 5, 15, 30 min, 1 h, 2 h...).</div><input type="checkbox" class="ck" data-key="m2_ck4"></div>
+            <div class="step"><span class="num">C</span><div><strong>Curva granulométrica</strong><br/>Combine os dados (peneiramento + hidrômetro) e trace a curva, obtendo D10, D30, D60 e coeficientes.</div><input type="checkbox" class="ck" data-key="m2_ck5"></div>
+          </div>
+
+          <div class="note">Registre massas retidas (%), passante acumulado e, na sedimentação, leituras do densímetro com tempo e temperatura. Manter pH 8–9 e evitar bolhas.</div>
+
+          <div class="actions">
+            <a class="btn btn-prev" href="#mod1"><svg width="18" height="18" aria-hidden="true"><use href="#ico-arrow-left"/></svg> Voltar</a>
+            <a class="btn btn-next" href="#mod3">Avançar <svg width="18" height="18" aria-hidden="true"><use href="#ico-arrow-right"/></svg></a>
+          </div>
+        </div>
+        <div>
+          <div class="panel" style="padding:16px">
+            <h3 style="margin-top:0;color:#0f2532;font-family:Montserrat">Tabela — Peneiramento</h3>
+            <p style="margin:0 0 8px">Informe massa retida por peneira. O sistema calcula % retido e % passante acumulado.</p>
+            <table id="tbPeneiras" class="data">
+              <thead>
+                <tr><th style="text-align:left">Abertura</th><th style="text-align:right">Massa retida (g)</th><th style="text-align:right">% retido</th><th style="text-align:right">% passante acum.</th></tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+            <div style="display:flex; gap:8px; margin-top:10px; flex-wrap:wrap">
+              <button class="btn btn-prev" onclick="initPeneiras()">Carregar peneiras padrão</button>
+              <button class="btn btn-next" onclick="calcPeneiras()">Calcular distribuição</button>
+            </div>
+            <p id="sumPeneiras" style="font-weight:800; margin-top:6px"></p>
+
+            <hr style="border:none;border-top:1px solid rgba(1,60,90,.1);margin:14px 0"/>
+            <h3 style="margin:0 0 8px;color:#0f2532;font-family:Montserrat">Leituras — Sedimentação (hidrômetro)</h3>
+            <p style="margin:0 0 8px">Registre tempo (s/min/h) · leitura (g/L aprox.) · temperatura (°C). Correções (menisco/temperatura) podem ser aplicadas no campo extra.</p>
+            <table id="tbHidro" class="data">
+              <thead><tr><th>Tempo</th><th>Leitura</th><th>Temperatura (°C)</th></tr></thead>
+              <tbody></tbody>
+            </table>
+            <div style="display:flex; gap:8px; margin-top:10px; flex-wrap:wrap">
+              <button class="btn btn-prev" onclick="initHidro()">Carregar tempos padrão</button>
+              <button class="btn btn-next" onclick="saveHidro()">Salvar leituras</button>
+            </div>
+            <p id="sumHidro" style="font-weight:800; margin-top:6px"></p>
+
+            <hr style="border:none;border-top:1px solid rgba(1,60,90,.1);margin:16px 0"/>
+            <h3 style="margin:0 0 8px;color:#0f2532;font-family:Montserrat">Conversão & Curva (simplificada)</h3>
+            <p style="margin:0 0 10px">Converta as leituras do hidrômetro em <em>% passante</em> (aproximação didática) e una com o peneiramento para gerar a curva granulométrica.</p>
+            <div class="panel" style="padding:12px">
+              <form class="calc" onsubmit="return false;">
+                <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px">
+                  <label>Massa da amostra fina (W<sub>s</sub>, g)<input type="number" step="0.01" id="ws" placeholder="70 ou 120"></label>
+                  <label>Densidade relativa (G<sub>s</sub>)<input type="number" step="0.01" id="gs" value="2.65"></label>
+                  <label>Temperatura (°C)<input type="number" step="0.1" id="temp" value="20"></label>
+                  <label>Profundidade efetiva L (m)<input type="number" step="0.001" id="L" value="0.145"></label>
+                  <label>Correção de leitura (Ct + Cm)<input type="number" step="0.001" id="corr" value="0"></label>
+                </div>
+                <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
+                  <button class="btn btn-next" onclick="converterHidro()">Converter hidrômetro</button>
+                  <button class="btn btn-prev" onclick="gerarCurva()">Gerar curva (A+B)</button>
+                  <button class="btn" style="background:#fff;color:var(--blue);border:1px solid rgba(1,60,90,.2)" onclick="exportCSV()">Exportar CSV</button>
+                </div>
+                <p id="convInfo" style="font-weight:800;margin-top:6px"></p>
+              </form>
+            </div>
+            <div class="chart-wrap" style="margin-top:12px">
+              <svg id="curvaSVG" class="chart-svg" viewBox="0 0 800 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Curva Granulométrica">
+                <desc>Semilog X: tamanho de partícula (mm) no eixo X; % passante no eixo Y.</desc>
+              </svg>
+              <div class="chart-legend">
+                <span class="chip">Peneiramento</span>
+                <span class="chip" style="background:#e8f5ee;color:#2a7f3e">Sedimentação</span>
+                <span class="chip" style="background:#013C5A;color:white">Curva combinada</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== MÓDULO 3 ===================== -->
+  <section id="mod3" class="module" aria-labelledby="mod3-title">
+    <div class="panel" id="content-mod-3">
+      <header class="module-head">
+        <span class="tag"><svg width="16" height="16" aria-hidden="true"><use href="#ico-whatsapp"/></svg> Módulo 3</span>
+        <h2 id="mod3-title">Aula ao Vivo + agendamento via WhatsApp</h2>
+      </header>
+      <div class="grid">
+        <div>
+          <div class="steps">
+            <div class="step"><span class="num">1</span><div><strong>Mentoria</strong><br/>Sessão ao vivo para tirar dúvidas sobre execução e interpretação dos ensaios.</div></div>
+            <div class="step"><span class="num">2</span><div><strong>Agendamento</strong><br/>Clique no botão e fale pelo WhatsApp para combinar horários.</div></div>
+          </div>
+          <div class="actions">
+            <a class="btn btn-prev" href="#mod2"><svg width="18" height="18" aria-hidden="true"><use href="#ico-arrow-left"/></svg> Voltar</a>
+            <a class="btn btn-next" href="#mod4">Avançar <svg width="18" height="18" aria-hidden="true"><use href="#ico-arrow-right"/></svg></a>
+          </div>
+          <div style="margin-top:10px">
+            <a class="btn btn-next" href="https://wa.me/" target="_blank" rel="noopener">Falar no WhatsApp <svg width="18" height="18" aria-hidden="true"><use href="#ico-whatsapp"/></svg></a>
+          </div>
+        </div>
+        <div class="visual" aria-hidden="true">
+          <svg viewBox="0 0 600 360" xmlns="http://www.w3.org/2000/svg">
+            <rect width="600" height="360" rx="16" fill="#e9f2f6"/>
+            <g transform="translate(70,60)" stroke="#013C5A" stroke-width="3" fill="none">
+              <rect x="0" y="0" width="460" height="240" rx="18" fill="#fff"/>
+              <circle cx="70" cy="80" r="36" fill="#f5fbff"/>
+              <path d="M140 70h220M140 110h220M140 150h200"/>
+            </g>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== MÓDULO 4 ===================== -->
+  <section id="mod4" class="module" aria-labelledby="mod4-title">
+    <div class="panel" id="content-mod-4">
+      <header class="module-head">
+        <span class="tag"><svg width="16" height="16" aria-hidden="true"><use href="#ico-index"/></svg> Módulo 4</span>
+        <h2 id="mod4-title">Conclusão e CTA – Volume 2</h2>
+      </header>
+      <div class="grid">
+        <div>
+          <p><strong>Parabéns!</strong> Você concluiu o Volume 1. No próximo volume, você aprenderá <em>Massa Específica Real dos Grãos</em> e <em>Limites de Atterberg</em>.</p>
+          <div class="note">Recomendação: revise suas anotações e monte uma ficha‑padrão para cada ensaio (dados, fórmulas e resultado final).</div>
+          <div class="actions">
+            <a class="btn btn-prev" href="#mod3"><svg width="18" height="18" aria-hidden="true"><use href="#ico-arrow-left"/></svg> Voltar</a>
+            <a class="btn btn-next" href="#home">Voltar ao Início <svg width="18" height="18" aria-hidden="true"><use href="#ico-arrow-right"/></svg></a>
+          </div>
+        </div>
+        <div class="visual" aria-hidden="true">
+          <svg viewBox="0 0 600 360" xmlns="http://www.w3.org/2000/svg">
+            <rect width="600" height="360" rx="16" fill="#e9f2f6"/>
+            <g transform="translate(80,40)" stroke="#013C5A" stroke-width="3" fill="none">
+              <path d="M0 280h440"/><path d="M40 240l90-90 70 60 110-130 80 60"/>
+            </g>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site">
+    <p>© <span id="year"></span> Curso Interativo – Ensaios de Solos (Vol. 1). Paleta: Azul #013C5A, Cinza #666666, Verde #28a745, Branco #FFFFFF · Fontes: Montserrat & Open Sans.</p>
+  </footer>
+
+  <script>
+    // Ano atual
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Destacar link ativo no menu conforme rolagem
+    const sections = ['home','index','mod0','mod1','mod2','mod3','mod4'].map(id=>document.getElementById(id));
+    const links = Array.from(document.querySelectorAll('nav a.nav-link'));
+    const byId = id => links.find(a => a.getAttribute('href') === `#${id}`);
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if(entry.isIntersecting){
+          links.forEach(a => a.classList.remove('active'));
+          const id = entry.target.id;
+          const link = byId(id);
+          if(link) link.classList.add('active');
+          try { localStorage.setItem('last-section', `#${id}`); } catch(e){}
+        }
+      })
+    }, { threshold: .5 });
+    sections.forEach(sec => sec && observer.observe(sec));
+
+    // Restaurar última seção visitada
+    try {
+      const last = localStorage.getItem('last-section');
+      if(last && document.querySelector(last)){
+        setTimeout(()=>{ location.hash = last; }, 200);
+      }
+    } catch(e){}
+
+    // Teclas de atalho ← →
+    const order = ['home','index','mod0','mod1','mod2','mod3','mod4'];
+    function goto(delta){
+      const current = location.hash ? location.hash.replace('#','') : 'home';
+      const i = Math.max(0, order.indexOf(current));
+      const j = Math.min(order.length - 1, Math.max(0, i + delta));
+      const target = `#${order[j]}`;
+      if(document.querySelector(target)) location.hash = target;
+    }
+    window.addEventListener('keydown', e => {
+      if(['INPUT','TEXTAREA'].includes(document.activeElement.tagName)) return;
+      if(e.key === 'ArrowRight') goto(+1);
+      if(e.key === 'ArrowLeft') goto(-1);
+    });
+
+    // ===== Persistência para checklists =====
+    function saveKV(key, value){ try{ localStorage.setItem(key, value); }catch(e){} }
+    function loadKV(key){ try{ return localStorage.getItem(key); }catch(e){ return null } }
+    function initChecks(){
+      document.querySelectorAll('input.ck').forEach(el=>{
+        const k = el.dataset.key; if(!k) return;
+        const v = loadKV(k); if(v!==null) el.checked = v==='1';
+        el.addEventListener('change', ()=> saveKV(k, el.checked?'1':'0'));
+      })
+    }
+
+    // ===== Calculadora Umidade =====
+    function val(id){ const el = document.getElementById(id); return el ? parseFloat((el.value||'').toString().replace(',','.')) : NaN }
+    function calcUmidade(){
+      const ml = val('m_lata'), mu = val('m_umida'), ms = val('m_seca');
+      if([ml,mu,ms].some(x=>isNaN(x))){ document.getElementById('w_result').textContent = 'Preencha todos os campos (g).'; return; }
+      const magua = mu - ms; const msecSolo = ms - ml; if(msecSolo<=0){ document.getElementById('w_result').textContent='Verifique as massas informadas.'; return; }
+      const w = (magua / msecSolo) * 100; const out = `w = ${w.toFixed(2)} %`;
+      document.getElementById('w_result').textContent = out; saveKV('m1_w', out);
+    }
+    function calcTripla(){
+      const ids=['w1','w2','w3']; const a=ids.map(id=>val(id)).filter(x=>!isNaN(x));
+      if(a.length<2){ document.getElementById('w_stats').textContent='Informe ao menos 2 valores.'; return; }
+      const media = a.reduce((s,x)=>s+x,0)/a.length; const sd = Math.sqrt(a.reduce((s,x)=>s+(x-media)**2,0)/a.length);
+      document.getElementById('w_stats').textContent = `média = ${media.toFixed(2)} % · desvio = ${sd.toFixed(2)} %`;
+      saveKV('m1_w_media', media.toFixed(2));
+    }
+
+    // ===== Peneiramento =====
+    const peneirasPadrao = ['4.8','2.0','0.84','0.42','0.25','0.15','0.075','Fundo'];
+    function initPeneiras(){
+      const tbody = document.querySelector('#tbPeneiras tbody'); if(!tbody) return; tbody.innerHTML='';
+      peneirasPadrao.forEach(size=>{
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${size} mm</td>
+          <td style="padding:0;"><input type="number" step="0.01" style="width:100%; padding:8px 10px; border:0" data-size="${size}" class="mRetida"></td>
+          <td class="pctR" style="text-align:right">–</td>
+          <td class="pctP" style="text-align:right">–</td>`;
+        tbody.appendChild(tr);
+      });
+    }
+    function calcPeneiras(){
+      const rows = Array.from(document.querySelectorAll('#tbPeneiras tbody tr')); if(!rows.length) return;
+      const masses = rows.map(r=>parseFloat((r.querySelector('input.mRetida').value||'').replace(',','.'))||0);
+      const total = masses.reduce((s,x)=>s+x,0);
+      let passante = 100;
+      rows.forEach((r,i)=>{
+        const pctR = total>0 ? (masses[i]/total)*100 : 0;
+        passante = i===0 ? 100 - pctR : passante - pctR;
+        r.querySelector('.pctR').textContent = pctR.toFixed(2)+' %';
+        r.querySelector('.pctP').textContent = passante.toFixed(2)+' %';
+      });
+      document.getElementById('sumPeneiras').textContent = total>0 ? `Massa total: ${total.toFixed(2)} g` : '';
+      try{ saveKV('m2_peneiras', JSON.stringify(masses)); }catch(e){}
+    }
+
+    // ===== Sedimentação (hidrômetro) — leituras =====
+    const temposPadrao = ['30 s','1 min','2 min','5 min','15 min','30 min','1 h','2 h'];
+    function initHidro(){
+      const tbody = document.querySelector('#tbHidro tbody'); if(!tbody) return; tbody.innerHTML='';
+      temposPadrao.forEach(t=>{
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${t}</td>
+          <td style="padding:0;"><input type="number" step="0.001" style="width:100%; padding:8px 10px; border:0" class="hidro-leitura" data-t="${t}"></td>
+          <td style="padding:0;"><input type="number" step="0.1" style="width:100%; padding:8px 10px; border:0" class="hidro-temp" data-t="${t}"></td>`;
+        tbody.appendChild(tr);
+      });
+    }
+    function saveHidro(){
+      const linhas = Array.from(document.querySelectorAll('#tbHidro tbody tr'));
+      const dados = linhas.map(r=>({
+        tempo: r.children[0].textContent.trim(),
+        leitura: parseFloat((r.querySelector('.hidro-leitura').value||'').replace(',','.'))||null,
+        temp: parseFloat((r.querySelector('.hidro-temp').value||'').replace(',','.'))||null
+      }));
+      try{ saveKV('m2_hidro', JSON.stringify(dados)); }catch(e){}
+      document.getElementById('sumHidro').textContent = 'Leituras salvas.';
+    }
+
+    // ===== Hidro — conversão simplificada e curva =====
+    function mu_water_vogel(T){ return 2.414e-5 * Math.pow(10, 247.8/(T + 133.15)); } // Pa·s
+    function rho_water(T){ return 998 - 0.3*(T-20); } // kg/m3 aprox
+    function parseTempoToSeconds(t){
+      if(!t) return null; const x=t.toLowerCase().trim();
+      if(x.includes('h')) return parseFloat(x)*3600;
+      if(x.includes('min')) return parseFloat(x)*60;
+      if(x.includes('s')) return parseFloat(x);
+      const n=parseFloat(x); return isNaN(n)?null:n;
+    }
+
+    let pontosHidro = []; // {d_mm, passante, tempo_s}
+    let pontosPeneira = []; // {d_mm, passante}
+    let curvaCombined = []; // {d_mm, passante}
+
+    function readHidroTable(){
+      const rows = Array.from(document.querySelectorAll('#tbHidro tbody tr'));
+      return rows.map(r=>{
+        const tempoTxt = r.children[0].textContent.trim();
+        const leitura = parseFloat((r.querySelector('.hidro-leitura').value||'').replace(',','.'));
+        const temp = parseFloat((r.querySelector('.hidro-temp').value||'').replace(',','.'));
+        return {tempoTxt, leitura: isNaN(leitura)?null:leitura, temp: isNaN(temp)?null:temp};
+      });
+    }
+
+    function converterHidro(){
+      const Ws = parseFloat((document.getElementById('ws').value||'').replace(',','.'));
+      const Gs = parseFloat((document.getElementById('gs').value||'').replace(',','.'));
+      const Tinput = parseFloat((document.getElementById('temp').value||'').replace(',','.'));
+      const L = parseFloat((document.getElementById('L').value||'').replace(',','.'));
+      const Corr = parseFloat((document.getElementById('corr').value||'').replace(',','.'));
+      if([Ws,Gs,Tinput,L].some(x=>isNaN(x)||x<=0)){ document.getElementById('convInfo').textContent='Informe Ws, Gs, T e L válidos.'; return; }
+
+      const dados = readHidroTable().filter(r=>r.leitura!==null);
+      if(!dados.length){ document.getElementById('convInfo').textContent='Informe ao menos uma leitura.'; return; }
+
+      const g = 9.80665;
+      pontosHidro = [];
+      dados.forEach(row=>{
+        const T = isNaN(row.temp)? Tinput : row.temp;
+        const mu = mu_water_vogel(T);
+        const rho_w = rho_water(T);
+        const rho_s = Gs * rho_w;
+        const delta = (rho_s - rho_w);
+        const t = parseTempoToSeconds(row.tempoTxt) || 0;
+        if(t<=0 || delta<=0) return;
+
+        const D = Math.sqrt( (18 * mu * L) / (delta * g * t) ); // metros
+        const d_mm = D * 1000;
+
+        // % passante (didático, simplificado)
+        const Rcorr = row.leitura + (isNaN(Corr)?0:Corr); // g/L aprox
+        const P = ((Rcorr * (Gs/(Gs-1))) / Ws) * 100;
+
+        if(!isNaN(d_mm) && !isNaN(P)){
+          pontosHidro.push({d_mm, passante: Math.max(0, Math.min(100, P)), tempo_s:t});
+        }
+      });
+
+      pontosHidro.sort((a,b)=>b.d_mm - a.d_mm);
+      document.getElementById('convInfo').textContent = `Convertidos ${pontosHidro.length} pontos de sedimentação (simplificado).`;
+    }
+
+    function coletarPeneiramento(){
+      const rows = Array.from(document.querySelectorAll('#tbPeneiras tbody tr'));
+      const pts = [];
+      rows.forEach(r=>{
+        const sizeTxt = r.children[0].textContent.trim().replace(' mm','');
+        let d_mm = (sizeTxt==='Fundo')? 0.01 : parseFloat(sizeTxt);
+        if(isNaN(d_mm)) return;
+        const pTxt = r.querySelector('.pctP').textContent.replace('%','').trim();
+        const passante = parseFloat(pTxt);
+        if(!isNaN(passante)){
+          pts.push({d_mm, passante: Math.max(0, Math.min(100, passante))});
+        }
+      });
+      return pts.sort((a,b)=>b.d_mm - a.d_mm);
+    }
+
+    function gerarCurva(){
+      pontosPeneira = coletarPeneiramento();
+      curvaCombined = [...pontosPeneira, ...pontosHidro].filter(p=>!isNaN(p.d_mm)&&!isNaN(p.passante));
+      curvaCombined.sort((a,b)=>a.d_mm - b.d_mm);
+      desenharCurva();
+    }
+
+    function desenharCurva(){
+      const svg = document.getElementById('curvaSVG'); if(!svg) return;
+      const W=800,H=360, padL=70, padR=20, padT=20, padB=40;
+      while(svg.firstChild) svg.removeChild(svg.firstChild);
+
+      const xMin=0.001, xMax=10; // mm
+      const yMin=0, yMax=100;
+      function xScale(v){ const t=(Math.log10(v)-Math.log10(xMin))/(Math.log10(xMax)-Math.log10(xMin)); return padL + t*(W-padL-padR); }
+      function yScale(v){ const t=(v-yMin)/(yMax-yMin); return H-padB - t*(H-padT-padB); }
+
+      // Grades verticais (décadas)
+      const decades=[0.001,0.01,0.1,1,10];
+      decades.forEach(val=>{
+        const x=xScale(val);
+        const ln=document.createElementNS(svg.namespaceURI,'line');
+        ln.setAttribute('x1',x); ln.setAttribute('x2',x);
+        ln.setAttribute('y1',padT); ln.setAttribute('y2',H-padB);
+        ln.setAttribute('stroke','rgba(1,60,90,.15)'); svg.appendChild(ln);
+        const tx=document.createElementNS(svg.namespaceURI,'text');
+        tx.setAttribute('x',x); tx.setAttribute('y',H-10); tx.setAttribute('text-anchor','middle');
+        tx.setAttribute('font-size','11'); tx.setAttribute('fill','#013C5A'); tx.textContent=val.toString(); svg.appendChild(tx);
+      });
+      // Grades horizontais (cada 20%)
+      for(let v=0; v<=100; v+=20){
+        const y=yScale(v);
+        const ln=document.createElementNS(svg.namespaceURI,'line');
+        ln.setAttribute('x1',padL); ln.setAttribute('x2',W-padR);
+        ln.setAttribute('y1',y); ln.setAttribute('y2',y);
+        ln.setAttribute('stroke','rgba(1,60,90,.12)'); svg.appendChild(ln);
+        const tx=document.createElementNS(svg.namespaceURI,'text');
+        tx.setAttribute('x',50); tx.setAttribute('y',y+4); tx.setAttribute('text-anchor','end');
+        tx.setAttribute('font-size','11'); tx.setAttribute('fill','#013C5A'); tx.textContent=v+'%'; svg.appendChild(tx);
+      }
+      // Títulos
+      const ylab=document.createElementNS(svg.namespaceURI,'text');
+      ylab.setAttribute('x',18); ylab.setAttribute('y',H/2);
+      ylab.setAttribute('transform','rotate(-90 18 '+(H/2)+')');
+      ylab.setAttribute('font-size','12'); ylab.setAttribute('fill','#013C5A'); ylab.textContent='% passante'; svg.appendChild(ylab);
+      const xlab=document.createElementNS(svg.namespaceURI,'text');
+      xlab.setAttribute('x',(W/2)); xlab.setAttribute('y',H-8); xlab.setAttribute('text-anchor','middle');
+      xlab.setAttribute('font-size','12'); xlab.setAttribute('fill','#013C5A'); xlab.textContent='tamanho (mm, eixo log)'; svg.appendChild(xlab);
+
+      // Desenhar séries
+      function drawSeries(arr, color, withLine){
+        if(!arr.length) return;
+        if(withLine){
+          let d='';
+          arr.forEach((p,i)=>{
+            const x=xScale(Math.max(xMin, Math.min(xMax, p.d_mm)));
+            const y=yScale(Math.max(0, Math.min(100, p.passante)));
+            d += (i===0? 'M':'L') + x + ' ' + y + ' ';
+          });
+          const path=document.createElementNS(svg.namespaceURI,'path');
+          path.setAttribute('d', d.trim());
+          path.setAttribute('fill','none'); path.setAttribute('stroke', color); path.setAttribute('stroke-width','2');
+          svg.appendChild(path);
+        }
+        arr.forEach(p=>{
+          const x=xScale(Math.max(xMin, Math.min(xMax, p.d_mm)));
+          const y=yScale(Math.max(0, Math.min(100, p.passante)));
+          const c=document.createElementNS(svg.namespaceURI,'circle');
+          c.setAttribute('cx',x); c.setAttribute('cy',y); c.setAttribute('r',3.5); c.setAttribute('fill', color);
+          svg.appendChild(c);
+        });
+      }
+      drawSeries(pontosPeneira, '#013C5A', true);
+      drawSeries(pontosHidro, '#2a7f3e', false);
+      drawSeries(curvaCombined, '#013C5A', true);
+    }
+
+    function exportCSV(){
+      const rows=[['d_mm','passante','fonte']];
+      pontosPeneira.forEach(p=>rows.push([p.d_mm, p.passante, 'peneiramento']));
+      pontosHidro.forEach(p=>rows.push([p.d_mm, p.passante, 'sedimentacao']));
+      curvaCombined.forEach(p=>rows.push([p.d_mm, p.passante, 'combinada']));
+      const csv = rows.map(r=>r.join(',')).join('\n');
+      const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = 'curva_granulometrica.csv'; a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    // ===== Sedimentação helpers end =====
+
+    // Boot
+    initChecks();
+  </script>
+</body>
+</html>
