@@ -406,6 +406,384 @@
 </div>
 
   </section>
+  
+<!-- ===================== MÓDULO 2 ===================== -->
+<section id="mod2" class="module" aria-labelledby="mod2-title">
+<div class="panel" id="content-mod-2">
+  <!-- Estilos locais do Módulo 2 -->
+  <style>
+    #content-mod-2 .step { gap:12px; align-items:flex-start; }
+    #content-mod-2 .step .num { margin-top:4px; }
+    #content-mod-2 .step-body { display:block; width:100%; }
+    #content-mod-2 .illus { display:grid; place-items:center; margin:2px 0 10px; }
+    #content-mod-2 .illus svg { width:92px; height:92px; transition: transform .2s ease; }
+    #content-mod-2 .step:hover .illus svg { transform: translateY(-2px); }
+    #content-mod-2 h3 { color:#013C5A; font-family:Montserrat,sans-serif; margin-top:16px; }
+    #content-mod-2 .sub { color:#666; margin-top:0; }
+    #content-mod-2 .split-visual svg { width:100%; max-width:520px; height:auto; }
+    #content-mod-2 .fields label { display:block; font-weight:600; margin:8px 0 4px; color:#0f2532; }
+    #content-mod-2 .fields textarea { width:100%; min-height:70px; border:1px solid rgba(1,60,90,.2); border-radius:10px; padding:10px; }
+  </style>
+
+  <header class="module-head">
+    <span class="tag"><svg width="16" height="16" aria-hidden="true"><use href="#ico-sieve"/></svg> Módulo 2</span>
+    <h2 id="mod2-title">Granulometria (NBR 7181) — Peneiramento + Sedimentação</h2>
+  </header>
+
+  <div class="grid">
+    <div>
+      <!-- Intro + resumo visual -->
+      <p class="sub"><strong>Objetivo:</strong> Determinar a distribuição granulométrica combinando <em>peneiramento</em> (≥ 2 mm) e <em>sedimentação com densímetro</em> (≤ 2 mm), seguindo a NBR 7181, em linguagem simples e visual.</p>
+
+      <div class="panel split-visual" style="padding:12px; margin-bottom:12px">
+        <h3 style="margin:6px 0 8px">Resumo visual — Divisão da amostra (2 kg)</h3>
+        <!-- Ilustração: 2 kg -> 1 kg A (peneiramento) | 1 kg B (sedimentação) -->
+        <svg viewBox="0 0 720 180" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Divisão: 2 kg → 1 kg peneiramento + 1 kg sedimentação">
+          <defs>
+            <linearGradient id="gBox" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#e6f2f9"/><stop offset="1" stop-color="#f7fbff"/>
+            </linearGradient>
+          </defs>
+          <rect x="20" y="30" width="200" height="120" rx="14" fill="url(#gBox)" stroke="#013C5A" stroke-opacity=".12"/>
+          <text x="120" y="60" text-anchor="middle" font-size="14" fill="#013C5A">Amostra total</text>
+          <text x="120" y="82" text-anchor="middle" font-size="16" font-weight="700" fill="#013C5A">2 kg</text>
+
+          <!-- setas -->
+          <path d="M220 90h70" stroke="#013C5A" stroke-width="2"/>
+          <path d="M290 86l8 4-8 4z" fill="#013C5A"/>
+          <path d="M220 90h70" transform="translate(0,30)" stroke="#013C5A" stroke-width="2" opacity=".5"/>
+          <path d="M290 116l8 4-8 4z" fill="#013C5A" opacity=".5"/>
+
+          <!-- caixas destino -->
+          <rect x="300" y="30" width="180" height="120" rx="14" fill="#ffffff" stroke="#013C5A" stroke-opacity=".12"/>
+          <text x="390" y="60" text-anchor="middle" font-size="14" fill="#013C5A">Parte A — Peneiramento</text>
+          <text x="390" y="82" text-anchor="middle" font-size="16" font-weight="700" fill="#28a745">1 kg (≥ 2 mm)</text>
+
+          <rect x="520" y="30" width="180" height="120" rx="14" fill="#ffffff" stroke="#013C5A" stroke-opacity=".12"/>
+          <text x="610" y="60" text-anchor="middle" font-size="14" fill="#013C5A">Parte B — Sedimentação</text>
+          <text x="610" y="82" text-anchor="middle" font-size="16" font-weight="700" fill="#28a745">1 kg (≤ 2 mm)</text>
+        </svg>
+      </div>
+
+      <!-- ===================== PARTE A — PENEIRAMENTO (≥ 2 mm) ===================== -->
+      <h3>Parte A — Peneiramento (≥ 2 mm)</h3>
+      <p class="sub">Determinação da fração grossa do solo. Siga a série de peneiras conforme NBR 7181 (da maior para a menor até 2,0 mm).</p>
+
+      <div class="steps">
+        <!-- A1 Secagem -->
+        <div class="step">
+          <span class="num">A1</span>
+          <div class="step-body">
+            <div class="illus" aria-hidden="true">
+              <!-- Estufa -->
+              <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+                <rect x="22" y="24" width="76" height="72" rx="10" fill="#f0f6fa" stroke="#013C5A" stroke-opacity=".12"/>
+                <rect x="30" y="32" width="60" height="56" rx="6" fill="#ffffff" stroke="#013C5A" stroke-opacity=".08"/>
+                <rect x="36" y="56" width="48" height="4" rx="2" fill="#e6eef4"/>
+                <circle cx="81" cy="64" r="6" fill="#28a745" opacity=".9"/>
+              </svg>
+            </div>
+            <div><strong>Secagem</strong><br/>Leve <em>1 kg</em> de solo à estufa (105 °C ± 5 °C) até massa constante. Deixe esfriar no dessecador.</div>
+            <input type="checkbox" class="ck" data-key="m2_ck1">
+          </div>
+        </div>
+
+        <!-- A2 Tara peneiras -->
+        <div class="step">
+          <span class="num">A2</span>
+          <div class="step-body">
+            <div class="illus" aria-hidden="true">
+              <!-- Peneira isolada -->
+              <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+                <ellipse cx="60" cy="72" rx="30" ry="10" fill="#e9eef2"/>
+                <ellipse cx="60" cy="70" rx="30" ry="10" fill="#cfd8df"/>
+                <rect x="30" y="50" width="60" height="20" rx="10" fill="#dfe7ec"/>
+              </svg>
+            </div>
+            <div><strong>Pesagem das peneiras (tara)</strong><br/>Pese cada peneira limpa e registre a tara individual.</div>
+            <input type="checkbox" class="ck" data-key="m2_ck2">
+          </div>
+        </div>
+
+        <!-- A3 Torre de peneiras -->
+        <div class="step">
+          <span class="num">A3</span>
+          <div class="step-body">
+            <div class="illus" aria-hidden="true">
+              <!-- Torre -->
+              <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+                <g opacity=".95">
+                  <ellipse cx="60" cy="88" rx="28" ry="9" fill="#cfd8df"/>
+                  <ellipse cx="60" cy="86" rx="28" ry="9" fill="#e9eef2"/>
+                  <ellipse cx="60" cy="70" rx="26" ry="8" fill="#cfd8df"/>
+                  <ellipse cx="60" cy="68" rx="26" ry="8" fill="#e9eef2"/>
+                  <ellipse cx="60" cy="52" rx="24" ry="7" fill="#cfd8df"/>
+                  <ellipse cx="60" cy="50" rx="24" ry="7" fill="#e9eef2"/>
+                </g>
+              </svg>
+            </div>
+            <div><strong>Montagem do conjunto</strong><br/>Monte da maior (≈ 50 mm) para a menor até <strong>2,0 mm</strong> + fundo coletor.</div>
+            <input type="checkbox" class="ck" data-key="m2_ck3">
+          </div>
+        </div>
+
+        <!-- A4 Peneiramento -->
+        <div class="step">
+          <span class="num">A4</span>
+          <div class="step-body">
+            <div class="illus" aria-hidden="true">
+              <!-- Agitador -->
+              <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+                <rect x="30" y="34" width="60" height="16" rx="8" fill="#f0f6fa" stroke="#013C5A" stroke-opacity=".12"/>
+                <rect x="22" y="52" width="76" height="10" rx="5" fill="#e6eef4"/>
+                <rect x="18" y="64" width="84" height="20" rx="8" fill="#013C5A" opacity=".08"/>
+              </svg>
+            </div>
+            <div><strong>Peneiramento</strong><br/>Coloque a amostra na peneira superior e agite por ~10 min (agitador ou manual). Evite perdas de solo.</div>
+            <input type="checkbox" class="ck" data-key="m2_ck4">
+          </div>
+        </div>
+
+        <!-- A5 Pesagem pós-ensaio -->
+        <div class="step">
+          <span class="num">A5</span>
+          <div class="step-body">
+            <div class="illus" aria-hidden="true">
+              <!-- Balança com peneira -->
+              <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+                <rect x="26" y="70" width="68" height="12" rx="6" fill="#f0f6fa" stroke="#013C5A" stroke-opacity=".12"/>
+                <rect x="22" y="40" width="76" height="30" rx="8" fill="#ffffff" stroke="#013C5A" stroke-opacity=".1"/>
+                <rect x="32" y="46" width="40" height="10" rx="4" fill="#e6f2f9"/>
+                <ellipse cx="60" cy="66" rx="20" ry="6" fill="#cfd8df"/><ellipse cx="60" cy="64" rx="20" ry="6" fill="#e9eef2"/>
+              </svg>
+            </div>
+            <div><strong>Pesagem pós-ensaio</strong><br/>Pese cada peneira com o material retido e calcule a <em>massa retida</em> (peso com solo – tara).</div>
+            <input type="checkbox" class="ck" data-key="m2_ck5">
+          </div>
+        </div>
+
+        <!-- A6 Lavagem final -->
+        <div class="step">
+          <span class="num">A6</span>
+          <div class="step-body">
+            <div class="illus" aria-hidden="true">
+              <!-- Peneira com água -->
+              <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+                <ellipse cx="60" cy="74" rx="28" ry="9" fill="#cfd8df"/>
+                <ellipse cx="60" cy="72" rx="28" ry="9" fill="#e9eef2"/>
+                <path d="M38 62c10 2 36 2 44 0v6c-10 4-34 4-44 0z" fill="#bfe6ff"/>
+                <path d="M84 50c-2 3-4 6-4 9 0 3 2 5 5 5 3 0 5-3 5-6 0-4-3-6-6-8z" fill="#28a745" opacity=".6"/>
+              </svg>
+            </div>
+            <div><strong>Lavagem final</strong><br/>Passe a fração passante na peneira 0,075 mm até a água sair clara. Seque o material retido antes de seguir.</div>
+            <input type="checkbox" class="ck" data-key="m2_ck6">
+          </div>
+        </div>
+      </div>
+
+      <h3>Cálculos — Parte A</h3>
+      <p class="sub">Use a tabela abaixo para calcular <strong>% Retida</strong> e <strong>% Passante acumulada</strong>. Em seguida gere a curva semi-log.</p>
+      <!-- (Mantemos a tabela e botões originais/IDs) -->
+    </div>
+
+    <!-- COLUNA DIREITA — Tabelas e Curva (mantém IDs e botões originais) -->
+    <div>
+      <div class="panel" style="padding:16px">
+        <h3 style="margin-top:0;color:#0f2532;font-family:Montserrat">Tabela — Peneiramento</h3>
+        <p style="margin:0 0 8px">Informe massa retida por peneira. O sistema calcula % retido e % passante acumulado.</p>
+        <table id="tbPeneiras" class="data">
+          <thead>
+            <tr><th style="text-align:left">Abertura</th><th style="text-align:right">Massa retida (g)</th><th style="text-align:right">% retido</th><th style="text-align:right">% passante acum.</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+        <div style="display:flex; gap:8px; margin-top:10px; flex-wrap:wrap">
+          <button class="btn btn-prev" onclick="initPeneiras()">Carregar peneiras padrão</button>
+          <button class="btn btn-next" onclick="calcPeneiras()">Calcular distribuição</button>
+        </div>
+        <p id="sumPeneiras" style="font-weight:800; margin-top:6px"></p>
+
+        <hr style="border:none;border-top:1px solid rgba(1,60,90,.1);margin:14px 0"/>
+        <h3 style="margin:0 0 8px;color:#0f2532;font-family:Montserrat">Leituras — Sedimentação (hidrômetro)</h3>
+        <p style="margin:0 0 8px">Registre tempo (s/min/h) · leitura (g/L aprox.) · temperatura (°C). Se desejar, aplique correções (menisco/temperatura) no campo avançado do conversor.</p>
+        <table id="tbHidro" class="data">
+          <thead><tr><th>Tempo</th><th>Leitura</th><th>Temperatura (°C)</th></tr></thead>
+          <tbody></tbody>
+        </table>
+        <div style="display:flex; gap:8px; margin-top:10px; flex-wrap:wrap">
+          <button class="btn btn-prev" onclick="initHidro()">Carregar tempos padrão</button>
+          <button class="btn btn-next" onclick="saveHidro()">Salvar leituras</button>
+        </div>
+        <p id="sumHidro" style="font-weight:800; margin-top:6px"></p>
+
+        <hr style="border:none;border-top:1px solid rgba(1,60,90,.1);margin:16px 0"/>
+        <h3 style="margin:0 0 8px;color:#0f2532;font-family:Montserrat">Conversão & Curva (simplificada)</h3>
+        <p style="margin:0 0 10px">Converta as leituras do hidrômetro em <em>% passante</em> e una com o peneiramento para gerar a curva granulométrica.</p>
+        <div class="panel" style="padding:12px">
+          <form class="calc" onsubmit="return false;">
+            <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px">
+              <label>Massa da amostra fina (W<sub>s</sub>, g)<input type="number" step="0.01" id="ws" placeholder="70 ou 120"></label>
+              <label>Densidade relativa (G<sub>s</sub>)<input type="number" step="0.01" id="gs" value="2.65"></label>
+              <label>Temperatura (°C)<input type="number" step="0.1" id="temp" value="20"></label>
+              <label>Profundidade efetiva L (m)<input type="number" step="0.001" id="L" value="0.145"></label>
+              <label>Correção de leitura (Ct + Cm)<input type="number" step="0.001" id="corr" value="0"></label>
+            </div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
+              <button class="btn btn-next" onclick="converterHidro()">Converter hidrômetro</button>
+              <button class="btn btn-prev" onclick="gerarCurva()">Gerar curva (A+B)</button>
+              <button class="btn" style="background:#fff;color:var(--blue);border:1px solid rgba(1,60,90,.2)" onclick="exportCSV()">Exportar CSV</button>
+            </div>
+            <p id="convInfo" style="font-weight:800;margin-top:6px"></p>
+          </form>
+        </div>
+
+        <div class="chart-wrap" style="margin-top:12px">
+          <svg id="curvaSVG" class="chart-svg" viewBox="0 0 800 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Curva Granulométrica">
+            <desc>Semilog X: tamanho (mm) no eixo X; % passante no eixo Y.</desc>
+          </svg>
+          <div class="chart-legend">
+            <span class="chip">Peneiramento</span>
+            <span class="chip" style="background:#e8f5ee;color:#2a7f3e">Sedimentação</span>
+            <span class="chip" style="background:#013C5A;color:white">Curva combinada</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== PARTE B — SEDIMENTAÇÃO (≤ 2 mm) ===================== -->
+  <div class="panel" style="margin-top:12px">
+    <h3>Parte B — Sedimentação (≤ 2,0 mm)</h3>
+    <p class="sub"><strong>Amostra:</strong> da fração passante em 2,0 mm, separe <strong>70 g</strong> (argilosa/siltosa) ou <strong>120 g</strong> (arenosa).</p>
+
+    <div class="steps">
+      <!-- B1 Béquer + defloculante + pH -->
+      <div class="step">
+        <span class="num">B1</span>
+        <div class="step-body">
+          <div class="illus" aria-hidden="true">
+            <!-- Béquer + pH -->
+            <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+              <rect x="28" y="28" width="64" height="64" rx="10" fill="#f0f6fa" stroke="#013C5A" stroke-opacity=".12"/>
+              <path d="M44 44h40v24c-10 6-30 6-40 0z" fill="#bfe6ff"/>
+              <rect x="82" y="36" width="6" height="28" rx="3" fill="#e6eef4"/>
+              <circle cx="85" cy="66" r="5" fill="#28a745" opacity=".9"/>
+            </svg>
+          </div>
+          <div><strong>Preparo da suspensão</strong><br/>Adicionar solução de hexametafosfato e ajustar com carbonato até pH ~8–9 (usar tiras de pH).</div>
+          <input type="checkbox" class="ck" data-key="m2_ck7">
+        </div>
+      </div>
+
+      <!-- B2 Imersão 12–24h -->
+      <div class="step">
+        <span class="num">B2</span>
+        <div class="step-body">
+          <div class="illus" aria-hidden="true">
+            <!-- Relógio / repouso -->
+            <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="60" cy="60" r="30" fill="#f0f6fa" stroke="#013C5A" stroke-opacity=".12"/>
+              <line x1="60" y1="60" x2="60" y2="42" stroke="#013C5A" stroke-width="3" opacity=".5"/>
+              <line x1="60" y1="60" x2="76" y2="60" stroke="#013C5A" stroke-width="3" opacity=".5"/>
+            </svg>
+          </div>
+          <div><strong>Imersão</strong><br/>Colocar a amostra no béquer e deixar agir <strong>12–24 h</strong>. Anotar horários.</div>
+          <input type="checkbox" class="ck" data-key="m2_ck8">
+        </div>
+      </div>
+
+      <!-- B3 Dispersor 15 min -->
+      <div class="step">
+        <span class="num">B3</span>
+        <div class="step-body">
+          <div class="illus" aria-hidden="true">
+            <!-- Dispersor -->
+            <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+              <rect x="30" y="34" width="60" height="16" rx="8" fill="#f0f6fa" stroke="#013C5A" stroke-opacity=".12"/>
+              <rect x="28" y="52" width="64" height="26" rx="6" fill="#ffffff" stroke="#013C5A" stroke-opacity=".08"/>
+              <rect x="48" y="58" width="24" height="14" rx="4" fill="#28a745" opacity=".9"/>
+            </svg>
+          </div>
+          <div><strong>Dispersão mecânica</strong><br/>Levar ao dispersor por ~15 min (evitar excesso para não quebrar grãos).</div>
+          <input type="checkbox" class="ck" data-key="m2_ck9">
+        </div>
+      </div>
+
+      <!-- B4 Transferência → proveta 1L -->
+      <div class="step">
+        <span class="num">B4</span>
+        <div class="step-body">
+          <div class="illus" aria-hidden="true">
+            <!-- Proveta 1L -->
+            <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+              <rect x="50" y="22" width="20" height="76" rx="8" fill="#f0f6fa" stroke="#013C5A" stroke-opacity=".12"/>
+              <rect x="52" y="28" width="16" height="54" rx="6" fill="#bfe6ff"/>
+              <rect x="52" y="82" width="16" height="8" rx="3" fill="#e6eef4"/>
+            </svg>
+          </div>
+          <div><strong>Transferência e volume</strong><br/>Transferir toda a suspensão para a proveta de 1 000 mL, lavar o béquer/haste e completar até a marca.</div>
+          <input type="checkbox" class="ck" data-key="m2_ck10">
+        </div>
+      </div>
+
+      <!-- B5 Agitação 1 min -->
+      <div class="step">
+        <span class="num">B5</span>
+        <div class="step-body">
+          <div class="illus" aria-hidden="true">
+            <!-- Agitação -->
+            <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+              <rect x="36" y="32" width="48" height="56" rx="10" fill="#f0f6fa" stroke="#013C5A" stroke-opacity=".12"/>
+              <path d="M44 60c14 10 26 10 40 0" fill="none" stroke="#28a745" stroke-width="3" opacity=".8"/>
+            </svg>
+          </div>
+          <div><strong>Agitação</strong><br/>Agitar manualmente por ~1 min. Em seguida, iniciar o cronômetro para leituras.</div>
+          <input type="checkbox" class="ck" data-key="m2_ck11">
+        </div>
+      </div>
+
+      <!-- B6 Leituras -->
+      <div class="step">
+        <span class="num">B6</span>
+        <div class="step-body">
+          <div class="illus" aria-hidden="true">
+            <!-- Densímetro -->
+            <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+              <rect x="48" y="24" width="24" height="72" rx="12" fill="#f0f6fa" stroke="#013C5A" stroke-opacity=".12"/>
+              <rect x="54" y="30" width="12" height="36" rx="6" fill="#e6f2f9"/>
+              <circle cx="60" cy="78" r="10" fill="#28a745" opacity=".9"/>
+            </svg>
+          </div>
+          <div><strong>Leituras</strong><br/>Realizar leituras de densímetro e temperatura nos tempos padrão (ex.: 30 s, 1 min, 2 min, 5 min, 15 min, 30 min, 60 min, 2 h…).</div>
+          <input type="checkbox" class="ck" data-key="m2_ck12">
+        </div>
+      </div>
+    </div>
+
+    <h3 style="margin-top:16px">Interatividade e anotações</h3>
+    <div class="fields">
+      <label>Tipo de solo e massa utilizada (70 g/120 g):</label>
+      <textarea placeholder="Ex.: Silto-argiloso, 70 g"></textarea>
+      <label>Tempos e densidades lidas (copiar da planilha):</label>
+      <textarea placeholder="Ex.: 30 s → 24 g/L; 1 min → 22 g/L; ..."></textarea>
+      <label>Observações de temperatura / pH:</label>
+      <textarea placeholder="Ex.: T = 21 °C; pH = 8,5; sem bolhas."></textarea>
+      <label>Conclusão: minha curva final indica um solo (bem/mal graduado) porque…</label>
+      <textarea placeholder="Ex.: Curva suave com D10=0,25 mm e coef. uniformidade alto."></textarea>
+    </div>
+
+    <div class="note" style="margin-top:12px">
+      <strong>Dicas profissionais:</strong> Limpe/escove as peneiras após cada ensaio; mantenha a ordem das peneiras; evite misturar frações; confira pH 8–9 e temperatura estável; evite bolhas no densímetro; respeite rigorosamente os tempos de leitura.
+      <br><em>Curiosidade:</em> Um peneiramento bem executado melhora a precisão da curva e reduz erros de classificação.
+    </div>
+
+    <div class="actions" style="margin-top:16px">
+      <a class="btn btn-prev" href="#mod1"><svg width="18" height="18" aria-hidden="true"><use href="#ico-arrow-left"/></svg> Voltar</a>
+      <a class="btn btn-next" href="#mod3">Avançar <svg width="18" height="18" aria-hidden="true"><use href="#ico-arrow-right"/></svg></a>
+    </div>
+  </div>
+</div>
+</section>
 
   <!-- ===================== MÓDULO 3 ===================== -->
   <section id="mod3" class="module" aria-labelledby="mod3-title">
