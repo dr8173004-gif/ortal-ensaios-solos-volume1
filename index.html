@@ -787,37 +787,133 @@
 
   <!-- ===================== MÓDULO 3 ===================== -->
   <section id="mod3" class="module" aria-labelledby="mod3-title">
-    <div class="panel" id="content-mod-3">
-      <header class="module-head">
-        <span class="tag"><svg width="16" height="16" aria-hidden="true"><use href="#ico-whatsapp"/></svg> Módulo 3</span>
-        <h2 id="mod3-title">Aula ao Vivo + agendamento via WhatsApp</h2>
-      </header>
-      <div class="grid">
-        <div>
-          <div class="steps">
-            <div class="step"><span class="num">1</span><div><strong>Mentoria</strong><br/>Sessão ao vivo para tirar dúvidas sobre execução e interpretação dos ensaios.</div></div>
-            <div class="step"><span class="num">2</span><div><strong>Agendamento</strong><br/>Clique no botão e fale pelo WhatsApp para combinar horários.</div></div>
-          </div>
-          <div class="actions">
-            <a class="btn btn-prev" href="#mod2"><svg width="18" height="18" aria-hidden="true"><use href="#ico-arrow-left"/></svg> Voltar</a>
-            <a class="btn btn-next" href="#mod4">Avançar <svg width="18" height="18" aria-hidden="true"><use href="#ico-arrow-right"/></svg></a>
-          </div>
-          <div style="margin-top:10px">
-            <a class="btn btn-next" href="https://wa.me/" target="_blank" rel="noopener">Falar no WhatsApp <svg width="18" height="18" aria-hidden="true"><use href="#ico-whatsapp"/></svg></a>
-          </div>
-        </div>
-        <div class="visual" aria-hidden="true">
-          <svg viewBox="0 0 600 360" xmlns="http://www.w3.org/2000/svg">
-            <rect width="600" height="360" rx="16" fill="#e9f2f6"/>
-            <g transform="translate(70,60)" stroke="#013C5A" stroke-width="3" fill="none">
-              <rect x="0" y="0" width="460" height="240" rx="18" fill="#fff"/>
-              <circle cx="70" cy="80" r="36" fill="#f5fbff"/>
-              <path d="M140 70h220M140 110h220M140 150h200"/>
-            </g>
-          </svg>
-        </div>
+   <div class="panel" id="content-mod-3">
+  <!-- Estilos locais do Módulo 3 -->
+  <style>
+    #content-mod-3 .illus { display:grid; place-items:center; margin:4px 0 12px; }
+    #content-mod-3 .illus svg { width:92px; height:92px; transition:transform .2s ease; }
+    #content-mod-3 .cardy { background:#fff; border-radius:16px; box-shadow:0 10px 30px rgba(1,60,90,.12); padding:18px; }
+    #content-mod-3 h3 { color:#013C5A; font-family:Montserrat, sans-serif; margin:0 0 8px; }
+    #content-mod-3 p.lead { color:#666; margin-top:6px; }
+    #content-mod-3 .stack { display:grid; gap:14px; }
+    #content-mod-3 .cta { display:flex; flex-wrap:wrap; gap:10px; margin-top:10px; align-items:center; }
+    #content-mod-3 .btn-wa { background:#25D366; color:#fff; font-weight:800; padding:12px 16px; border-radius:12px; text-decoration:none; display:inline-flex; align-items:center; gap:8px; box-shadow:0 6px 20px rgba(37,211,102,.25); }
+    #content-mod-3 .btn-wa:hover { filter:brightness(1.05); }
+    #content-mod-3 .tips li { margin:6px 0; }
+    #content-mod-3 .section { display:grid; grid-template-columns:1fr; gap:12px; }
+    @media (min-width: 880px) { #content-mod-3 .section { grid-template-columns:1.1fr .9fr; } }
+  </style>
+
+  <header class="module-head">
+    <span class="tag"><svg width="16" height="16" aria-hidden="true"><use href="#ico-whatsapp"/></svg> Módulo 3</span>
+    <h2 id="mod3-title">Mentoria Técnica Personalizada (Bônus Exclusivo)</h2>
+  </header>
+
+  <!-- Seção 1 — Apresentação da Mentoria -->
+  <div class="section">
+    <div class="cardy">
+      <div class="illus" aria-hidden="true">
+        <!-- Ícone: Mentor + balão de conversa -->
+        <svg viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="gMentor" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#e6f2f9"/><stop offset="1" stop-color="#f7fbff"/>
+            </linearGradient>
+          </defs>
+          <!-- balão -->
+          <rect x="18" y="22" width="84" height="52" rx="12" fill="url(#gMentor)" stroke="#013C5A" stroke-opacity=".12"/>
+          <circle cx="42" cy="48" r="6" fill="#013C5A" opacity=".25"/>
+          <circle cx="60" cy="48" r="6" fill="#013C5A" opacity=".25"/>
+          <circle cx="78" cy="48" r="6" fill="#013C5A" opacity=".25"/>
+          <path d="M40 74l12-8" stroke="#013C5A" stroke-opacity=".12"/>
+          <!-- mentor -->
+          <circle cx="104" cy="76" r="14" fill="#e9eef2"/>
+          <rect x="90" y="90" width="28" height="22" rx="10" fill="#cfd8df"/>
+          <rect x="86" y="106" width="36" height="12" rx="6" fill="#013C5A" opacity=".08"/>
+        </svg>
+      </div>
+      <h3>Apresentação da Mentoria</h3>
+      <p class="lead">
+        Parabéns! Você chegou à parte mais importante do curso: o contato direto com o instrutor.
+        Nesta sessão individual de até <strong>45 min</strong>, você revisa seus resultados, tira dúvidas e recebe dicas profissionais sobre o mercado de ensaios de solos.
+        É o momento que transforma o aprendizado em prática real.
+      </p>
+      <div class="note">
+        🌟 <strong>Dica:</strong> Traga seus resultados, dúvidas e até suas metas — vamos direcionar seu próximo passo com segurança técnica.
       </div>
     </div>
+
+    <!-- Cartão lateral: relógio + duração -->
+    <div class="cardy" style="align-self:start">
+      <div class="illus" aria-hidden="true">
+        <!-- Ícone: Relógio 45min -->
+        <svg viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="70" cy="70" r="36" fill="#f0f6fa" stroke="#013C5A" stroke-opacity=".12"/>
+          <line x1="70" y1="70" x2="70" y2="48" stroke="#013C5A" stroke-width="4" opacity=".6"/>
+          <line x1="70" y1="70" x2="90" y2="70" stroke="#013C5A" stroke-width="4" opacity=".6"/>
+          <circle cx="70" cy="70" r="5" fill="#28a745"/>
+        </svg>
+      </div>
+      <h3>Duração & Formato</h3>
+      <p class="lead">Sessão individual de até <strong>45 min</strong> via chamada. Foco total nas suas dúvidas e nos seus dados de ensaio.</p>
+    </div>
+  </div>
+
+  <!-- Seção 2 — Agendamento pelo WhatsApp -->
+  <div class="cardy" style="margin-top:12px">
+    <div class="illus" aria-hidden="true">
+      <!-- Ícone: WhatsApp estilizado -->
+      <svg viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="70" cy="70" r="38" fill="#25D366" opacity=".9"/>
+        <path d="M54 92l3.2-11.5A24 24 0 1 1 94 64a24 24 0 0 1-36 20.7L54 92z" fill="#fff" opacity=".15"/>
+        <path d="M58 56c1-1 2-1 3 0l3 6c.4.8.2 1.7-.5 2.2l-1 1c-.2.2-.2.5 0 .7 4.2 5 9.2 8.1 12.7 9 .3.1.6 0 .8-.2l1.2-1.2c.5-.5 1.2-.6 1.9-.4l6.2 2c1 .3 1.4 1.6 1 2.5-1.1 2.4-4 4-6.7 4-6.5.5-12-2.5-18.9-8.2C56.8 68.1 55 62.6 56 56.3c.1-.2.2-.3.3-.3z" fill="#fff"/>
+      </svg>
+    </div>
+    <h3>Agendamento pelo WhatsApp</h3>
+    <p class="lead">
+      Clique no botão abaixo para agendar sua aula ao vivo diretamente comigo.
+      O WhatsApp abrirá com a mensagem pronta:
+      <em>“Olá! Gostaria de agendar minha aula ao vivo do curso Ensaios de Solos – Volume 1.”</em>
+    </p>
+    <div class="cta">
+      <a class="btn-wa" href="https://wa.me/5531987670863?text=Ol%C3%A1!%20Gostaria%20de%20agendar%20minha%20aula%20ao%20vivo%20do%20curso%20Ensaios%20de%20Solos%20-%20Volume%201." target="_blank" rel="noopener">
+        <!-- mini ícone WA -->
+        <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><use href="#ico-whatsapp"/></svg>
+        📱 Agendar Aula ao Vivo
+      </a>
+      <span style="color:#666">Eu mesmo vou te responder e confirmar o melhor horário 🙂</span>
+    </div>
+  </div>
+
+  <!-- Seção 3 — Dicas de Aproveitamento -->
+  <div class="cardy" style="margin-top:12px">
+    <div class="illus" aria-hidden="true">
+      <!-- Ícone: Caderno / checklist -->
+      <svg viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg">
+        <rect x="32" y="24" width="76" height="92" rx="12" fill="#ffffff" stroke="#013C5A" stroke-opacity=".12"/>
+        <rect x="40" y="32" width="60" height="76" rx="8" fill="#f0f6fa"/>
+        <g stroke="#28a745" stroke-width="3" opacity=".9">
+          <path d="M48 52l6 6 12-12"/>
+          <path d="M48 72l6 6 12-12"/>
+          <path d="M48 92l6 6 12-12"/>
+        </g>
+      </svg>
+    </div>
+    <h3>Dicas de Aproveitamento</h3>
+    <ul class="tips">
+      <li>Tenha em mãos seus resultados e anotações.</li>
+      <li>Liste dúvidas sobre os ensaios de <em>Umidade</em> e <em>Granulometria</em>.</li>
+      <li>Se possível, envie fotos/vídeos das amostras e montagens.</li>
+      <li>Deixe papel e caneta prontos — você vai sair com <strong>insights práticos</strong>.</li>
+    </ul>
+  </div>
+
+  <div class="actions" style="margin-top:16px">
+    <a class="btn btn-prev" href="#mod2"><svg width="18" height="18" aria-hidden="true"><use href="#ico-arrow-left"/></svg> Voltar</a>
+    <a class="btn btn-next" href="#mod4">Avançar <svg width="18" height="18" aria-hidden="true"><use href="#ico-arrow-right"/></svg></a>
+  </div>
+</div>
+
   </section>
 
   <!-- ===================== MÓDULO 4 ===================== -->
