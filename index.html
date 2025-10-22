@@ -918,196 +918,100 @@
 
   <!-- ===================== MÓDULO 4 ===================== -->
   <section id="mod4" class="module" aria-labelledby="mod4-title">
-   <div class="panel" id="content-mod-4">
+  <div class="panel" id="content-mod-4">
   <style>
-    #content-mod-4 .wrap { display:grid; grid-template-columns:1fr; gap:16px; }
-    @media (min-width: 960px){ #content-mod-4 .wrap { grid-template-columns:1.1fr .9fr; } }
-    #content-mod-4 h3 { color:#013C5A; font-family:Montserrat, sans-serif; margin:8px 0; }
-    #content-mod-4 p.lead { color:#666; margin:6px 0 12px; }
-    #content-mod-4 .cardy { background:#fff; border-radius:16px; box-shadow:0 10px 30px rgba(1,60,90,.12); padding:18px; }
-    #content-mod-4 .illus { display:grid; place-items:center; margin:4px 0 12px; }
-    #content-mod-4 .illus svg { width:96px; height:96px; transition:transform .2s ease; }
-    #content-mod-4 .cardy:hover .illus svg { transform: translateY(-2px); }
-    #content-mod-4 .fields { display:grid; gap:10px; }
-    #content-mod-4 .fields label { font-weight:700; color:#0f2532; }
-    #content-mod-4 .fields input[type="text"] { width:100%; padding:10px; border:1px solid rgba(1,60,90,.22); border-radius:10px; }
-    #content-mod-4 .btn-cert { background:linear-gradient(180deg,#f7d36b,#e8b846); color:#2b1f00; font-weight:900; border:none; padding:12px 16px; border-radius:12px; cursor:pointer; box-shadow:0 8px 24px rgba(232,184,70,.35); }
-    #content-mod-4 .btn-cert:hover { filter:brightness(1.03); }
-    #content-mod-4 .btn-cta { background:#28a745; color:#fff; font-weight:800; padding:10px 14px; border-radius:12px; text-decoration:none; display:inline-flex; gap:8px; align-items:center; box-shadow:0 6px 20px rgba(40,167,69,.25); }
-    #content-mod-4 .note { background:#fff9e6; border:1px solid #ffe5a3; border-radius:12px; padding:12px; }
+    #content-mod-4 h2, #content-mod-4 h3 { color:#013C5A; font-family:Montserrat,sans-serif; }
+    #content-mod-4 p { color:#666; font-family:'Open Sans',sans-serif; }
+    #content-mod-4 .cardy { background:#fff; border-radius:16px; box-shadow:0 10px 30px rgba(1,60,90,.12); padding:18px; margin-bottom:16px; }
+    #content-mod-4 .btn-cert { background:linear-gradient(180deg,#f7d36b,#e8b846); color:#2b1f00; font-weight:900; border:none; padding:12px 16px; border-radius:12px; cursor:pointer; box-shadow:0 8px 24px rgba(232,184,70,.35); width:100%; }
+    #content-mod-4 .btn-cert:hover { filter:brightness(1.05); }
   </style>
 
   <header class="module-head">
-    <span class="tag"><svg width="16" height="16" aria-hidden="true"><use href="#ico-index"/></svg> Módulo 4</span>
-    <h2 id="mod4-title">Certificação & Próximo Nível da sua Jornada</h2>
+    <span class="tag"><svg width="16" height="16"><use href="#ico-index"/></svg> Módulo 4</span>
+    <h2>Certificação & Próxima Etapa</h2>
   </header>
 
-  <div class="wrap">
-    <!-- Parabéns -->
-    <div class="cardy">
-      <div class="illus" aria-hidden="true">
-        <svg viewBox="0 0 150 150" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <linearGradient id="gold1" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0" stop-color="#ffe28a"/><stop offset="1" stop-color="#f0b945"/>
-            </linearGradient>
-            <linearGradient id="gold2" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0" stop-color="#f9d46a"/><stop offset="1" stop-color="#e2a93a"/>
-            </linearGradient>
-          </defs>
-          <path d="M75 10 L55 40 L75 52 L95 40 Z" fill="#013C5A" opacity=".95"/>
-          <circle cx="75" cy="85" r="38" fill="url(#gold1)" stroke="#c28c2d" stroke-opacity=".5"/>
-          <circle cx="75" cy="85" r="28" fill="url(#gold2)"/>
-          <path d="M75 64l6 12 14 2-10 9 3 13-13-7-13 7 3-13-10-9 14-2z" fill="#fff0b8" opacity=".85"/>
-        </svg>
-      </div>
-      <h3>Parabéns pela conclusão do Volume 1!</h3>
-      <p class="lead">Você concluiu os fundamentos de <strong>Umidade Natural</strong> e <strong>Granulometria</strong>. Agora, avance para o próximo nível e consolide seu diferencial técnico.</p>
-      <div class="note">Seu certificado será gerado em PDF com seu nome, data, código de verificação e assinatura digital — pronto para compartilhar.</div>
-    </div>
-
-    <!-- CTA Volume 2 -->
-    <div class="cardy" style="align-self:start">
-      <div class="illus" aria-hidden="true">
-        <svg viewBox="0 0 150 150" xmlns="http://www.w3.org/2000/svg">
-          <rect x="24" y="110" width="102" height="6" rx="3" fill="#e6eef4"/>
-          <path d="M34 106 L50 88 L64 98 L80 74 L98 86 L116 60" fill="none" stroke="#28a745" stroke-width="5"/>
-          <circle cx="116" cy="60" r="6" fill="#013C5A"/>
-        </svg>
-      </div>
-      <h3>Próxima etapa</h3>
-      <p class="lead"><strong>Volume 2 – Massa Específica Real dos Grãos e Limites de Atterberg</strong></p>
-      <p class="lead" style="margin-top:-6px;color:#666">Domine limites de liquidez/plasticidade e densidade dos grãos — base para classificação e projetos.</p>
-      <a class="btn-cta" href="#" onclick="alert('Em breve! Deixe seu interesse via WhatsApp.'); return false;">➡️ Quero avançar para o Volume 2</a>
-    </div>
+  <div class="cardy">
+    <h3>🎉 Parabéns pela conclusão do Volume 1!</h3>
+    <p>Você concluiu os fundamentos de <strong>Umidade Natural</strong> e <strong>Granulometria</strong>.  
+    Agora avance para o próximo nível: <em>Volume 2 – Massa Específica Real dos Grãos e Limites de Atterberg</em>.</p>
   </div>
 
-  <!-- Certificado (no FINAL, após o CTA) -->
-  <div class="cardy" style="margin-top:12px">
-    <h3>Gerar certificado em PDF</h3>
-    <p class="lead">Digite seu nome completo e clique em “Gerar”. O layout dourado será aplicado automaticamente.</p>
-    <div class="fields" aria-label="Gerar certificado">
-      <label for="cert_nome">Nome e sobrenome</label>
-      <input id="cert_nome" type="text" placeholder="Ex.: Manuel Gomes" autocomplete="name"/>
-      <button class="btn-cert" onclick="generateCertPDF()">📜 Gerar Certificado (PDF)</button>
-    </div>
+  <div class="cardy">
+    <h3>📜 Gerar Certificado</h3>
+    <p>Digite seu nome completo abaixo e clique para gerar seu certificado oficial do curso.</p>
+    <input id="cert_nome" type="text" placeholder="Ex.: Manuel Gomes" style="width:100%;padding:10px;margin-bottom:12px;border-radius:10px;border:1px solid #ccc;">
+    <button class="btn-cert" onclick="generateCertPDF()">📜 Gerar Certificado (PDF)</button>
   </div>
 
   <div class="actions" style="margin-top:16px">
-    <a class="btn btn-prev" href="#mod3"><svg width="18" height="18" aria-hidden="true"><use href="#ico-arrow-left"/></svg> Voltar</a>
-    <a class="btn btn-next" href="#home">Voltar ao Início <svg width="18" height="18" aria-hidden="true"><use href="#ico-arrow-right"/></svg></a>
+    <a class="btn btn-prev" href="#mod3"><svg width="18" height="18"><use href="#ico-arrow-left"/></svg> Voltar</a>
+    <a class="btn btn-next" href="#home">Voltar ao Início <svg width="18" height="18"><use href="#ico-arrow-right"/></svg></a>
   </div>
 
   <script>
-    // === jsPDF loader ===
     async function ensureJSPDF(){
       if(window.jspdf && window.jspdf.jsPDF) return window.jspdf.jsPDF;
-      await new Promise((res, rej)=>{
+      await new Promise((res,rej)=>{
         const s=document.createElement('script');
         s.src='https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js';
-        s.onload=()=>res(); s.onerror=()=>rej(new Error('Falha ao carregar jsPDF'));
+        s.onload=()=>res(); s.onerror=()=>rej();
         document.head.appendChild(s);
       });
       return window.jspdf.jsPDF;
     }
 
-    // === Pré-carrega automaticamente o PNG dourado do Canva (invisível ao aluno) ===
-    // 1) Coloque seu arquivo em: /assets/certificado_volume1.png (ou ajuste CERT_BG_URL)
-    const CERT_BG_URL = './assets/certificado_volume1.png';
-    let CERT_BG_DATAURL = null;
-
-    (async function preloadCertBackground(){
-      try{
-        const res = await fetch(CERT_BG_URL, {cache:'reload'});
-        if(!res.ok) throw new Error('PNG não encontrado');
-        const blob = await res.blob();
-        const reader = new FileReader();
-        reader.onload = e => { CERT_BG_DATAURL = e.target.result; };
-        reader.readAsDataURL(blob);
-      }catch(e){
-        console.warn('Não foi possível carregar o PNG do certificado. Usarei o fallback dourado.', e);
-      }
-    })();
-
-    // === Fallback dourado programático (se PNG não carregar) ===
-    function drawFallbackGold(doc, W, H){
-      doc.setFillColor(248, 251, 255);
-      doc.rect(0,0,W,H,'F');
-      const gold1 = [240,185,69], gold2=[255,226,138];
-      doc.setDrawColor(...gold1); doc.setLineWidth(6);
-      doc.roundedRect(28,28,W-56,H-56,14,14,'S');
-      doc.setDrawColor(...gold2); doc.setLineWidth(2);
-      doc.roundedRect(42,42,W-84,H-84,12,12,'S');
-      doc.setFillColor(1,60,90);
-      doc.triangle(W/2-18,70, W/2+18,70, W/2,110, 'F');
-      doc.setFillColor(...gold2); doc.circle(W/2,140,38,'F');
-      doc.setFillColor(...gold1); doc.circle(W/2,140,28,'F');
-    }
-
-    // === Gerador de PDF ===
     async function generateCertPDF(){
-      const nome = (document.getElementById('cert_nome').value||'').trim();
-      if(!nome || nome.length < 3){ alert('Informe seu nome e sobrenome.'); return; }
+      const nome = (document.getElementById('cert_nome').value || '').trim();
+      if(!nome){ alert('Digite seu nome completo.'); return; }
 
       const jsPDF = await ensureJSPDF();
       const doc = new jsPDF({orientation:'landscape', unit:'pt', format:'a4'});
-      const W = doc.internal.pageSize.getWidth();
-      const H = doc.internal.pageSize.getHeight();
+      const W = doc.internal.pageSize.getWidth(), H = doc.internal.pageSize.getHeight();
 
-      // Fundo: PNG do Canva (se pré-carregado) OU fallback dourado
-      if(CERT_BG_DATAURL){
-        try{ doc.addImage(CERT_BG_DATAURL, 'PNG', 0, 0, W, H); }
-        catch(e){ console.warn('Falha ao aplicar PNG; usando fallback.', e); drawFallbackGold(doc, W, H); }
-      }else{
-        drawFallbackGold(doc, W, H);
-      }
+      // Moldura dourada
+      doc.setDrawColor(240,185,69); doc.setLineWidth(6);
+      doc.roundedRect(30,30,W-60,H-60,12,12,'S');
+      doc.setDrawColor(255,226,138); doc.setLineWidth(2);
+      doc.roundedRect(46,46,W-92,H-92,10,10,'S');
 
-      // Textos (português)
-      doc.setTextColor(1,60,90);
-      doc.setFont('helvetica','bold'); doc.setFontSize(28);
-      doc.text('Certificado de Conclusão', W/2, 190, {align:'center'});
+      // Cabeçalho
+      doc.setFont('helvetica','bold'); doc.setFontSize(28); doc.setTextColor(1,60,90);
+      doc.text('Certificado de Conclusão', W/2, 130, {align:'center'});
 
-      doc.setTextColor(27,31,35);
-      doc.setFont('helvetica','bold'); doc.setFontSize(40);
-      doc.text(nome, W/2, 250, {align:'center'});
+      // Nome do aluno
+      doc.setFontSize(42); doc.setTextColor(0,0,0);
+      doc.text(nome, W/2, 200, {align:'center'});
 
-      const body = 'Concluiu o curso Interativo — Ensaios de Solos (Volume 1), ' +
-                   'abrangendo Teor de Umidade Natural e Granulometria (peneiramento + sedimentação), ' +
-                   'demonstrando competência técnica fundamental em laboratório.';
-      doc.setTextColor(1,60,90); doc.setFont('helvetica','normal'); doc.setFontSize(14);
-      doc.text(doc.splitTextToSize(body, W-220), W/2, 290, {align:'center'});
+      // Corpo
+      doc.setFont('helvetica','normal'); doc.setFontSize(14); doc.setTextColor(60);
+      const texto = 'Concluiu o curso Interativo — Ensaios de Solos (Volume 1), abrangendo Teor de Umidade Natural e Granulometria (peneiramento + sedimentação), demonstrando competência técnica fundamental em laboratório.';
+      doc.text(doc.splitTextToSize(texto, W-200), W/2, 250, {align:'center'});
 
+      // Assinatura
       const yLine = H-140;
       doc.setDrawColor(200); doc.setLineWidth(1);
       doc.line(120, yLine, W-120, yLine);
-
       doc.setFont('helvetica','bold'); doc.setFontSize(12);
-      doc.text('Diego R. Jesus— Instrutor Responsável', W/2, yLine+22,{align:'center'});
+      doc.text('Diego R. Jesus — Instrutor Responsável', W/2, yLine+20, {align:'center'});
       doc.setFont('helvetica','normal');
-      doc.text('Portal Interativo de Ensaios de Solos', W/2, yLine+38,{align:'center'});
+      doc.text('Portal Interativo de Ensaios de Solos', W/2, yLine+38, {align:'center'});
 
-      doc.setFillColor(240,185,69); doc.circle(W-110, H-110, 30, 'F');
-      doc.setFillColor(255,226,138); doc.circle(W-110, H-110, 20, 'F');
-
-      const d = new Date();
-      const dd = String(d.getDate()).padStart(2,'0');
-      const mm = String(d.getMonth()+1).padStart(2,'0');
-      const yyyy = d.getFullYear();
-      const dateStr = `${dd}/${mm}/${yyyy}`;
+      // Data e código
+      const d = new Date(), data = `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`;
       const code = Math.random().toString(36).slice(2,10).toUpperCase();
-      doc.setFontSize(11); doc.setTextColor(102);
-      doc.text(`Data: ${dateStr}`, 120, H-90);
-      doc.text(`Código de verificação: ${code}`, 120, H-72);
+      doc.setFontSize(11); doc.setTextColor(100);
+      doc.text(`Data: ${data}`, 100, H-70);
+      doc.text(`Código de verificação: ${code}`, 100, H-52);
 
-      doc.setTextColor(1,60,90); doc.setFontSize(10);
-      doc.text('© Ensaios de Solos — Vol. 1', W-160, H-60);
+      doc.setFontSize(10); doc.setTextColor(1,60,90);
+      doc.text('© Ensaios de Solos — Vol. 1', W-140, H-60);
 
-      const safeName = nome.replace(/[^\p{L}\p{N}\s.-]/gu,'').trim() || 'Aluno';
-      doc.save(`Certificado - ${safeName}.pdf`);
+      doc.save(`Certificado - ${nome}.pdf`);
     }
   </script>
 </div>
-
 
   </section>
 
