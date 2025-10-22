@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Portal Interativo de Ensaios de Solos – Volume 1</title>
+  <title> Formaçao de Laboratoristas de Solos – Volume 1</title>
   <meta name="description" content="Curso interativo para iniciantes em ensaios de solos (ABNT). Volume 1: Umidade Natural e Granulometria (peneiramento + sedimentação).">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet" />
   <style>
@@ -128,67 +128,277 @@
     </div>
   </div>
 
-  <section id="index" class="module" aria-labelledby="indice-title">
-    <div class="panel">
-      <header class="module-head"><svg width="22" height="22" aria-hidden="true"><use href="#ico-index"/></svg><h2 id="indice-title">Índice</h2></header>
-      <div class="grid">
-        <div>
-          <ol class="steps" style="margin:0">
-            <li class="step"><span class="num">0</span><div><strong>Introdução e contexto</strong><br/>O que faz um laboratorista de solos. Mercado e oportunidades.</div></li>
-            <li class="step"><span class="num">1</span><div><strong>Teor de Umidade Natural</strong><br/>Coleta, pesagem, secagem em estufa e cálculo.</div></li>
-            <li class="step"><span class="num">2</span><div><strong>Granulometria</strong><br/>Peneiramento (areia/pedregulho) e sedimentação (silte/argila).</div></li>
-            <li class="step"><span class="num">3</span><div><strong>Aula ao Vivo</strong><br/>Mentoria e agendamento via WhatsApp.</div></li>
-            <li class="step"><span class="num">4</span><div><strong>Conclusão + Próximos Passos</strong><br/>CTA para Volume 2 (Massa Específica Real dos Grãos e Limites de Atterberg).</div></li>
-          </ol>
+   <section id="index" class="module" aria-labelledby="indice-title">
+  <div class="panel" id="content-index">
+    <header class="module-head">
+      <svg width="22" height="22" aria-hidden="true"><use href="#ico-index"/></svg>
+      <h2 id="indice-title">Seu Progresso no Curso</h2>
+    </header>
+
+    <p style="color:#666;margin-top:0">Acompanhe abaixo seu avanço em cada módulo. As porcentagens são salvas automaticamente conforme você realiza os passos dentro de cada módulo.</p>
+
+    <div class="grid" style="display:grid;gap:16px;margin-top:18px;">
+      <!-- Módulo 0 -->
+      <div class="panel" style="padding:16px">
+        <h3 style="margin:0 0 6px;color:#013C5A;font-family:Montserrat;">🔬 Módulo 0 — Introdução & Contexto</h3>
+        <p style="margin:0 0 8px;">Descubra o papel do laboratorista e o mercado de solos.</p>
+        <div class="progress" style="display:flex;align-items:center;gap:8px;">
+          <div class="meter" style="flex:1;height:10px;background:#eef4f7;border-radius:999px;overflow:hidden;">
+            <i id="bar0" style="display:block;height:100%;width:0%;background:#28a745;"></i>
+          </div>
+          <span id="pct0" style="font-weight:700;color:#013C5A;">0%</span>
         </div>
-        <div class="visual" aria-hidden="true">
-          <svg viewBox="0 0 600 300" xmlns="http://www.w3.org/2000/svg">
-            <defs><linearGradient id="g1" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#e6f2f9"/><stop offset="1" stop-color="#f7fbff"/></linearGradient></defs>
-            <rect width="600" height="300" rx="16" fill="url(#g1)"/>
-            <g stroke="#013C5A" stroke-width="3" fill="none" opacity=".5">
-              <rect x="30" y="30" width="240" height="100" rx="12"/>
-              <rect x="330" y="30" width="240" height="100" rx="12"/>
-              <rect x="30" y="170" width="240" height="100" rx="12"/>
-              <rect x="330" y="170" width="240" height="100" rx="12"/>
-            </g>
-          </svg>
+        <a href="#mod0" class="btn btn-next" style="margin-top:8px;">Acessar Módulo 0</a>
+      </div>
+
+      <!-- Módulo 1 -->
+      <div class="panel" style="padding:16px">
+        <h3 style="margin:0 0 6px;color:#013C5A;font-family:Montserrat;">🧪 Módulo 1 — Teor de Umidade Natural</h3>
+        <p style="margin:0 0 8px;">Determinação prática da umidade e cálculo automatizado.</p>
+        <div class="progress" style="display:flex;align-items:center;gap:8px;">
+          <div class="meter" style="flex:1;height:10px;background:#eef4f7;border-radius:999px;overflow:hidden;">
+            <i id="bar1" style="display:block;height:100%;width:0%;background:#28a745;"></i>
+          </div>
+          <span id="pct1" style="font-weight:700;color:#013C5A;">0%</span>
         </div>
+        <a href="#mod1" class="btn btn-next" style="margin-top:8px;">Acessar Módulo 1</a>
+      </div>
+
+      <!-- Módulo 2 -->
+      <div class="panel" style="padding:16px">
+        <h3 style="margin:0 0 6px;color:#013C5A;font-family:Montserrat;">📊 Módulo 2 — Granulometria (Peneiramento + Sedimentação)</h3>
+        <p style="margin:0 0 8px;">Distribuição de partículas e curva granulométrica semi-log.</p>
+        <div class="progress" style="display:flex;align-items:center;gap:8px;">
+          <div class="meter" style="flex:1;height:10px;background:#eef4f7;border-radius:999px;overflow:hidden;">
+            <i id="bar2" style="display:block;height:100%;width:0%;background:#28a745;"></i>
+          </div>
+          <span id="pct2" style="font-weight:700;color:#013C5A;">0%</span>
+        </div>
+        <a href="#mod2" class="btn btn-next" style="margin-top:8px;">Acessar Módulo 2</a>
+      </div>
+
+      <!-- Módulo 3 -->
+      <div class="panel" style="padding:16px">
+        <h3 style="margin:0 0 6px;color:#013C5A;font-family:Montserrat;">🧭 Módulo 3 — Mentoria Técnica</h3>
+        <p style="margin:0 0 8px;">Agende uma sessão ao vivo e tire dúvidas sobre os ensaios.</p>
+        <div class="progress" style="display:flex;align-items:center;gap:8px;">
+          <div class="meter" style="flex:1;height:10px;background:#eef4f7;border-radius:999px;overflow:hidden;">
+            <i id="bar3" style="display:block;height:100%;width:0%;background:#28a745;"></i>
+          </div>
+          <span id="pct3" style="font-weight:700;color:#013C5A;">0%</span>
+        </div>
+        <a href="#mod3" class="btn btn-next" style="margin-top:8px;">Acessar Módulo 3</a>
+      </div>
+
+      <!-- Módulo 4 -->
+      <div class="panel" style="padding:16px">
+        <h3 style="margin:0 0 6px;color:#013C5A;font-family:Montserrat;">🏅 Módulo 4 — Certificação & Volume 2</h3>
+        <p style="margin:0 0 8px;">Gere seu certificado e descubra o próximo volume do curso.</p>
+        <div class="progress" style="display:flex;align-items:center;gap:8px;">
+          <div class="meter" style="flex:1;height:10px;background:#eef4f7;border-radius:999px;overflow:hidden;">
+            <i id="bar4" style="display:block;height:100%;width:0%;background:#28a745;"></i>
+          </div>
+          <span id="pct4" style="font-weight:700;color:#013C5A;">0%</span>
+        </div>
+        <a href="#mod4" class="btn btn-next" style="margin-top:8px;">Acessar Módulo 4</a>
       </div>
     </div>
+  </div>
+
+  <script>
+    // ===== Atualiza barras de progresso do Índice =====
+    (function(){
+      const mods=[0,1,2,3,4];
+      function val(k){ try{ return parseInt(localStorage.getItem(k)||'0'); }catch(e){ return 0; } }
+      mods.forEach(i=>{
+        const pct=val(`m${i}_progress_pct`);
+        const bar=document.getElementById(`bar${i}`);
+        const txt=document.getElementById(`pct${i}`);
+        if(bar) bar.style.width=pct+'%';
+        if(txt) txt.textContent=pct+'%';
+      });
+    })();
+  </script>
+</section>
+
   </section>
 
   <!-- ===================== MÓDULO 0 ===================== -->
   <section id="mod0" class="module" aria-labelledby="mod0-title">
-    <div class="panel" id="content-mod-0">
-      <header class="module-head">
-        <span class="tag"><svg width="16" height="16" aria-hidden="true"><use href="#ico-home"/></svg> Módulo 0</span>
-        <h2 id="mod0-title">Introdução e contexto da profissão</h2>
-      </header>
-      <div class="grid">
-        <div>
-          <div class="steps">
-            <div class="step"><span class="num">1</span><div><strong>O papel do laboratorista</strong><br/>Entenda responsabilidades, rotina e impacto dos ensaios na obra.</div></div>
-            <div class="step"><span class="num">2</span><div><strong>Onde você pode atuar</strong><br/>Terraplenagem, pavimentação, geotecnia, controle tecnológico.</div></div>
-            <div class="step"><span class="num">3</span><div><strong>Boas práticas iniciais</strong><br/>Segurança, organização e rastreabilidade dos resultados.</div></div>
-          </div>
-          <div class="note" role="note" aria-label="Dica">Dica: mantenha um caderno de campo ou registro digital dos ensaios (amostra, data, massa, resultados e observações).</div>
-          <div class="actions">
-            <a class="btn btn-prev" href="#index"><svg width="18" height="18" aria-hidden="true"><use href="#ico-arrow-left"/></svg> Voltar</a>
-            <a class="btn btn-next" href="#mod1">Avançar <svg width="18" height="18" aria-hidden="true"><use href="#ico-arrow-right"/></svg></a>
-          </div>
-        </div>
-        <div class="visual" aria-hidden="true">
-          <svg viewBox="0 0 600 360" xmlns="http://www.w3.org/2000/svg">
-            <rect width="600" height="360" rx="16" fill="#e9f2f6"/>
-            <g transform="translate(90,60)" stroke="#013C5A" stroke-width="3" fill="none">
-              <rect x="0" y="0" width="420" height="240" rx="14" fill="#fff"/>
-              <circle cx="80" cy="90" r="42" fill="#f5fbff"/>
-              <path d="M150 140h210M150 110h180M150 170h180"/>
-            </g>
-          </svg>
-        </div>
+   <div class="panel" id="content-mod-0">
+  <style>
+    /* Estilos locais do Módulo 0 */
+    #content-mod-0 .cover {
+      position: relative; border-radius:16px; overflow:hidden; margin-bottom:16px;
+      background: linear-gradient(180deg, rgba(1,60,90,.78), rgba(1,60,90,.78)), 
+                  url('https://images.unsplash.com/photo-1581092921461-eab62e97a780?q=80&w=1600&fit=crop') center/cover no-repeat;
+      min-height: 220px; display:flex; align-items:center; padding:22px;
+      box-shadow: var(--shadow);
+    }
+    #content-mod-0 .cover h2 { color:#fff; margin:0; font-family:Montserrat, sans-serif; font-size:1.8rem; }
+    #content-mod-0 .cover p { color:#e8f2f8; margin:.4rem 0 0; max-width:840px; }
+
+    #content-mod-0 .cols { display:grid; grid-template-columns:1fr; gap:16px; }
+    @media (min-width: 980px){ #content-mod-0 .cols { grid-template-columns:1.1fr .9fr; } }
+
+    #content-mod-0 .badge-row { display:flex; gap:8px; flex-wrap:wrap; margin-top:8px; }
+    #content-mod-0 .bchip { display:inline-flex; align-items:center; gap:8px; padding:6px 10px; border-radius:999px;
+      background:#e8f5ee; color:#2a7f3e; font-weight:800; font-size:.85rem; }
+
+    #content-mod-0 .list { margin:8px 0 0; padding:0 0 0 1.1rem; }
+    #content-mod-0 .list li { margin:.35rem 0; }
+    #content-mod-0 .icon { font-style: normal; margin-right:6px; }
+
+    #content-mod-0 .note-hero { background:#fff9e6; border:1px solid #ffe5a3; border-radius:12px; padding:12px; }
+    #content-mod-0 .progress-wrap { display:flex; align-items:center; gap:10px; }
+    #content-mod-0 .meter { flex:1; height:10px; background:#eef4f7; border-radius:999px; overflow:hidden }
+    #content-mod-0 .meter > i { display:block; height:100%; width:0%; background:#28a745; }
+
+    #content-mod-0 .checklist { display:grid; gap:10px; }
+    #content-mod-0 .item { display:flex; gap:10px; align-items:flex-start; border:1px dashed rgba(1,60,90,.15); border-radius:12px; padding:12px; }
+    #content-mod-0 .item .ck { margin-left:auto; }
+
+    #content-mod-0 .mini { color:#013C5A; font-weight:800; font-size:.9rem; display:inline-flex; gap:6px; align-items:center; }
+    #content-mod-0 .actions { display:flex; gap:10px; flex-wrap:wrap; justify-content:space-between; margin-top:16px; }
+  </style>
+
+  <!-- Capa / Banner -->
+  <div class="cover" role="img" aria-label="Laboratório de solos com equipamentos e peneiras">
+    <div>
+      <h2>Por que trabalhar com ensaios de solos</h2>
+      <p>Entenda a profissão, o mercado e por que dominar esse conhecimento agora — comece sua jornada para atuar em
+         terraplenagem, geotecnia e infraestrutura com confiança.</p>
+      <div class="badge-row">
+        <span class="bchip">🔬 Laboratório</span>
+        <span class="bchip">🧪 Ensaios ABNT</span>
+        <span class="bchip">📈 Mercado em alta</span>
       </div>
     </div>
+  </div>
+
+  <div class="cols">
+    <!-- Coluna A: Conteúdo principal -->
+    <div>
+      <header class="module-head" style="margin-bottom:8px">
+        <span class="tag"><svg width="16" height="16" aria-hidden="true"><use href="#ico-home"/></svg> Módulo 0</span>
+        <h2 id="mod0-title" style="margin:0">Panorama da profissão & oportunidades</h2>
+      </header>
+
+      <div class="steps" style="margin-top:8px">
+        <div class="step">
+          <span class="num">1</span>
+          <div>
+            <strong><i class="icon">📋</i>Objetivo deste módulo</strong><br/>
+            Apresentar o cenário do laboratorista de solos e te preparar mentalmente para a jornada:
+            onde você pode atuar, quais ensaios fará e como isso te torna valioso na obra.
+          </div>
+        </div>
+        <div class="step">
+          <span class="num">2</span>
+          <div>
+            <strong><i class="icon">🔧</i>O que faz um laboratorista?</strong><br/>
+            Executa e registra ensaios (umidade natural, granulometria, etc.), confere equipamentos, prepara amostras,
+            interpreta resultados e auxilia no controle tecnológico.
+          </div>
+        </div>
+        <div class="step">
+          <span class="num">3</span>
+          <div>
+            <strong><i class="icon">💼</i>Mercado & salário</strong><br/>
+            Laboratoristas de solos têm salário médio em torno de <strong>R$ 2.8k/mês</strong> e, com prática/ especialização,
+            podem ultrapassar <strong>R$ 5.3k/mês</strong>. A carência de profissionais abre portas para quem começa agora.
+          </div>
+        </div>
+      </div>
+
+      <div class="note-hero" role="note" style="margin-top:12px">
+        <strong>Curiosidade:</strong> <em>🔍 Um ensaio mal executado pode atrasar uma obra inteira e custar milhares de reais.</em>
+      </div>
+
+      <h3 style="margin-top:18px;color:#013C5A;font-family:Montserrat">O que você vai ver nos próximos módulos</h3>
+      <ul class="list">
+        <li>🧪 <strong>Módulo 1:</strong> Teor de Umidade Natural — pesagem, estufa e cálculo.</li>
+        <li>📊 <strong>Módulo 2:</strong> Granulometria — peneiramento + sedimentação com curva semi-log.</li>
+        <li>🧭 <strong>Módulo 3:</strong> Mentoria ao vivo (bônus) — revisão guiada e dicas profissionais.</li>
+        <li>🏅 <strong>Módulo 4:</strong> Certificação & Próximo Nível — certificado PDF e CTA para Volume 2.</li>
+        <li>🚀 <strong>Módulo 5:</strong> “Próximos Módulos” — roadmap de especialização e materiais extras.</li>
+      </ul>
+    </div>
+
+    <!-- Coluna B: Interação + Progresso -->
+    <div>
+      <div class="panel" style="padding:16px">
+        <h3 style="margin:0 0 8px">💡 Desafio rápido</h3>
+        <div class="checklist">
+          <div class="item">
+            <div>
+              <strong>✏️ Anote no seu caderno</strong><br/>
+              Por que quero trabalhar com ensaios de solos?
+            </div>
+            <input type="checkbox" class="ck" data-key="m0_ck_1"/>
+          </div>
+          <div class="item">
+            <div>
+              <strong>🎯 Defina sua meta</strong><br/>
+              Ao final deste curso, quero estar habilitado para executar: <em>(ex.: ensaio de umidade com tripla determinação)</em>
+            </div>
+            <input type="checkbox" class="ck" data-key="m0_ck_2"/>
+          </div>
+          <div class="item">
+            <div>
+              <strong>🗂️ Explore o Índice</strong><br/>
+              Abra o Índice do curso e visualize sua jornada pelos módulos.
+            </div>
+            <input type="checkbox" class="ck" data-key="m0_ck_3"/>
+          </div>
+        </div>
+
+        <hr style="border:none;border-top:1px solid rgba(1,60,90,.1);margin:14px 0"/>
+
+        <div class="progress-wrap" aria-label="Progresso no Módulo 0">
+          <span class="mini">Progresso no Módulo 0</span>
+          <div class="meter" aria-hidden="true"><i id="m0_bar" style="width:0%"></i></div>
+          <span id="m0_pct" class="mini">0%</span>
+        </div>
+
+        <p style="margin:10px 0 0; color:#666">Dica: marque as tarefas acima conforme concluir. Seu progresso fica salvo no dispositivo.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="actions">
+    <a class="btn btn-prev" href="#home"><svg width="18" height="18" aria-hidden="true"><use href="#ico-arrow-left"/></svg> Voltar ao Início</a>
+    <a class="btn btn-prev" href="#index"><svg width="18" height="18" aria-hidden="true"><use href="#ico-index"/></svg> Índice</a>
+    <a class="btn btn-next" href="#mod1">Avançar para Módulo 1 <svg width="18" height="18" aria-hidden="true"><use href="#ico-arrow-right"/></svg></a>
+  </div>
+
+  <script>
+    // ===== Progresso do Módulo 0 (com base nas checkboxes) =====
+    (function m0Progress(){
+      const keys = ['m0_ck_1','m0_ck_2','m0_ck_3'];
+      function loadKV(k){try{return localStorage.getItem(k)}catch(e){return null}}
+      function update(){
+        const vals = keys.map(k => loadKV(k)==='1' ? 1 : (document.querySelector('[data-key=\"'+k+'\"]')?.checked?1:0));
+        const done = vals.reduce((s,x)=>s+x,0), total = keys.length;
+        const pct = Math.round((done/total)*100);
+        const bar = document.getElementById('m0_bar');
+        const txt = document.getElementById('m0_pct');
+        if(bar) bar.style.width = pct + '%';
+        if(txt) txt.textContent = pct + '%';
+        try{ localStorage.setItem('m0_progress_pct', String(pct)); }catch(e){}
+      }
+      // ligar eventos após pequenos ms para garantir que initChecks já rodou
+      setTimeout(()=>{
+        keys.forEach(k=>{
+          const el = document.querySelector('[data-key=\"'+k+'\"]');
+          if(el) el.addEventListener('change', update);
+        });
+        update();
+      }, 250);
+    })();
+  </script>
+</div>
+
   </section>
 
   <!-- ===================== MÓDULO 1 ===================== -->
