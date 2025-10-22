@@ -919,7 +919,6 @@
   <!-- ===================== MÓDULO 4 ===================== -->
   <section id="mod4" class="module" aria-labelledby="mod4-title">
    <div class="panel" id="content-mod-4">
-  <!-- Estilos locais do Módulo 4 -->
   <style>
     #content-mod-4 .wrap { display:grid; grid-template-columns:1fr; gap:16px; }
     @media (min-width: 960px){ #content-mod-4 .wrap { grid-template-columns:1.1fr .9fr; } }
@@ -932,11 +931,8 @@
     #content-mod-4 .fields { display:grid; gap:10px; }
     #content-mod-4 .fields label { font-weight:700; color:#0f2532; }
     #content-mod-4 .fields input[type="text"] { width:100%; padding:10px; border:1px solid rgba(1,60,90,.22); border-radius:10px; }
-    #content-mod-4 .fields input[type="file"] { display:block; }
     #content-mod-4 .btn-cert { background:linear-gradient(180deg,#f7d36b,#e8b846); color:#2b1f00; font-weight:900; border:none; padding:12px 16px; border-radius:12px; cursor:pointer; box-shadow:0 8px 24px rgba(232,184,70,.35); }
     #content-mod-4 .btn-cert:hover { filter:brightness(1.03); }
-    #content-mod-4 .cta-list { display:grid; grid-template-columns:1fr; gap:12px; }
-    @media (min-width: 720px){ #content-mod-4 .cta-list { grid-template-columns:1fr 1fr; } }
     #content-mod-4 .btn-cta { background:#28a745; color:#fff; font-weight:800; padding:10px 14px; border-radius:12px; text-decoration:none; display:inline-flex; gap:8px; align-items:center; box-shadow:0 6px 20px rgba(40,167,69,.25); }
     #content-mod-4 .note { background:#fff9e6; border:1px solid #ffe5a3; border-radius:12px; padding:12px; }
   </style>
@@ -947,10 +943,9 @@
   </header>
 
   <div class="wrap">
-    <!-- Coluna esquerda: Parabéns -->
+    <!-- Parabéns -->
     <div class="cardy">
       <div class="illus" aria-hidden="true">
-        <!-- Medalha dourada -->
         <svg viewBox="0 0 150 150" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <linearGradient id="gold1" x1="0" y1="0" x2="1" y2="1">
@@ -971,10 +966,9 @@
       <div class="note">Seu certificado será gerado em PDF com seu nome, data, código de verificação e assinatura digital — pronto para compartilhar.</div>
     </div>
 
-    <!-- Coluna direita: CTA Volume 2 -->
+    <!-- CTA Volume 2 -->
     <div class="cardy" style="align-self:start">
       <div class="illus" aria-hidden="true">
-        <!-- Alvo/crescimento -->
         <svg viewBox="0 0 150 150" xmlns="http://www.w3.org/2000/svg">
           <rect x="24" y="110" width="102" height="6" rx="3" fill="#e6eef4"/>
           <path d="M34 106 L50 88 L64 98 L80 74 L98 86 L116 60" fill="none" stroke="#28a745" stroke-width="5"/>
@@ -988,18 +982,13 @@
     </div>
   </div>
 
-  <!-- BLOCO DO CERTIFICADO (fica no FINAL, após o CTA) -->
+  <!-- Certificado (no FINAL, após o CTA) -->
   <div class="cardy" style="margin-top:12px">
     <h3>Gerar certificado em PDF</h3>
-    <p class="lead">Preencha seu nome completo. Opcionalmente, carregue o <em>fundo do certificado em PNG</em> (o dourado do Canva). Se você não carregar, um layout dourado padrão será aplicado.</p>
+    <p class="lead">Digite seu nome completo e clique em “Gerar”. O layout dourado será aplicado automaticamente.</p>
     <div class="fields" aria-label="Gerar certificado">
       <label for="cert_nome">Nome e sobrenome</label>
-      <input id="cert_nome" type="text" placeholder="Ex.: Diego Souza" autocomplete="name"/>
-
-      <label for="cert_bg">Fundo do certificado (PNG do Canva)</label>
-      <input id="cert_bg" type="file" accept="image/png" />
-      <small style="color:#666">Dica: use o arquivo PNG A4 horizontal que criamos no Canva.</small>
-
+      <input id="cert_nome" type="text" placeholder="Ex.: Manuel Gomes" autocomplete="name"/>
       <button class="btn-cert" onclick="generateCertPDF()">📜 Gerar Certificado (PDF)</button>
     </div>
   </div>
@@ -1009,9 +998,8 @@
     <a class="btn btn-next" href="#home">Voltar ao Início <svg width="18" height="18" aria-hidden="true"><use href="#ico-arrow-right"/></svg></a>
   </div>
 
-  <!-- Script do Certificado -->
   <script>
-    // Carrega jsPDF UMD se necessário
+    // === jsPDF loader ===
     async function ensureJSPDF(){
       if(window.jspdf && window.jspdf.jsPDF) return window.jspdf.jsPDF;
       await new Promise((res, rej)=>{
@@ -1023,65 +1011,58 @@
       return window.jspdf.jsPDF;
     }
 
-    // Lê o PNG do input e guarda como DataURL
-    (function attachCertBgReader(){
-      const input = document.getElementById('cert_bg');
-      if(!input) return;
-      input.addEventListener('change', ()=>{
-        const f = input.files && input.files[0];
-        if(!f) { window.CERT_BG_DATAURL = null; return; }
+    // === Pré-carrega automaticamente o PNG dourado do Canva (invisível ao aluno) ===
+    // 1) Coloque seu arquivo em: /assets/certificado_volume1.png (ou ajuste CERT_BG_URL)
+    const CERT_BG_URL = './assets/certificado_volume1.png';
+    let CERT_BG_DATAURL = null;
+
+    (async function preloadCertBackground(){
+      try{
+        const res = await fetch(CERT_BG_URL, {cache:'reload'});
+        if(!res.ok) throw new Error('PNG não encontrado');
+        const blob = await res.blob();
         const reader = new FileReader();
-        reader.onload = e => { window.CERT_BG_DATAURL = e.target.result; };
-        reader.readAsDataURL(f);
-      });
+        reader.onload = e => { CERT_BG_DATAURL = e.target.result; };
+        reader.readAsDataURL(blob);
+      }catch(e){
+        console.warn('Não foi possível carregar o PNG do certificado. Usarei o fallback dourado.', e);
+      }
     })();
 
-    // Desenha um fundo dourado "fallback" (programático) quando não há PNG
+    // === Fallback dourado programático (se PNG não carregar) ===
     function drawFallbackGold(doc, W, H){
-      // Fundo suave
       doc.setFillColor(248, 251, 255);
       doc.rect(0,0,W,H,'F');
-
-      // Moldura dourada dupla
       const gold1 = [240,185,69], gold2=[255,226,138];
       doc.setDrawColor(...gold1); doc.setLineWidth(6);
       doc.roundedRect(28,28,W-56,H-56,14,14,'S');
       doc.setDrawColor(...gold2); doc.setLineWidth(2);
       doc.roundedRect(42,42,W-84,H-84,12,12,'S');
-
-      // Medalha topo
       doc.setFillColor(1,60,90);
       doc.triangle(W/2-18,70, W/2+18,70, W/2,110, 'F');
       doc.setFillColor(...gold2); doc.circle(W/2,140,38,'F');
       doc.setFillColor(...gold1); doc.circle(W/2,140,28,'F');
     }
 
-    // Gera o PDF (usa PNG do Canva se presente; senão, fallback dourado)
+    // === Gerador de PDF ===
     async function generateCertPDF(){
       const nome = (document.getElementById('cert_nome').value||'').trim();
       if(!nome || nome.length < 3){ alert('Informe seu nome e sobrenome.'); return; }
 
       const jsPDF = await ensureJSPDF();
       const doc = new jsPDF({orientation:'landscape', unit:'pt', format:'a4'});
-
       const W = doc.internal.pageSize.getWidth();
       const H = doc.internal.pageSize.getHeight();
 
-      // Se houver PNG do Canva, usar como background
-      if(window.CERT_BG_DATAURL){
-        // preencher a página inteira respeitando A4 horizontal
-        try {
-          doc.addImage(window.CERT_BG_DATAURL, 'PNG', 0, 0, W, H);
-        } catch (e) {
-          console.warn('Falha ao usar PNG; aplicando fallback', e);
-          drawFallbackGold(doc, W, H);
-        }
-      } else {
-        // Fallback programático
+      // Fundo: PNG do Canva (se pré-carregado) OU fallback dourado
+      if(CERT_BG_DATAURL){
+        try{ doc.addImage(CERT_BG_DATAURL, 'PNG', 0, 0, W, H); }
+        catch(e){ console.warn('Falha ao aplicar PNG; usando fallback.', e); drawFallbackGold(doc, W, H); }
+      }else{
         drawFallbackGold(doc, W, H);
       }
 
-      // Texto
+      // Textos (português)
       doc.setTextColor(1,60,90);
       doc.setFont('helvetica','bold'); doc.setFontSize(28);
       doc.text('Certificado de Conclusão', W/2, 190, {align:'center'});
@@ -1096,33 +1077,28 @@
       doc.setTextColor(1,60,90); doc.setFont('helvetica','normal'); doc.setFontSize(14);
       doc.text(doc.splitTextToSize(body, W-220), W/2, 290, {align:'center'});
 
-      // Linha/assinatura/rodapé
       const yLine = H-140;
       doc.setDrawColor(200); doc.setLineWidth(1);
       doc.line(120, yLine, W-120, yLine);
 
       doc.setFont('helvetica','bold'); doc.setFontSize(12);
-      doc.text('Diego R. Jesus — Instrutor Responsável', W/2, yLine+22,{align:'center'});
+      doc.text('Diego R. Jesus— Instrutor Responsável', W/2, yLine+22,{align:'center'});
       doc.setFont('helvetica','normal');
       doc.text('Portal Interativo de Ensaios de Solos', W/2, yLine+38,{align:'center'});
 
-      // Selo lateral
       doc.setFillColor(240,185,69); doc.circle(W-110, H-110, 30, 'F');
       doc.setFillColor(255,226,138); doc.circle(W-110, H-110, 20, 'F');
 
-      // Data e verificação
-      const data = new Date();
-      const dd = String(data.getDate()).padStart(2,'0');
-      const mm = String(data.getMonth()+1).padStart(2,'0');
-      const yyyy = data.getFullYear();
+      const d = new Date();
+      const dd = String(d.getDate()).padStart(2,'0');
+      const mm = String(d.getMonth()+1).padStart(2,'0');
+      const yyyy = d.getFullYear();
       const dateStr = `${dd}/${mm}/${yyyy}`;
       const code = Math.random().toString(36).slice(2,10).toUpperCase();
-
       doc.setFontSize(11); doc.setTextColor(102);
       doc.text(`Data: ${dateStr}`, 120, H-90);
       doc.text(`Código de verificação: ${code}`, 120, H-72);
 
-      // Rodapé
       doc.setTextColor(1,60,90); doc.setFontSize(10);
       doc.text('© Ensaios de Solos — Vol. 1', W-160, H-60);
 
@@ -1131,6 +1107,7 @@
     }
   </script>
 </div>
+
 
   </section>
 
