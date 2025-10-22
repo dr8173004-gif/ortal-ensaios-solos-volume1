@@ -193,7 +193,18 @@
 
   <!-- ===================== MÓDULO 1 ===================== -->
   <section id="mod1" class="module" aria-labelledby="mod1-title">
-    <div class="panel" id="content-mod-1">
+   <div class="panel" id="content-mod-1">
+  <!-- Estilos locais só deste módulo (não quebram o resto) -->
+  <style>
+    #content-mod-1 .step { gap:12px; align-items:flex-start; }
+    #content-mod-1 .step .num { margin-top:4px; }
+    #content-mod-1 .step-body { display:block; width:100%; }
+    #content-mod-1 .illus { display:grid; place-items:center; margin:2px 0 10px; }
+    #content-mod-1 .illus svg { width:88px; height:88px; transition:transform .2s ease; }
+    #content-mod-1 .step:hover .illus svg { transform: translateY(-2px); }
+    #content-mod-1 h3 { color:#013C5A; font-family:Montserrat, sans-serif; margin-top:16px; }
+  </style>
+
   <header class="module-head">
     <span class="tag"><svg width="16" height="16" aria-hidden="true"><use href="#ico-droplet"/></svg> Módulo 1</span>
     <h2 id="mod1-title">Ensaio de Teor de Umidade Natural (NBR 6457 / NBR 6458)</h2>
@@ -206,30 +217,142 @@
 
       <div class="note">Conceito: O teor de umidade (<em>w</em>) é a razão entre a massa da água e a massa dos sólidos secos do solo, expressa em porcentagem.</div>
 
-      <!-- EQUIPAMENTOS -->
-      <h3 style="color:#013C5A;font-family:Montserrat;margin-top:16px">Equipamentos necessários</h3>
-      <ul style="margin-top:4px">
-        <li>Latas metálicas numeradas com tampa;</li>
-        <li>Balança com precisão de 0,01 g;</li>
-        <li>Estufa regulável entre 105 °C e 110 °C;</li>
-        <li>Dessecador (para resfriamento);</li>
-        <li>Pincel e espátula de aço inox.</li>
-      </ul>
-
-      <!-- EXECUÇÃO PASSO A PASSO -->
-      <h3 style="color:#013C5A;font-family:Montserrat;margin-top:18px">Procedimento passo a passo</h3>
+      <!-- EXECUÇÃO PASSO A PASSO COM ÍCONES 3D FLAT -->
+      <h3>Procedimento passo a passo</h3>
       <div class="steps">
-        <div class="step"><span class="num">1</span><div><strong>Identificação da amostra</strong><br/>Numere a lata e registre o código da amostra e a data. Pese e anote a tara (<em>m<sub>lata</sub></em>).</div><input type="checkbox" class="ck" data-key="m1_ck1"></div>
 
-        <div class="step"><span class="num">2</span><div><strong>Pesagem úmida</strong><br/>Coloque o solo natural na lata, feche a tampa e pese o conjunto (<em>m<sub>úmida</sub></em> = lata + solo úmido).</div><input type="checkbox" class="ck" data-key="m1_ck2"></div>
+        <!-- PASSO 1: CADERNETA (identificação) -->
+        <div class="step">
+          <span class="num">1</span>
+          <div class="step-body">
+            <div class="illus" aria-hidden="true">
+              <!-- Ícone: Caderneta de campo -->
+              <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" role="img">
+                <defs>
+                  <linearGradient id="cadernoA" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0" stop-color="#e6f2f9"/><stop offset="1" stop-color="#f7fbff"/>
+                  </linearGradient>
+                </defs>
+                <rect x="16" y="18" width="88" height="84" rx="12" fill="url(#cadernoA)" stroke="#013C5A" stroke-opacity=".12"/>
+                <rect x="24" y="22" width="72" height="76" rx="10" fill="#ffffff" stroke="#013C5A" stroke-opacity=".10"/>
+                <!-- espiral -->
+                <g fill="#013C5A" opacity=".25">
+                  <rect x="28" y="18" width="6" height="12" rx="2"/>
+                  <rect x="40" y="18" width="6" height="12" rx="2"/>
+                  <rect x="52" y="18" width="6" height="12" rx="2"/>
+                  <rect x="64" y="18" width="6" height="12" rx="2"/>
+                  <rect x="76" y="18" width="6" height="12" rx="2"/>
+                  <rect x="88" y="18" width="6" height="12" rx="2"/>
+                </g>
+                <!-- linhas -->
+                <g stroke="#013C5A" stroke-opacity=".25">
+                  <line x1="30" y1="42" x2="96" y2="42"/>
+                  <line x1="30" y1="54" x2="96" y2="54"/>
+                  <line x1="30" y1="66" x2="96" y2="66"/>
+                  <line x1="30" y1="78" x2="96" y2="78"/>
+                  <line x1="30" y1="90" x2="84" y2="90"/>
+                </g>
+                <!-- marcador verde -->
+                <rect x="84" y="36" width="8" height="12" rx="2" fill="#28a745" opacity=".8"/>
+              </svg>
+            </div>
+            <div><strong>Identificação da amostra</strong><br/>Numere a lata e registre o código da amostra e a data. Pese e anote a tara (<em>m<sub>lata</sub></em>).</div>
+            <input type="checkbox" class="ck" data-key="m1_ck1">
+          </div>
+        </div>
 
-        <div class="step"><span class="num">3</span><div><strong>Secagem</strong><br/>Leve a amostra à estufa a 105–110 °C até massa constante (mínimo 12 h). Retire e deixe resfriar no dessecador.</div><input type="checkbox" class="ck" data-key="m1_ck3"></div>
+        <!-- PASSO 2: BALANÇA + CÁPSULA (pesagem úmida) -->
+        <div class="step">
+          <span class="num">2</span>
+          <div class="step-body">
+            <div class="illus" aria-hidden="true">
+              <!-- Ícone: Balança com cápsula -->
+              <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" role="img">
+                <defs>
+                  <linearGradient id="balancaA" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0" stop-color="#eaf4fb"/><stop offset="1" stop-color="#f8fbff"/>
+                  </linearGradient>
+                </defs>
+                <!-- base -->
+                <rect x="18" y="74" width="84" height="22" rx="8" fill="#013C5A" opacity=".08"/>
+                <!-- plataforma -->
+                <rect x="26" y="62" width="68" height="12" rx="6" fill="url(#balancaA)" stroke="#013C5A" stroke-opacity=".12"/>
+                <!-- corpo -->
+                <rect x="22" y="30" width="76" height="34" rx="8" fill="#ffffff" stroke="#013C5A" stroke-opacity=".1"/>
+                <!-- visor -->
+                <rect x="32" y="38" width="40" height="10" rx="4" fill="#e6f2f9"/>
+                <rect x="76" y="38" width="16" height="10" rx="3" fill="#28a745" opacity=".9"/>
+                <!-- cápsula -->
+                <ellipse cx="60" cy="58" rx="18" ry="6" fill="#cfd8df"/>
+                <ellipse cx="60" cy="56" rx="18" ry="6" fill="#e9eef2"/>
+                <path d="M46 50c3-4 25-4 28 0v5c-3 3-25 3-28 0z" fill="#dfe7ec"/>
+              </svg>
+            </div>
+            <div><strong>Pesagem úmida</strong><br/>Coloque o solo natural na lata, feche a tampa e pese o conjunto (<em>m<sub>úmida</sub></em> = lata + solo úmido).</div>
+            <input type="checkbox" class="ck" data-key="m1_ck2">
+          </div>
+        </div>
 
-        <div class="step"><span class="num">4</span><div><strong>Pesagem seca</strong><br/>Após o resfriamento, pese o conjunto (<em>m<sub>seca</sub></em> = lata + solo seco) e calcule o teor de umidade usando a calculadora.</div><input type="checkbox" class="ck" data-key="m1_ck4"></div>
+        <!-- PASSO 3: ESTUFA (secagem) -->
+        <div class="step">
+          <span class="num">3</span>
+          <div class="step-body">
+            <div class="illus" aria-hidden="true">
+              <!-- Ícone: Estufa de laboratório -->
+              <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" role="img">
+                <defs>
+                  <linearGradient id="estufaA" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0" stop-color="#f0f6fa"/><stop offset="1" stop-color="#ffffff"/>
+                  </linearGradient>
+                </defs>
+                <rect x="22" y="24" width="76" height="72" rx="10" fill="url(#estufaA)" stroke="#013C5A" stroke-opacity=".12"/>
+                <!-- porta -->
+                <rect x="30" y="32" width="60" height="56" rx="6" fill="#ffffff" stroke="#013C5A" stroke-opacity=".08"/>
+                <circle cx="36" cy="60" r="6" fill="#013C5A" opacity=".15"/>
+                <!-- prateleira -->
+                <rect x="36" y="56" width="48" height="4" rx="2" fill="#e6eef4"/>
+                <!-- cápsula dentro -->
+                <ellipse cx="64" cy="66" rx="12" ry="4" fill="#cfd8df"/>
+                <ellipse cx="64" cy="64" rx="12" ry="4" fill="#e9eef2"/>
+                <!-- termômetro -->
+                <rect x="78" y="38" width="6" height="24" rx="3" fill="#e6eef4"/>
+                <circle cx="81" cy="64" r="5" fill="#28a745" opacity=".9"/>
+              </svg>
+            </div>
+            <div><strong>Secagem</strong><br/>Leve a amostra à estufa a 105–110 °C até massa constante (mínimo 12 h). Retire e deixe resfriar no dessecador.</div>
+            <input type="checkbox" class="ck" data-key="m1_ck3">
+          </div>
+        </div>
+
+        <!-- PASSO 4: BALANÇA (pesagem seca) -->
+        <div class="step">
+          <span class="num">4</span>
+          <div class="step-body">
+            <div class="illus" aria-hidden="true">
+              <!-- Ícone: Balança (variação) -->
+              <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" role="img">
+                <defs>
+                  <linearGradient id="balancaB" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0" stop-color="#eaf4fb"/><stop offset="1" stop-color="#f8fbff"/>
+                  </linearGradient>
+                </defs>
+                <rect x="20" y="76" width="80" height="20" rx="8" fill="#013C5A" opacity=".08"/>
+                <rect x="28" y="64" width="64" height="12" rx="6" fill="url(#balancaB)" stroke="#013C5A" stroke-opacity=".12"/>
+                <rect x="24" y="34" width="72" height="30" rx="8" fill="#ffffff" stroke="#013C5A" stroke-opacity=".1"/>
+                <rect x="34" y="41" width="48" height="10" rx="4" fill="#e6f2f9"/>
+                <!-- cápsula (seca) -->
+                <ellipse cx="60" cy="60" rx="16" ry="5" fill="#ccd6dd"/>
+                <ellipse cx="60" cy="58" rx="16" ry="5" fill="#e9eef2"/>
+              </svg>
+            </div>
+            <div><strong>Pesagem seca</strong><br/>Após o resfriamento, pese o conjunto (<em>m<sub>seca</sub></em> = lata + solo seco) e calcule o teor de umidade usando a calculadora.</div>
+            <input type="checkbox" class="ck" data-key="m1_ck4">
+          </div>
+        </div>
       </div>
 
       <!-- INTERPRETAÇÃO -->
-      <h3 style="color:#013C5A;font-family:Montserrat;margin-top:18px">Interpretação dos resultados</h3>
+      <h3>Interpretação dos resultados</h3>
       <p>O resultado médio (<em>w̄</em>) representa a umidade natural do solo. Valores elevados indicam solos mais plásticos e compressíveis; baixos valores são típicos de solos arenosos. Para controle de qualidade, o desvio entre determinações não deve ultrapassar <strong>1 %</strong>.</p>
 
       <div class="note">Boas práticas: Evite correntes de ar durante a pesagem, use luvas limpas e registre sempre a identificação da amostra, operador e data do ensaio.</div>
@@ -240,7 +363,7 @@
       </div>
     </div>
 
-    <!-- CALCULADORAS -->
+    <!-- CALCULADORAS + ÍCONE TRIPLA DETERMINAÇÃO -->
     <div>
       <div class="panel" style="padding:16px">
         <h3 style="margin-top:0;color:#0f2532;font-family:Montserrat">Calculadora — Teor de Umidade (w)</h3>
@@ -260,7 +383,15 @@
         </form>
 
         <hr style="border:none;border-top:1px solid rgba(1,60,90,.1);margin:14px 0"/>
-        <h4 style="margin:8px 0 6px;color:#0f2532;font-family:Montserrat">Tripla determinação (opcional)</h4>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+          <!-- Ícone: Três cápsulas (tripla determinação) -->
+          <svg width="40" height="40" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <ellipse cx="30" cy="78" rx="16" ry="5" fill="#cfd8df"/><ellipse cx="30" cy="76" rx="16" ry="5" fill="#e9eef2"/>
+            <ellipse cx="60" cy="78" rx="16" ry="5" fill="#cfd8df"/><ellipse cx="60" cy="76" rx="16" ry="5" fill="#e9eef2"/>
+            <ellipse cx="90" cy="78" rx="16" ry="5" fill="#cfd8df"/><ellipse cx="90" cy="76" rx="16" ry="5" fill="#e9eef2"/>
+          </svg>
+          <h4 style="margin:0;color:#0f2532;font-family:Montserrat">Tripla determinação (opcional)</h4>
+        </div>
         <p style="margin:0">Informe <em>w₁, w₂, w₃</em> para calcular média e desvio.</p>
         <form class="calc" onsubmit="return false;" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:8px">
           <input type="number" step="0.01" id="w1" placeholder="w1 %" />
@@ -274,96 +405,6 @@
   </div>
 </div>
 
-  </section>
-
-  <!-- ===================== MÓDULO 2 ===================== -->
-  <section id="mod2" class="module" aria-labelledby="mod2-title">
-    <div class="panel" id="content-mod-2">
-      <header class="module-head">
-        <span class="tag"><svg width="16" height="16" aria-hidden="true"><use href="#ico-sieve"/></svg> Módulo 2</span>
-        <h2 id="mod2-title">Granulometria (NBR 7181) — Peneiramento + Sedimentação</h2>
-      </header>
-      <div class="grid">
-        <div>
-          <div class="steps">
-            <div class="step"><span class="num">A1</span><div><strong>Amostra e preparo</strong><br/>Quarteie e determine a massa de ensaio. Para fração grossa, monte a coluna de peneiras padronizadas; para fração fina, prepare a suspensão com dispersante.</div><input type="checkbox" class="ck" data-key="m2_ck1"></div>
-            <div class="step"><span class="num">A2</span><div><strong>Peneiramento (fração grossa)</strong><br/>Vibração controlada; pese a massa <em>retida</em> em cada peneira; calcule % retido e % passante acumulado.</div><input type="checkbox" class="ck" data-key="m2_ck2"></div>
-            <div class="step"><span class="num">B1</span><div><strong>Sedimentação — preparação</strong><br/><strong>Amostra:</strong> 1 kg passante em 2 mm → separe 70 g (argiloso) ou 120 g (arenoso). Prepare solução de hexametafosfato + carbonato (pH 8–9).</div><input type="checkbox" class="ck" data-key="m2_ck3"></div>
-            <div class="step"><span class="num">B2</span><div><strong>Sedimentação — execução</strong><br/>Imersão 12–24 h → dispersor ~15 min → transferir para proveta de 1000 mL → completar a 1 L → agitar 1 min → iniciar leituras (30 s, 1, 2, 5, 15, 30 min, 1 h, 2 h...).</div><input type="checkbox" class="ck" data-key="m2_ck4"></div>
-            <div class="step"><span class="num">C</span><div><strong>Curva granulométrica</strong><br/>Combine os dados (peneiramento + hidrômetro) e trace a curva, obtendo D10, D30, D60 e coeficientes.</div><input type="checkbox" class="ck" data-key="m2_ck5"></div>
-          </div>
-
-          <div class="note">Registre massas retidas (%), passante acumulado e, na sedimentação, leituras do densímetro com tempo e temperatura. Manter pH 8–9 e evitar bolhas.</div>
-
-          <div class="actions">
-            <a class="btn btn-prev" href="#mod1"><svg width="18" height="18" aria-hidden="true"><use href="#ico-arrow-left"/></svg> Voltar</a>
-            <a class="btn btn-next" href="#mod3">Avançar <svg width="18" height="18" aria-hidden="true"><use href="#ico-arrow-right"/></svg></a>
-          </div>
-        </div>
-        <div>
-          <div class="panel" style="padding:16px">
-            <h3 style="margin-top:0;color:#0f2532;font-family:Montserrat">Tabela — Peneiramento</h3>
-            <p style="margin:0 0 8px">Informe massa retida por peneira. O sistema calcula % retido e % passante acumulado.</p>
-            <table id="tbPeneiras" class="data">
-              <thead>
-                <tr><th style="text-align:left">Abertura</th><th style="text-align:right">Massa retida (g)</th><th style="text-align:right">% retido</th><th style="text-align:right">% passante acum.</th></tr>
-              </thead>
-              <tbody></tbody>
-            </table>
-            <div style="display:flex; gap:8px; margin-top:10px; flex-wrap:wrap">
-              <button class="btn btn-prev" onclick="initPeneiras()">Carregar peneiras padrão</button>
-              <button class="btn btn-next" onclick="calcPeneiras()">Calcular distribuição</button>
-            </div>
-            <p id="sumPeneiras" style="font-weight:800; margin-top:6px"></p>
-
-            <hr style="border:none;border-top:1px solid rgba(1,60,90,.1);margin:14px 0"/>
-            <h3 style="margin:0 0 8px;color:#0f2532;font-family:Montserrat">Leituras — Sedimentação (hidrômetro)</h3>
-            <p style="margin:0 0 8px">Registre tempo (s/min/h) · leitura (g/L aprox.) · temperatura (°C). Correções (menisco/temperatura) podem ser aplicadas no campo extra.</p>
-            <table id="tbHidro" class="data">
-              <thead><tr><th>Tempo</th><th>Leitura</th><th>Temperatura (°C)</th></tr></thead>
-              <tbody></tbody>
-            </table>
-            <div style="display:flex; gap:8px; margin-top:10px; flex-wrap:wrap">
-              <button class="btn btn-prev" onclick="initHidro()">Carregar tempos padrão</button>
-              <button class="btn btn-next" onclick="saveHidro()">Salvar leituras</button>
-            </div>
-            <p id="sumHidro" style="font-weight:800; margin-top:6px"></p>
-
-            <hr style="border:none;border-top:1px solid rgba(1,60,90,.1);margin:16px 0"/>
-            <h3 style="margin:0 0 8px;color:#0f2532;font-family:Montserrat">Conversão & Curva (simplificada)</h3>
-            <p style="margin:0 0 10px">Converta as leituras do hidrômetro em <em>% passante</em> (aproximação didática) e una com o peneiramento para gerar a curva granulométrica.</p>
-            <div class="panel" style="padding:12px">
-              <form class="calc" onsubmit="return false;">
-                <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px">
-                  <label>Massa da amostra fina (W<sub>s</sub>, g)<input type="number" step="0.01" id="ws" placeholder="70 ou 120"></label>
-                  <label>Densidade relativa (G<sub>s</sub>)<input type="number" step="0.01" id="gs" value="2.65"></label>
-                  <label>Temperatura (°C)<input type="number" step="0.1" id="temp" value="20"></label>
-                  <label>Profundidade efetiva L (m)<input type="number" step="0.001" id="L" value="0.145"></label>
-                  <label>Correção de leitura (Ct + Cm)<input type="number" step="0.001" id="corr" value="0"></label>
-                </div>
-                <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
-                  <button class="btn btn-next" onclick="converterHidro()">Converter hidrômetro</button>
-                  <button class="btn btn-prev" onclick="gerarCurva()">Gerar curva (A+B)</button>
-                  <button class="btn" style="background:#fff;color:var(--blue);border:1px solid rgba(1,60,90,.2)" onclick="exportCSV()">Exportar CSV</button>
-                </div>
-                <p id="convInfo" style="font-weight:800;margin-top:6px"></p>
-              </form>
-            </div>
-            <div class="chart-wrap" style="margin-top:12px">
-              <svg id="curvaSVG" class="chart-svg" viewBox="0 0 800 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Curva Granulométrica">
-                <desc>Semilog X: tamanho de partícula (mm) no eixo X; % passante no eixo Y.</desc>
-              </svg>
-              <div class="chart-legend">
-                <span class="chip">Peneiramento</span>
-                <span class="chip" style="background:#e8f5ee;color:#2a7f3e">Sedimentação</span>
-                <span class="chip" style="background:#013C5A;color:white">Curva combinada</span>
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </div>
-    </div>
   </section>
 
   <!-- ===================== MÓDULO 3 ===================== -->
