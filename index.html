@@ -920,11 +920,11 @@
   <section id="mod4" class="module" aria-labelledby="mod4-title">
   <div class="panel" id="content-mod-4">
   <style>
-    #content-mod-4 h2, #content-mod-4 h3 { color:#013C5A; font-family:Montserrat,sans-serif; }
-    #content-mod-4 p { color:#666; font-family:'Open Sans',sans-serif; }
-    #content-mod-4 .cardy { background:#fff; border-radius:16px; box-shadow:0 10px 30px rgba(1,60,90,.12); padding:18px; margin-bottom:16px; }
-    #content-mod-4 .btn-cert { background:linear-gradient(180deg,#f7d36b,#e8b846); color:#2b1f00; font-weight:900; border:none; padding:12px 16px; border-radius:12px; cursor:pointer; box-shadow:0 8px 24px rgba(232,184,70,.35); width:100%; }
-    #content-mod-4 .btn-cert:hover { filter:brightness(1.05); }
+    #content-mod-4 h2,#content-mod-4 h3{color:#013C5A;font-family:Montserrat,sans-serif;}
+    #content-mod-4 p{color:#666;font-family:'Open Sans',sans-serif;}
+    #content-mod-4 .cardy{background:#fff;border-radius:16px;box-shadow:0 10px 30px rgba(1,60,90,.12);padding:18px;margin-bottom:16px;}
+    #content-mod-4 .btn-cert{background:linear-gradient(180deg,#f7d36b,#e8b846);color:#2b1f00;font-weight:900;border:none;padding:12px 16px;border-radius:12px;cursor:pointer;box-shadow:0 8px 24px rgba(232,184,70,.35);width:100%;}
+    #content-mod-4 .btn-cert:hover{filter:brightness(1.05);}
   </style>
 
   <header class="module-head">
@@ -940,8 +940,9 @@
 
   <div class="cardy">
     <h3>📜 Gerar Certificado</h3>
-    <p>Digite seu nome completo abaixo e clique para gerar seu certificado oficial do curso.</p>
-    <input id="cert_nome" type="text" placeholder="Ex.: Manuel Gomes" style="width:100%;padding:10px;margin-bottom:12px;border-radius:10px;border:1px solid #ccc;">
+    <p>Digite seu nome completo e clique abaixo para gerar seu certificado oficial.</p>
+    <input id="cert_nome" type="text" placeholder="Ex.: Manuel Gomes"
+      style="width:100%;padding:10px;margin-bottom:12px;border-radius:10px;border:1px solid #ccc;">
     <button class="btn-cert" onclick="generateCertPDF()">📜 Gerar Certificado (PDF)</button>
   </div>
 
@@ -952,61 +953,95 @@
 
   <script>
     async function ensureJSPDF(){
-      if(window.jspdf && window.jspdf.jsPDF) return window.jspdf.jsPDF;
+      if(window.jspdf&&window.jspdf.jsPDF)return window.jspdf.jsPDF;
       await new Promise((res,rej)=>{
         const s=document.createElement('script');
         s.src='https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js';
-        s.onload=()=>res(); s.onerror=()=>rej();
+        s.onload=()=>res();s.onerror=()=>rej();
         document.head.appendChild(s);
       });
       return window.jspdf.jsPDF;
     }
+    async function ensureQR(){
+      if(window.QRCode)return true;
+      await new Promise((res,rej)=>{
+        const s=document.createElement('script');
+        s.src='https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js';
+        s.onload=()=>res();s.onerror=()=>rej();
+        document.head.appendChild(s);
+      });
+      return true;
+    }
 
     async function generateCertPDF(){
-      const nome = (document.getElementById('cert_nome').value || '').trim();
-      if(!nome){ alert('Digite seu nome completo.'); return; }
+      const nome=(document.getElementById('cert_nome').value||'').trim();
+      if(!nome){alert('Digite seu nome completo.');return;}
 
-      const jsPDF = await ensureJSPDF();
-      const doc = new jsPDF({orientation:'landscape', unit:'pt', format:'a4'});
-      const W = doc.internal.pageSize.getWidth(), H = doc.internal.pageSize.getHeight();
+      const jsPDF=await ensureJSPDF();await ensureQR();
+      const doc=new jsPDF({orientation:'landscape',unit:'pt',format:'a4'});
+      const W=doc.internal.pageSize.getWidth(),H=doc.internal.pageSize.getHeight();
 
-      // Moldura dourada
-      doc.setDrawColor(240,185,69); doc.setLineWidth(6);
+      // Moldura dourada dupla
+      doc.setDrawColor(240,185,69);doc.setLineWidth(6);
       doc.roundedRect(30,30,W-60,H-60,12,12,'S');
-      doc.setDrawColor(255,226,138); doc.setLineWidth(2);
+      doc.setDrawColor(255,226,138);doc.setLineWidth(2);
       doc.roundedRect(46,46,W-92,H-92,10,10,'S');
 
-      // Cabeçalho
-      doc.setFont('helvetica','bold'); doc.setFontSize(28); doc.setTextColor(1,60,90);
-      doc.text('Certificado de Conclusão', W/2, 130, {align:'center'});
+      // Título
+      doc.setFont('helvetica','bold');doc.setFontSize(28);doc.setTextColor(1,60,90);
+      doc.text('Certificado de Conclusão',W/2,130,{align:'center'});
 
-      // Nome do aluno
-      doc.setFontSize(42); doc.setTextColor(0,0,0);
-      doc.text(nome, W/2, 200, {align:'center'});
+      // Nome
+      doc.setFontSize(42);doc.setTextColor(0,0,0);
+      doc.text(nome,W/2,200,{align:'center'});
 
       // Corpo
-      doc.setFont('helvetica','normal'); doc.setFontSize(14); doc.setTextColor(60);
-      const texto = 'Concluiu o curso Interativo — Ensaios de Solos (Volume 1), abrangendo Teor de Umidade Natural e Granulometria (peneiramento + sedimentação), demonstrando competência técnica fundamental em laboratório.';
-      doc.text(doc.splitTextToSize(texto, W-200), W/2, 250, {align:'center'});
+      doc.setFont('helvetica','normal');doc.setFontSize(14);doc.setTextColor(60);
+      const texto='Concluiu o curso Interativo — Ensaios de Solos (Volume 1), abrangendo Teor de Umidade Natural e Granulometria (peneiramento + sedimentação), demonstrando competência técnica fundamental em laboratório.';
+      doc.text(doc.splitTextToSize(texto,W-200),W/2,250,{align:'center'});
 
       // Assinatura
-      const yLine = H-140;
-      doc.setDrawColor(200); doc.setLineWidth(1);
-      doc.line(120, yLine, W-120, yLine);
-      doc.setFont('helvetica','bold'); doc.setFontSize(12);
-      doc.text('Diego R. Jesus — Instrutor Responsável', W/2, yLine+20, {align:'center'});
+      const yLine=H-140;
+      doc.setDrawColor(200);doc.setLineWidth(1);
+      doc.line(120,yLine,W-120,yLine);
+      doc.setFont('helvetica','bold');doc.setFontSize(12);
+      doc.text('Diego R. Jesus — Instrutor Responsável',W/2,yLine+20,{align:'center'});
       doc.setFont('helvetica','normal');
-      doc.text('Portal Interativo de Ensaios de Solos', W/2, yLine+38, {align:'center'});
+      doc.text('Portal Interativo de Ensaios de Solos',W/2,yLine+38,{align:'center'});
 
-      // Data e código
-      const d = new Date(), data = `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`;
-      const code = Math.random().toString(36).slice(2,10).toUpperCase();
-      doc.setFontSize(11); doc.setTextColor(100);
-      doc.text(`Data: ${data}`, 100, H-70);
-      doc.text(`Código de verificação: ${code}`, 100, H-52);
+      // Selo dourado 3D
+      const xS=W-110,yS=H-110;
+      const g1={r:232,g:184,b:70},g2={r:255,g:226,b:138};
+      for(let i=40;i>0;i-=2){
+        const t=i/40;
+        const r=Math.round(g1.r*(1-t)+g2.r*t);
+        const g=Math.round(g1.g*(1-t)+g2.g*t);
+        const b=Math.round(g1.b*(1-t)+g2.b*t);
+        doc.setFillColor(r,g,b);doc.circle(xS,yS,i,'F');
+      }
+      doc.setFillColor(1,60,90);doc.setFont('helvetica','bold');
+      doc.setTextColor(255);doc.setFontSize(12);
+      doc.text('OFICIAL',xS,yS+4,{align:'center'});
 
-      doc.setFontSize(10); doc.setTextColor(1,60,90);
-      doc.text('© Ensaios de Solos — Vol. 1', W-140, H-60);
+      // Data & Código
+      const d=new Date(),data=`${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`;
+      const code=Math.random().toString(36).slice(2,10).toUpperCase();
+      doc.setFontSize(11);doc.setTextColor(100);
+      doc.text(`Data: ${data}`,100,H-70);
+      doc.text(`Código de verificação: ${code}`,100,H-52);
+
+      // QR Code + legenda
+      const portalURL='https://dr8173004-gif.github.io/ortal-ensaios-solos-volume1/';
+      const qrCanvas=document.createElement('canvas');
+      await QRCode.toCanvas(qrCanvas,portalURL,{width:80,margin:0,color:{dark:'#013C5AFF',light:'#FFFFFFFF'}});
+      const qrData=qrCanvas.toDataURL('image/png');
+      doc.addImage(qrData,'PNG',100,H-130,70,70);
+      doc.setFontSize(9);doc.setTextColor(60);
+      doc.text('Verifique este certificado online',100,H-42);
+
+      // Rodapé
+      doc.setFontSize(10);doc.setTextColor(1,60,90);
+      doc.text('© Ensaios de Solos — Vol. 1',W-140,H-60);
 
       doc.save(`Certificado - ${nome}.pdf`);
     }
