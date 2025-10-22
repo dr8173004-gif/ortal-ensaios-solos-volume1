@@ -194,56 +194,86 @@
   <!-- ===================== MÓDULO 1 ===================== -->
   <section id="mod1" class="module" aria-labelledby="mod1-title">
     <div class="panel" id="content-mod-1">
-      <header class="module-head">
-        <span class="tag"><svg width="16" height="16" aria-hidden="true"><use href="#ico-droplet"/></svg> Módulo 1</span>
-        <h2 id="mod1-title">Ensaio de Teor de Umidade Natural</h2>
-      </header>
-      <div class="grid">
-        <div>
-          <div class="steps">
-            <div class="step"><span class="num">1</span><div><strong>Preparar a amostra e identificar</strong><br/>Separe a lata identificada (código da amostra) e registre a <em>tara</em> (massa da lata vazia).</div><input type="checkbox" class="ck" data-key="m1_ck1"></div>
-            <div class="step"><span class="num">2</span><div><strong>Pesagem úmida</strong><br/>Pese <em>lata + solo úmido</em> evitando perdas por evaporação. Registre imediatamente.</div><input type="checkbox" class="ck" data-key="m1_ck2"></div>
-            <div class="step"><span class="num">3</span><div><strong>Secagem em estufa (105–110 °C)</strong><br/>Até massa constante; resfrie em dessecador antes da pesagem final.</div><input type="checkbox" class="ck" data-key="m1_ck3"></div>
-            <div class="step"><span class="num">4</span><div><strong>Pesagem seca</strong><br/>Pese <em>lata + solo seco</em>. Calcule o teor de umidade <em>w</em> usando a calculadora ao lado.</div><input type="checkbox" class="ck" data-key="m1_ck4"></div>
-          </div>
+  <header class="module-head">
+    <span class="tag"><svg width="16" height="16" aria-hidden="true"><use href="#ico-droplet"/></svg> Módulo 1</span>
+    <h2 id="mod1-title">Ensaio de Teor de Umidade Natural (NBR 6457 / NBR 6458)</h2>
+  </header>
 
-          <div class="note" role="note">Boas práticas: usar luvas, evitar correntes de ar durante pesagens e sempre registrar código da amostra, data e operador.</div>
-          <div class="actions">
-            <a class="btn btn-prev" href="#mod0"><svg width="18" height="18" aria-hidden="true"><use href="#ico-arrow-left"/></svg> Voltar</a>
-            <a class="btn btn-next" href="#mod2">Avançar <svg width="18" height="18" aria-hidden="true"><use href="#ico-arrow-right"/></svg></a>
-          </div>
-        </div>
-        <div>
-          <div class="panel" style="padding:16px">
-            <h3 style="margin-top:0;color:#0f2532;font-family:Montserrat">Calculadora — Teor de Umidade (w)</h3>
-            <form class="calc" onsubmit="return false;">
-              <label>Tara (lata vazia) — <code>m<sub>lata</sub></code>
-                <input type="number" step="0.01" id="m_lata" placeholder="g" />
-              </label>
-              <label>Lata + solo úmido — <code>m<sub>úmida</sub></code>
-                <input type="number" step="0.01" id="m_umida" placeholder="g" />
-              </label>
-              <label>Lata + solo seco — <code>m<sub>seca</sub></code>
-                <input type="number" step="0.01" id="m_seca" placeholder="g" />
-              </label>
-              <div class="note" style="margin:10px 0">Fórmula: <strong>w = (m<sub>água</sub> / m<sub>solo seco</sub>) × 100%</strong><br>Onde m<sub>água</sub> = m<sub>úmida</sub> − m<sub>seca</sub>; m<sub>solo seco</sub> = m<sub>seca</sub> − m<sub>lata</sub>.</div>
-              <button class="btn btn-next" onclick="calcUmidade()">Calcular w</button>
-              <p id="w_result" style="font-weight:800; margin-top:10px"></p>
-            </form>
-            <hr style="border:none;border-top:1px solid rgba(1,60,90,.1);margin:14px 0"/>
-            <h4 style="margin:8px 0 6px;color:#0f2532;font-family:Montserrat">Tripla determinação (opcional)</h4>
-            <p style="margin:0">Repita o ensaio 3× e registre <em>w₁, w₂, w₃</em>. A calculadora pode estimar a média e o desvio.</p>
-            <form class="calc" onsubmit="return false;" style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-top:8px">
-              <input type="number" step="0.01" id="w1" placeholder="w1 %"/>
-              <input type="number" step="0.01" id="w2" placeholder="w2 %"/>
-              <input type="number" step="0.01" id="w3" placeholder="w3 %"/>
-              <button class="btn btn-prev" style="grid-column:1/4" onclick="calcTripla()">Calcular média</button>
-            </form>
-            <p id="w_stats" style="font-weight:800; margin-top:6px"></p>
-          </div>
-        </div>
+  <div class="grid">
+    <div>
+      <!-- INTRODUÇÃO -->
+      <p><strong>Objetivo:</strong> Determinar a quantidade de água presente no solo em seu estado natural. Essa informação é essencial para avaliar a consistência, a compactação e o comportamento mecânico do solo em campo e laboratório.</p>
+
+      <div class="note">Conceito: O teor de umidade (<em>w</em>) é a razão entre a massa da água e a massa dos sólidos secos do solo, expressa em porcentagem.</div>
+
+      <!-- EQUIPAMENTOS -->
+      <h3 style="color:#013C5A;font-family:Montserrat;margin-top:16px">Equipamentos necessários</h3>
+      <ul style="margin-top:4px">
+        <li>Latas metálicas numeradas com tampa;</li>
+        <li>Balança com precisão de 0,01 g;</li>
+        <li>Estufa regulável entre 105 °C e 110 °C;</li>
+        <li>Dessecador (para resfriamento);</li>
+        <li>Pincel e espátula de aço inox.</li>
+      </ul>
+
+      <!-- EXECUÇÃO PASSO A PASSO -->
+      <h3 style="color:#013C5A;font-family:Montserrat;margin-top:18px">Procedimento passo a passo</h3>
+      <div class="steps">
+        <div class="step"><span class="num">1</span><div><strong>Identificação da amostra</strong><br/>Numere a lata e registre o código da amostra e a data. Pese e anote a tara (<em>m<sub>lata</sub></em>).</div><input type="checkbox" class="ck" data-key="m1_ck1"></div>
+
+        <div class="step"><span class="num">2</span><div><strong>Pesagem úmida</strong><br/>Coloque o solo natural na lata, feche a tampa e pese o conjunto (<em>m<sub>úmida</sub></em> = lata + solo úmido).</div><input type="checkbox" class="ck" data-key="m1_ck2"></div>
+
+        <div class="step"><span class="num">3</span><div><strong>Secagem</strong><br/>Leve a amostra à estufa a 105–110 °C até massa constante (mínimo 12 h). Retire e deixe resfriar no dessecador.</div><input type="checkbox" class="ck" data-key="m1_ck3"></div>
+
+        <div class="step"><span class="num">4</span><div><strong>Pesagem seca</strong><br/>Após o resfriamento, pese o conjunto (<em>m<sub>seca</sub></em> = lata + solo seco) e calcule o teor de umidade usando a calculadora.</div><input type="checkbox" class="ck" data-key="m1_ck4"></div>
+      </div>
+
+      <!-- INTERPRETAÇÃO -->
+      <h3 style="color:#013C5A;font-family:Montserrat;margin-top:18px">Interpretação dos resultados</h3>
+      <p>O resultado médio (<em>w̄</em>) representa a umidade natural do solo. Valores elevados indicam solos mais plásticos e compressíveis; baixos valores são típicos de solos arenosos. Para controle de qualidade, o desvio entre determinações não deve ultrapassar <strong>1 %</strong>.</p>
+
+      <div class="note">Boas práticas: Evite correntes de ar durante a pesagem, use luvas limpas e registre sempre a identificação da amostra, operador e data do ensaio.</div>
+
+      <div class="actions">
+        <a class="btn btn-prev" href="#mod0"><svg width="18" height="18" aria-hidden="true"><use href="#ico-arrow-left"/></svg> Voltar</a>
+        <a class="btn btn-next" href="#mod2">Avançar <svg width="18" height="18" aria-hidden="true"><use href="#ico-arrow-right"/></svg></a>
       </div>
     </div>
+
+    <!-- CALCULADORAS -->
+    <div>
+      <div class="panel" style="padding:16px">
+        <h3 style="margin-top:0;color:#0f2532;font-family:Montserrat">Calculadora — Teor de Umidade (w)</h3>
+        <form class="calc" onsubmit="return false;">
+          <label>Tara (lata vazia) — <code>m<sub>lata</sub></code>
+            <input type="number" step="0.01" id="m_lata" placeholder="g" />
+          </label>
+          <label>Lata + solo úmido — <code>m<sub>úmida</sub></code>
+            <input type="number" step="0.01" id="m_umida" placeholder="g" />
+          </label>
+          <label>Lata + solo seco — <code>m<sub>seca</sub></code>
+            <input type="number" step="0.01" id="m_seca" placeholder="g" />
+          </label>
+          <div class="note" style="margin:10px 0">Fórmula: <strong>w = (m<sub>água</sub> / m<sub>solo seco</sub>) × 100%</strong><br>Onde m<sub>água</sub> = m<sub>úmida</sub> − m<sub>seca</sub>; m<sub>solo seco</sub> = m<sub>seca</sub> − m<sub>lata</sub>.</div>
+          <button class="btn btn-next" onclick="calcUmidade()">Calcular w</button>
+          <p id="w_result" style="font-weight:800;margin-top:10px"></p>
+        </form>
+
+        <hr style="border:none;border-top:1px solid rgba(1,60,90,.1);margin:14px 0"/>
+        <h4 style="margin:8px 0 6px;color:#0f2532;font-family:Montserrat">Tripla determinação (opcional)</h4>
+        <p style="margin:0">Informe <em>w₁, w₂, w₃</em> para calcular média e desvio.</p>
+        <form class="calc" onsubmit="return false;" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:8px">
+          <input type="number" step="0.01" id="w1" placeholder="w1 %" />
+          <input type="number" step="0.01" id="w2" placeholder="w2 %" />
+          <input type="number" step="0.01" id="w3" placeholder="w3 %" />
+          <button class="btn btn-prev" style="grid-column:1/4" onclick="calcTripla()">Calcular média</button>
+        </form>
+        <p id="w_stats" style="font-weight:800;margin-top:6px"></p>
+      </div>
+    </div>
+  </div>
+</div>
+
   </section>
 
   <!-- ===================== MÓDULO 2 ===================== -->
