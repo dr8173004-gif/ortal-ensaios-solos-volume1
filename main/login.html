@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Acesso ao Portal – Ensaios de Solos</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&family=Open+Sans:wght@400&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Open Sans', sans-serif;
+      background: linear-gradient(rgba(1,60,90,0.92), rgba(1,60,90,0.95)),
+                  url('../assets/background_portal.png') center/cover no-repeat fixed;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+    .login-container {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(15px);
+      border-radius: 16px;
+      padding: 40px;
+      width: 320px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+    h2 {
+      font-family: 'Montserrat', sans-serif;
+      margin-bottom: 24px;
+      font-size: 1.6rem;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border: none;
+      border-radius: 6px;
+      outline: none;
+    }
+    .btn {
+      width: 48%;
+      padding: 10px;
+      margin: 8px 1%;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+    .btn-login { background: #28a745; color: white; }
+    .btn-login:hover { background: #34c759; }
+    .btn-register { background: #666; color: white; }
+    .btn-register:hover { background: #888; }
+    p {
+      margin-top: 15px;
+      font-size: 0.85rem;
+      opacity: 0.8;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="login-container">
+    <h2>🔒 Acesso ao Portal</h2>
+    <input id="email" type="email" placeholder="E-mail" />
+    <input id="password" type="password" placeholder="Senha" />
+    <div>
+      <button id="loginBtn" class="btn btn-login">Entrar</button>
+      <button id="registerBtn" class="btn btn-register">Cadastrar</button>
+    </div>
+    <p>Seu acesso é pessoal e intransferível.</p>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged } 
+      from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+
+    // 🔧 Configuração do Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyDY5IFakVFbbLn8UQHUCgea7KOx_zZjvlY",
+      authDomain: "portal-ensaios-solos-vol1.firebaseapp.com",
+      projectId: "portal-ensaios-solos-vol1",
+      storageBucket: "portal-ensaios-solos-vol1.firebasestorage.app",
+      messagingSenderId: "217730071254",
+      appId: "1:217730071254:web:a79fa9cbf49f742ff62777"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    // Redireciona se já estiver logado
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        window.location.href = "index.html";
+      }
+    });
+
+    // Login
+    document.getElementById("loginBtn").addEventListener("click", async () => {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+        alert("Login realizado com sucesso!");
+        window.location.href = "index.html";
+      } catch (error) {
+        alert("Erro ao fazer login: " + error.message);
+      }
+    });
+
+    // Cadastro
+    document.getElementById("registerBtn").addEventListener("click", async () => {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      try {
+        await createUserWithEmailAndPassword(auth, email, password);
+        alert("Conta criada com sucesso!");
+        window.location.href = "index.html";
+      } catch (error) {
+        alert("Erro ao criar conta: " + error.message);
+      }
+    });
+  </script>
+</body>
+</html>
