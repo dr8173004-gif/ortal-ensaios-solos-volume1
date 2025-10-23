@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login | Portal Ensaios de Solos</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&family=Open+Sans&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(160deg, #013C5A 0%, #025d85 100%);
+      font-family: 'Open Sans', sans-serif;
+      color: #fff;
+    }
+    .login-container {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      padding: 40px 30px;
+      border-radius: 20px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+      text-align: center;
+      width: 330px;
+      animation: fadeIn 0.8s ease-in-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    h2 {
+      font-family: 'Montserrat', sans-serif;
+      margin-bottom: 20px;
+      color: #fff;
+    }
+    input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: none;
+      border-radius: 8px;
+      outline: none;
+      font-size: 14px;
+    }
+    button {
+      width: 48%;
+      padding: 10px;
+      margin-top: 12px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-family: 'Montserrat', sans-serif;
+      transition: all 0.3s ease;
+    }
+    #loginBtn {
+      background: #28a745;
+      color: white;
+    }
+    #loginBtn:hover {
+      background: #2ecc71;
+      box-shadow: 0 0 10px #28a745;
+    }
+    #registerBtn {
+      background: #666;
+      color: white;
+    }
+    #registerBtn:hover {
+      background: #888;
+    }
+    .footer {
+      margin-top: 20px;
+      font-size: 13px;
+      color: rgba(255,255,255,0.8);
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <h2>🔒 Acesso ao Portal</h2>
+    <input id="email" type="email" placeholder="E-mail" />
+    <input id="password" type="password" placeholder="Senha" />
+    <div>
+      <button id="loginBtn">Entrar</button>
+      <button id="registerBtn">Cadastrar</button>
+    </div>
+    <div class="footer">Seu acesso é pessoal e intransferível.</div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged } 
+      from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDY5IFakVFbbLn8UQHUCgea7KOx_zZjvlY",
+      authDomain: "portal-ensaios-solos-vol1.firebaseapp.com",
+      projectId: "portal-ensaios-solos-vol1",
+      storageBucket: "portal-ensaios-solos-vol1.firebasestorage.app",
+      messagingSenderId: "217730071254",
+      appId: "1:217730071254:web:a79fa9cbf49f742ff62777"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        window.location.href = "./portal.html";
+      }
+    });
+
+    document.getElementById("loginBtn").addEventListener("click", async () => {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+        alert("Login realizado com sucesso!");
+        window.location.href = "./portal.html";
+      } catch (error) {
+        alert("Erro ao fazer login: " + error.message);
+      }
+    });
+
+    document.getElementById("registerBtn").addEventListener("click", async () => {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      try {
+        await createUserWithEmailAndPassword(auth, email, password);
+        alert("Conta criada com sucesso!");
+      } catch (error) {
+        alert("Erro ao criar conta: " + error.message);
+      }
+    });
+  </script>
+</body>
+</html>
