@@ -147,7 +147,7 @@
   onAuthStateChanged(auth, (user) => {
     if (!user) {
       // 🔁 Redireciona se não estiver logado
-      window.location.href = "main/login.html";
+    window.location.href = "https://dr8173004-gif.github.io/ortal-ensaios-solos-volume1/main/login.html";
     }
   });
 
@@ -157,7 +157,7 @@
     logoutBtn.addEventListener("click", async () => {
       await signOut(auth);
       alert("Você saiu do portal.");
-      window.location.href = "main/login.html";
+     window.location.href = "https://dr8173004-gif.github.io/ortal-ensaios-solos-volume1/main/login.html";
     });
   }
 </script>
@@ -184,7 +184,7 @@
   onAuthStateChanged(auth, (user) => {
     if (!user) {
       console.warn("Usuário não autenticado — redirecionando...");
-      window.location.replace("main/login.html"); // 🔁 redireciona para login
+      window.location.href = "https://dr8173004-gif.github.io/ortal-ensaios-solos-volume1/main/login.html";// 🔁 redireciona para login
     } else {
       console.log("Usuário autenticado:", user.email);
     }
@@ -196,7 +196,7 @@
     logoutBtn.addEventListener("click", async () => {
       await signOut(auth);
       alert("Você saiu do portal.");
-      window.location.replace("main/login.html");
+  window.location.href = "https://dr8173004-gif.github.io/ortal-ensaios-solos-volume1/main/login.html";
     });
   }
 </script>
