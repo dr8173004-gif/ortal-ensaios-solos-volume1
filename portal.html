@@ -1694,95 +1694,51 @@ body::after {
     // Boot
     initChecks();
   </script>
-<!-- 🔒 Autenticação, Perfil, Progresso e Logout unificados -->
+<!-- Firebase unificado -->
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
-import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
-import { getFirestore, doc, setDoc, updateDoc, getDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+import { auth, db } from "./main/firebase-init.js";
+import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+import { doc, setDoc, updateDoc, getDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
 
-// 🔧 Configuração Firebase
-const firebaseConfig = {
-  apiKey: "AIzaSyDY5IFakVFbbLn8UQHUCgea7KOx_zZjvlY",
-  authDomain: "portal-ensaios-solos-vol1.firebaseapp.com",
-  projectId: "portal-ensaios-solos-vol1",
-  storageBucket: "portal-ensaios-solos-vol1.firebasestorage.app",
-  messagingSenderId: "217730071254",
-  appId: "1:217730071254:web:a79fa9cbf49f742ff62777"
-};
-
-// 🔌 Inicializa uma vez só
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-
-// 🧩 Cria perfil se não existir
-async function criarPerfil(user) {
-  try {
-    const ref = doc(db, "users", user.uid);
-    const snap = await getDoc(ref);
-    if (!snap.exists()) {
-      await setDoc(ref, {
-        nome: user.displayName || user.email.split("@")[0],
-        email: user.email,
-        criadoEm: serverTimestamp(),
-        ativo: true,
-        progresso: { mod0: false, mod1: false, mod2: false, mod3: false, mod4: false }
-      });
-      console.log("✅ Perfil criado:", user.email);
-    }
-  } catch (e) {
-    console.error("Erro ao criar perfil:", e);
-  }
-}
-
-// 💾 Salva progresso no Firestore
-async function salvarProgresso(uid, modulo, completo) {
-  const ref = doc(db, "users", uid);
-  try {
-    await updateDoc(ref, { [`progresso.${modulo}`]: completo });
-    console.log(`💾 Progresso salvo: ${modulo} = ${completo}`);
-  } catch {
-    await setDoc(ref, { progresso: { [modulo]: completo } }, { merge: true });
-  }
-}
-
-// 🧭 Verifica login
-onAuthStateChanged(auth, (user) => {
+// Protege e inicializa
+onAuthStateChanged(auth, async (user) => {
   if (!user) {
-    console.warn("Usuário não autenticado — redirecionando...");
-    window.location.href = "./index.html";
+    window.location.href = "./main/login.html";
     return;
   }
 
-  criarPerfil(user); // garante perfil
+  // Cria perfil
+  const ref = doc(db, "users", user.uid);
+  const snap = await getDoc(ref);
+  if (!snap.exists()) {
+    await setDoc(ref, {
+      nome: user.displayName || user.email.split("@")[0],
+      email: user.email,
+      criadoEm: serverTimestamp(),
+      progresso: { mod0: false, mod1: false, mod2: false, mod3: false, mod4: false }
+    });
+  }
 
-  // mostra nome do usuário
-  const span = document.getElementById("userName");
-  if (span) span.textContent = `👋 Olá, ${user.displayName || user.email.split("@")[0]}`;
-
-  // vincula checkboxes
+  // Atualiza progresso
   const cks = document.querySelectorAll(".ck");
   cks.forEach((ck) => {
     ck.addEventListener("change", async () => {
-      const section = ck.closest("main[id^='content-mod-']") || ck.closest("section.module");
+      const section = ck.closest("main[id^='content-mod-']");
       const modulo = section ? section.id.replace("content-", "") : "modX";
       const todas = section.querySelectorAll(".ck");
       const concluidas = Array.from(todas).filter(c => c.checked).length;
       const completo = concluidas === todas.length;
-      await salvarProgresso(user.uid, modulo, completo);
+      await updateDoc(ref, { [`progresso.${modulo}`]: completo });
+      console.log(`💾 ${modulo} atualizado: ${completo}`);
     });
   });
 });
 
-// 🔘 Logout
-const logoutBtn = document.getElementById("logoutBtn");
-if (logoutBtn) {
-  logoutBtn.addEventListener("click", async () => {
-    await signOut(auth);
-    alert("Você saiu do portal com sucesso!");
-    window.location.href = "./index.html";
-  });
-}
+// Logout
+document.getElementById("logoutBtn")?.addEventListener("click", async () => {
+  await signOut(auth);
+  window.location.href = "./main/login.html";
+});
 </script>
 
 <!-- 🔵 Cabeçalho do usuário -->
