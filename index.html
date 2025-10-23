@@ -3416,7 +3416,7 @@ body::after {
     // Boot
     initChecks();
   </script>
- <!-- 🔥 Login do Firebase + Portal do Curso -->
+<!-- 🔥 Login do Firebase -->
 <div id="loginModal" style="
   position:fixed;
   top:0; left:0;
@@ -3424,59 +3424,44 @@ body::after {
   display:flex;
   justify-content:center;
   align-items:center;
-  background:rgba(1,60,90,0.95);
+  background:rgba(1,60,90,0.96);
   backdrop-filter:blur(10px);
   color:#fff;
   flex-direction:column;
   z-index:99999;
-  overflow:hidden;
   font-family:'Montserrat',sans-serif;
   text-align:center;
   padding:20px;
-  margin:0;
- pointer-events: all;
+  overflow:hidden;
 ">
-
-  <h2 style="margin-bottom:20px;font-weight:600;">🔐 Acesso ao Portal</h2>
-  <input id="email" type="email" placeholder="E-mail" 
-    style="margin:8px;padding:10px;width:260px;border:none;border-radius:6px;outline:none;">
-  <input id="password" type="password" placeholder="Senha" 
-    style="margin:8px;padding:10px;width:260px;border:none;border-radius:6px;outline:none;">
-  <div style="margin-top:12px;">
-    <button id="loginBtn" 
-      style="background:#28a745;color:#fff;padding:10px 20px;margin:6px;
-      border:none;border-radius:6px;cursor:pointer;">Entrar</button>
-    <button id="registerBtn" 
-      style="background:#666;color:#fff;padding:10px 20px;margin:6px;
-      border:none;border-radius:6px;cursor:pointer;">Cadastrar</button>
+  <h2 style="font-size:1.6rem;margin-bottom:12px;">🔒 Acesso ao Portal</h2>
+  <input id="email" type="email" placeholder="E-mail"
+    style="margin:8px;padding:10px;width:260px;border:none;border-radius:6px;">
+  <input id="password" type="password" placeholder="Senha"
+    style="margin:8px;padding:10px;width:260px;border:none;border-radius:6px;">
+  <div>
+    <button id="loginBtn" style="background:#28a745;color:#fff;padding:8px 18px;margin:4px;border:none;border-radius:6px;cursor:pointer;">Entrar</button>
+    <button id="registerBtn" style="background:#666;color:#fff;padding:8px 18px;margin:4px;border:none;border-radius:6px;cursor:pointer;">Cadastrar</button>
   </div>
-  <p style="margin-top:18px;font-size:14px;opacity:.85;">Seu acesso é pessoal e intransferível.</p>
+  <p style="font-size:0.9rem;opacity:0.8;margin-top:10px;">Seu acesso é pessoal e intransferível.</p>
 </div>
 
-<div id="portalContent" style="pointer-events:none; filter:blur(4px); opacity:0.4; transition:all .3s ease;">
-  <button id="logoutBtn" 
-    style="position:fixed;top:10px;right:10px;background:#28a745;
-    color:#fff;padding:8px 16px;border:none;border-radius:6px;cursor:pointer;z-index:999;">
-    Sair
-  </button>
-
-  <!-- Aqui fica todo o conteúdo do portal -->
-  <main style="padding:60px 20px;text-align:center;color:#013C5A;font-family:'Open Sans',sans-serif;">
-    <h1>Bem-vindo ao Portal Interativo – Ensaios de Solos (Vol. 1)</h1>
-    <p style="max-width:700px;margin:auto;margin-top:20px;">
-      Você está autenticado e pode acessar todos os módulos do curso.  
-      Utilize o menu acima para navegar entre os ensaios e anotar seus resultados.
-    </p>
-  </main>
+<div id="portalContent" style="
+  pointer-events:none;
+  user-select:none;
+  filter:blur(4px);
+  opacity:0.4;
+  transition:all .3s ease;
+">
+  <button id="logoutBtn" style="position:fixed;top:10px;right:10px;background:#28a745;color:#fff;padding:8px;border:none;border-radius:6px;z-index:999;">Sair</button>
 </div>
 
-<!-- Script de autenticação Firebase -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
-  import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } 
+  import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged }
     from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
 
-  // Configuração do Firebase
+  // Config Firebase
   const firebaseConfig = {
     apiKey: "AIzaSyDY5IFakVFbbLn8UQHUCgea7KOx_zZjvlY",
     authDomain: "portal-ensaios-solos-vol1.firebaseapp.com",
@@ -3486,91 +3471,72 @@ body::after {
     appId: "1:217730071254:web:a79fa9cbf49f742ff62777"
   };
 
-  // Inicializa Firebase
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
-  console.log("[DEBUG] Firebase inicializado:", app.name);
-// Força logout ao abrir o site (para testes e novos acessos)
-import { signOut } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
-signOut(auth).then(() => {
-  console.log("[DEBUG] Sessão limpa. Usuário precisa logar.");
-}).catch((err) => {
-  console.error("[ERRO] ao limpar sessão:", err);
-});
 
-  // Executa apenas após o DOM carregar
-  document.addEventListener("DOMContentLoaded", () => {
-    // Bloqueia scroll do body quando login estiver ativo
-const body = document.body;
-const toggleScroll = (enable) => {
-  body.style.overflow = enable ? "auto" : "hidden";
-};
+  const loginModal = document.getElementById('loginModal');
+  const portalContent = document.getElementById('portalContent');
+  const loginBtn = document.getElementById('loginBtn');
+  const registerBtn = document.getElementById('registerBtn');
+  const logoutBtn = document.getElementById('logoutBtn');
 
-    const loginModal    = document.getElementById("loginModal");
-    const portalContent = document.getElementById("portalContent");
-    const loginBtn      = document.getElementById("loginBtn");
-    const registerBtn   = document.getElementById("registerBtn");
-    const logoutBtn     = document.getElementById("logoutBtn");
+  // Função para ativar/desativar scroll
+  const toggleScroll = (enable) => {
+    document.body.style.overflow = enable ? "auto" : "hidden";
+  };
 
-    // Verifica estado de login
-   onAuthStateChanged(auth, (user) => {
-  console.log("[DEBUG] Estado do usuário:", user);
-  if (user) {
-    // Usuário logado: exibe portal e libera interações
-    loginModal.style.display = "none";
-    portalContent.style.display = "block";
-    portalContent.style.pointerEvents = "all";
-    portalContent.style.filter = "none";
-    portalContent.style.opacity = "1";
-    toggleScroll(true);
-  } else {
-    // Usuário não logado: bloqueia portal
-    loginModal.style.display = "flex";
-    portalContent.style.pointerEvents = "none";
-    portalContent.style.filter = "blur(4px)";
-    portalContent.style.opacity = "0.4";
-    toggleScroll(false);
-  }
-});
+  // Sempre forçar logout ao abrir o site (garante que login seja obrigatório)
+  signOut(auth).then(() => console.log("[DEBUG] Sessão limpa.")).catch(()=>{});
 
+  // Controle de estado
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      // Usuário logado → libera portal
+      loginModal.style.display = "none";
+      portalContent.style.pointerEvents = "all";
+      portalContent.style.userSelect = "auto";
+      portalContent.style.filter = "none";
+      portalContent.style.opacity = "1";
+      toggleScroll(true);
+    } else {
+      // Sem login → bloqueia portal
+      loginModal.style.display = "flex";
+      portalContent.style.pointerEvents = "none";
+      portalContent.style.userSelect = "none";
+      portalContent.style.filter = "blur(4px)";
+      portalContent.style.opacity = "0.4";
+      toggleScroll(false);
+    }
+  });
 
+  // Botão login
+  loginBtn.addEventListener('click', async () => {
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      alert('✅ Login realizado com sucesso!');
+    } catch (error) {
+      alert('Erro ao fazer login: ' + error.message);
+    }
+  });
 
-    // Login
-    loginBtn.addEventListener("click", async () => {
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
-      try {
-        await signInWithEmailAndPassword(auth, email, password);
-        alert("✅ Login realizado com sucesso!");
-      } catch (error) {
-        console.error("[ERRO] Login:", error.code, error.message);
-        alert("Erro ao fazer login: " + error.message);
-      }
-    });
+  // Botão registrar
+  registerBtn.addEventListener('click', async () => {
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    try {
+      await createUserWithEmailAndPassword(auth, email, password);
+      alert('Conta criada com sucesso! Agora faça login.');
+    } catch (error) {
+      alert('Erro ao criar conta: ' + error.message);
+    }
+  });
 
-    // Registro
-    registerBtn.addEventListener("click", async () => {
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
-      try {
-        await createUserWithEmailAndPassword(auth, email, password);
-        alert("✅ Conta criada com sucesso!");
-      } catch (error) {
-        console.error("[ERRO] Cadastro:", error.code, error.message);
-        alert("Erro ao criar conta: " + error.message);
-      }
-    });
-
-    // Logout
-    logoutBtn.addEventListener("click", async () => {
-      try {
-        await signOut(auth);
-        alert("Você saiu do portal.");
-      } catch (error) {
-        console.error("[ERRO] Logout:", error.code, error.message);
-        alert("Erro ao sair: " + error.message);
-      }
-    });
+  // Botão sair
+  logoutBtn.addEventListener('click', async () => {
+    await signOut(auth);
+    alert('Você saiu do portal.');
   });
 </script>
 
