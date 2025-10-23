@@ -3418,11 +3418,24 @@ body::after {
   </script>
  <!-- 🔥 Login do Firebase + Portal do Curso -->
 <div id="loginModal" style="
-  position:fixed;top:0;left:0;width:100%;height:100%;
-  display:flex;justify-content:center;align-items:center;
-  background:rgba(1,60,90,.9);color:#fff;flex-direction:column;z-index:9999;
-  font-family:'Montserrat',sans-serif;text-align:center;padding:20px;
+  position:fixed;
+  top:0; left:0;
+  width:100vw; height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:rgba(1,60,90,0.95);
+  backdrop-filter:blur(10px);
+  color:#fff;
+  flex-direction:column;
+  z-index:99999;
+  overflow:hidden;
+  font-family:'Montserrat',sans-serif;
+  text-align:center;
+  padding:20px;
+  margin:0;
 ">
+
   <h2 style="margin-bottom:20px;font-weight:600;">🔐 Acesso ao Portal</h2>
   <input id="email" type="email" placeholder="E-mail" 
     style="margin:8px;padding:10px;width:260px;border:none;border-radius:6px;outline:none;">
@@ -3479,6 +3492,12 @@ body::after {
 
   // Executa apenas após o DOM carregar
   document.addEventListener("DOMContentLoaded", () => {
+    // Bloqueia scroll do body quando login estiver ativo
+const body = document.body;
+const toggleScroll = (enable) => {
+  body.style.overflow = enable ? "auto" : "hidden";
+};
+
     const loginModal    = document.getElementById("loginModal");
     const portalContent = document.getElementById("portalContent");
     const loginBtn      = document.getElementById("loginBtn");
@@ -3487,15 +3506,18 @@ body::after {
 
     // Verifica estado de login
     onAuthStateChanged(auth, (user) => {
-      console.log("[DEBUG] Estado do usuário:", user);
-      if (user) {
-        loginModal.style.display = "none";
-        portalContent.style.display = "block";
-      } else {
-        loginModal.style.display = "flex";
-        portalContent.style.display = "none";
-      }
-    });
+  console.log("[DEBUG] Estado do usuário:", user);
+  if (user) {
+    loginModal.style.display = "none";
+    portalContent.style.display = "block";
+    toggleScroll(true);
+  } else {
+    loginModal.style.display = "flex";
+    portalContent.style.display = "none";
+    toggleScroll(false);
+  }
+});
+
 
     // Login
     loginBtn.addEventListener("click", async () => {
