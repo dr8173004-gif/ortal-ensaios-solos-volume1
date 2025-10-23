@@ -1713,41 +1713,10 @@ body::after {
       portalContent.style.display = 'none';
     }
   });
-
-  document.getElementById('loginBtn').addEventListener('click', async () => {
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
-    try {
-      await signInWithEmailAndPassword(auth, email, password);
-      alert('Login realizado com sucesso!');
-    } catch (error) {
-      alert('Erro ao fazer login: ' + error.message);
-    }
-  });
-
-  document.getElementById('registerBtn').addEventListener('click', async () => {
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
-    try {
-      await createUserWithEmailAndPassword(auth, email, password);
-      alert('Conta criada com sucesso!');
-    } catch (error) {
-      alert('Erro ao criar conta: ' + error.message);
-    }
-  });
-
-  document.getElementById('logoutBtn').addEventListener('click', async () => {
-    await signOut(auth);
-    alert('Você saiu do portal.');
-  });
-</script>
-
 <!-- Modal de Login -->
-<div id="loginModal" style="
-  position:fixed;top:0;left:0;width:100%;height:100%;
-  display:flex;justify-content:center;align-items:center;
-  background:rgba(1,60,90,.9);color:#fff;flex-direction:column;z-index:9999;">
-  
+<div id="loginModal" style="position:fixed;top:0;left:0;width:100%;height:100%;
+display:flex;justify-content:center;align-items:center;
+background:rgba(1,60,90,.9);color:#fff;flex-direction:column;z-index:9999;">
   <h2 style="font-family:Montserrat;">Acesso ao Portal</h2>
   <input id="email" type="email" placeholder="E-mail" style="margin:8px;padding:8px;width:240px;">
   <input id="password" type="password" placeholder="Senha" style="margin:8px;padding:8px;width:240px;">
@@ -1762,9 +1731,6 @@ body::after {
   <!-- TODO: todo o conteúdo do portal vai aqui -->
   <button id="logoutBtn" style="position:fixed;top:10px;right:10px;background:#28a745;color:#fff;padding:8px;border:none;border-radius:6px;">Sair</button>
 </div>
-
-</body>
-</html>
 
 </body>
 </html>
