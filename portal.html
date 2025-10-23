@@ -3416,8 +3416,44 @@ body::after {
     // Boot
     initChecks();
   </script>
+<!-- 🔒 Proteção do Portal + Logout -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
 
+  // Configuração Firebase
+  const firebaseConfig = {
+    apiKey: "AIzaSyDY5IFakVFbbLn8UQHUCgea7KOx_zZjvlY",
+    authDomain: "portal-ensaios-solos-vol1.firebaseapp.com",
+    projectId: "portal-ensaios-solos-vol1",
+    storageBucket: "portal-ensaios-solos-vol1.firebasestorage.app",
+    messagingSenderId: "217730071254",
+    appId: "1:217730071254:web:a79fa9cbf49f742ff62777"
+  };
 
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  // 🔍 Proteção: verifica login
+  onAuthStateChanged(auth, (user) => {
+    if (!user) {
+      console.warn("Usuário não autenticado — redirecionando...");
+      window.location.href = "./index.html";
+    } else {
+      console.log("Usuário autenticado:", user.email);
+    }
+  });
+
+  // 🔘 Logout funcional
+  const logoutBtn = document.getElementById("logoutBtn");
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", async () => {
+      await signOut(auth);
+      alert("Você saiu do portal com sucesso!");
+      window.location.href = "./index.html";
+    });
+  }
+</script>
 
 </body>
 </html>
