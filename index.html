@@ -3434,6 +3434,7 @@ body::after {
   text-align:center;
   padding:20px;
   margin:0;
+ pointer-events: all;
 ">
 
   <h2 style="margin-bottom:20px;font-weight:600;">🔐 Acesso ao Portal</h2>
@@ -3452,7 +3453,7 @@ body::after {
   <p style="margin-top:18px;font-size:14px;opacity:.85;">Seu acesso é pessoal e intransferível.</p>
 </div>
 
-<div id="portalContent" style="display:none;">
+<div id="portalContent" style="pointer-events:none; filter:blur(4px); opacity:0.4; transition:all .3s ease;">
   <button id="logoutBtn" 
     style="position:fixed;top:10px;right:10px;background:#28a745;
     color:#fff;padding:8px 16px;border:none;border-radius:6px;cursor:pointer;z-index:999;">
@@ -3512,18 +3513,26 @@ const toggleScroll = (enable) => {
     const logoutBtn     = document.getElementById("logoutBtn");
 
     // Verifica estado de login
-    onAuthStateChanged(auth, (user) => {
+   onAuthStateChanged(auth, (user) => {
   console.log("[DEBUG] Estado do usuário:", user);
   if (user) {
+    // Usuário logado: exibe portal e libera interações
     loginModal.style.display = "none";
     portalContent.style.display = "block";
+    portalContent.style.pointerEvents = "all";
+    portalContent.style.filter = "none";
+    portalContent.style.opacity = "1";
     toggleScroll(true);
   } else {
+    // Usuário não logado: bloqueia portal
     loginModal.style.display = "flex";
-    portalContent.style.display = "none";
+    portalContent.style.pointerEvents = "none";
+    portalContent.style.filter = "blur(4px)";
+    portalContent.style.opacity = "0.4";
     toggleScroll(false);
   }
 });
+
 
 
     // Login
