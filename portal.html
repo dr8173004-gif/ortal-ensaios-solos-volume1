@@ -235,6 +235,19 @@ body::after {
       </nav>
     </div>
   </header>
+  </header>
+
+  <!-- 📈 Barra de progresso geral -->
+  <section id="progresso-geral" style="background:#f8f9fa;padding:15px 0;text-align:center;border-bottom:1px solid #ddd;">
+    <h3 style="font-family:Montserrat;font-weight:600;color:#013C5A;">
+      📈 Seu Progresso Geral: <span id="percentualGeral">0%</span>
+    </h3>
+    <div style="width:60%;margin:10px auto;background:#e0e0e0;border-radius:10px;height:10px;position:relative;">
+      <div id="barraGeral" style="background:#28a745;width:0%;height:10px;border-radius:10px;transition:width 0.5s ease;"></div>
+    </div>
+  </section>
+
+  <div id="home" class="hero" tabindex="-1">
 
   <div id="home" class="hero" tabindex="-1">
     <div class="card">
@@ -1834,6 +1847,78 @@ body::after {
     });
   }
 </script>
-  
+  .progress-container {
+  width: 100%;
+  background: #e0e0e0;
+  border-radius: 10px;
+  height: 10px;
+  margin-top: 8px;
+  position: relative;
+}
+.progress-bar {
+  background: #28a745;
+  height: 10px;
+  width: 0%;
+  border-radius: 10px;
+  transition: width 0.5s ease;
+}
+.progress-text {
+  font-size: 14px;
+  color: #013C5A;
+  position: absolute;
+  top: -20px;
+  right: 0;
+}
+<!-- 💾 Salvamento automático de progresso no Firestore -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+  import { getFirestore, doc, setDoc, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDY5IFakVFbbLn8UQHUCgea7KOx_zZjvlY",
+    authDomain: "portal-ensaios-solos-vol1.firebaseapp.com",
+    projectId: "portal-ensaios-solos-vol1",
+    storageBucket: "portal-ensaios-solos-vol1.firebasestorage.app",
+    messagingSenderId: "217730071254",
+    appId: "1:217730071254:web:a79fa9cbf49f742ff62777"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  // 🧩 Função para salvar progresso
+  async function salvarProgresso(uid, modulo, status) {
+    const userRef = doc(db, "users", uid);
+    const snap = await getDoc(userRef);
+    if (snap.exists()) {
+      await updateDoc(userRef, { [`progresso.${modulo}`]: status });
+    } else {
+      await setDoc(userRef, { progresso: { [modulo]: status } });
+    }
+    console.log(`✅ Progresso salvo: ${modulo} = ${status}`);
+  }
+
+  // 🎯 Detecta mudança nos checkboxes de módulos
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      const checkboxes = document.querySelectorAll(".ck"); // Cada checkbox de micro-passos
+      checkboxes.forEach((ck) => {
+        ck.addEventListener("change", async () => {
+          const modulo = ck.closest("section.module")?.id || "modX";
+          const todas = ck.closest("section.module").querySelectorAll(".ck");
+          const concluidas = Array.from(todas).filter(c => c.checked).length;
+          const total = todas.length;
+          const completo = concluidas === total;
+
+          // salva o estado do módulo
+          await salvarProgresso(user.uid, modulo, completo);
+        });
+      });
+    }
+  });
+</script>
+
 </body>
 </html>
