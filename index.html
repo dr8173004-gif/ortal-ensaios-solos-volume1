@@ -3419,22 +3419,22 @@ body::after {
 <!-- 🔥 Login do Firebase -->
 <div id="loginModal" style="
   position:fixed;
-  top:0; left:0;
-  width:100vw; height:100vh;
+  inset:0;
+  width:100vw;
+  height:100vh;
   display:flex;
   justify-content:center;
   align-items:center;
-  background:rgba(1,60,90,0.96);
-  backdrop-filter:blur(10px);
-  color:#fff;
   flex-direction:column;
-  z-index:99999;
+  background:rgba(1,60,90,0.95);
+  backdrop-filter:blur(12px);
+  color:#fff;
   font-family:'Montserrat',sans-serif;
   text-align:center;
-  padding:20px;
-  overflow:hidden;
+  z-index:999999;
+  pointer-events:auto;
 ">
-  <h2 style="font-size:1.6rem;margin-bottom:12px;">🔒 Acesso ao Portal</h2>
+  <h2 style="font-size:1.8rem;margin-bottom:12px;">🔒 Acesso ao Portal</h2>
   <input id="email" type="email" placeholder="E-mail"
     style="margin:8px;padding:10px;width:260px;border:none;border-radius:6px;">
   <input id="password" type="password" placeholder="Senha"
@@ -3446,6 +3446,17 @@ body::after {
   <p style="font-size:0.9rem;opacity:0.8;margin-top:10px;">Seu acesso é pessoal e intransferível.</p>
 </div>
 
+<!-- 🔒 Bloqueador invisível para evitar cliques no portal -->
+<div id="clickBlocker" style="
+  position:fixed;
+  inset:0;
+  width:100vw;
+  height:100vh;
+  background:transparent;
+  z-index:99998;
+  display:block;
+"></div>
+
 <div id="portalContent" style="
   pointer-events:none;
   user-select:none;
@@ -3453,7 +3464,7 @@ body::after {
   opacity:0.4;
   transition:all .3s ease;
 ">
-  <button id="logoutBtn" style="position:fixed;top:10px;right:10px;background:#28a745;color:#fff;padding:8px;border:none;border-radius:6px;z-index:999;">Sair</button>
+  <button id="logoutBtn" style="position:fixed;top:10px;right:10px;background:#28a745;color:#fff;padding:8px;border:none;border-radius:6px;z-index:998;">Sair</button>
 </div>
 
 <script type="module">
