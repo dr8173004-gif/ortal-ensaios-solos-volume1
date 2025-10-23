@@ -1919,6 +1919,51 @@ body::after {
     }
   });
 </script>
+<!-- 🧠 Criação automática do perfil do aluno no Firestore -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+  import { getFirestore, doc, setDoc, getDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDY5IFakVFbbLn8UQHUCgea7KOx_zZjvlY",
+    authDomain: "portal-ensaios-solos-vol1.firebaseapp.com",
+    projectId: "portal-ensaios-solos-vol1",
+    storageBucket: "portal-ensaios-solos-vol1.firebasestorage.app",
+    messagingSenderId: "217730071254",
+    appId: "1:217730071254:web:a79fa9cbf49f742ff62777"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  // 🧩 Função que cria o perfil no Firestore se ainda não existir
+  async function criarPerfilUsuario(user) {
+    try {
+      const userRef = doc(db, "users", user.uid);
+      const snap = await getDoc(userRef);
+      if (!snap.exists()) {
+        await setDoc(userRef, {
+          nome: user.displayName || "Usuário sem nome",
+          email: user.email,
+          criadoEm: serverTimestamp(),
+          progresso: { mod0: false, mod1: false, mod2: false, mod3: false, mod4: false }
+        });
+        console.log("✅ Perfil criado para:", user.email);
+      } else {
+        console.log("ℹ️ Perfil já existe:", user.email);
+      }
+    } catch (e) {
+      console.error("❌ Erro ao criar perfil:", e);
+    }
+  }
+
+  // 🧠 Executa automaticamente quando o usuário loga
+  onAuthStateChanged(auth, (user) => {
+    if (user) criarPerfilUsuario(user);
+  });
+</script>
 
 </body>
 </html>
