@@ -3416,28 +3416,53 @@ body::after {
     // Boot
     initChecks();
   </script>
-  
-<!-- 🔥 Login do Firebase -->
-<div id="loginModal" style="position:fixed;top:0;left:0;width:100%;height:100%;
-display:flex;justify-content:center;align-items:center;
-background:rgba(1,60,90,.9);color:#fff;flex-direction:column;z-index:9999;">
-  <h2 style="font-family:Montserrat;">Acesso ao Portal</h2>
-  <input id="email" type="email" placeholder="E-mail" style="margin:8px;padding:8px;width:240px;">
-  <input id="password" type="password" placeholder="Senha" style="margin:8px;padding:8px;width:240px;">
-  <div>
-    <button id="loginBtn" style="background:#28a745;color:#fff;padding:8px 16px;margin:4px;border:none;border-radius:6px;">Entrar</button>
-    <button id="registerBtn" style="background:#666;color:#fff;padding:8px 16px;margin:4px;border:none;border-radius:6px;">Cadastrar</button>
+ <!-- 🔥 Login do Firebase + Portal do Curso -->
+<div id="loginModal" style="
+  position:fixed;top:0;left:0;width:100%;height:100%;
+  display:flex;justify-content:center;align-items:center;
+  background:rgba(1,60,90,.9);color:#fff;flex-direction:column;z-index:9999;
+  font-family:'Montserrat',sans-serif;text-align:center;padding:20px;
+">
+  <h2 style="margin-bottom:20px;font-weight:600;">🔐 Acesso ao Portal</h2>
+  <input id="email" type="email" placeholder="E-mail" 
+    style="margin:8px;padding:10px;width:260px;border:none;border-radius:6px;outline:none;">
+  <input id="password" type="password" placeholder="Senha" 
+    style="margin:8px;padding:10px;width:260px;border:none;border-radius:6px;outline:none;">
+  <div style="margin-top:12px;">
+    <button id="loginBtn" 
+      style="background:#28a745;color:#fff;padding:10px 20px;margin:6px;
+      border:none;border-radius:6px;cursor:pointer;">Entrar</button>
+    <button id="registerBtn" 
+      style="background:#666;color:#fff;padding:10px 20px;margin:6px;
+      border:none;border-radius:6px;cursor:pointer;">Cadastrar</button>
   </div>
+  <p style="margin-top:18px;font-size:14px;opacity:.85;">Seu acesso é pessoal e intransferível.</p>
 </div>
 
-<div id="portalContent">
-  <button id="logoutBtn" style="position:fixed;top:10px;right:10px;background:#28a745;color:#fff;padding:8px;border:none;border-radius:6px;">Sair</button>
+<div id="portalContent" style="display:none;">
+  <button id="logoutBtn" 
+    style="position:fixed;top:10px;right:10px;background:#28a745;
+    color:#fff;padding:8px 16px;border:none;border-radius:6px;cursor:pointer;z-index:999;">
+    Sair
+  </button>
+
+  <!-- Aqui fica todo o conteúdo do portal -->
+  <main style="padding:60px 20px;text-align:center;color:#013C5A;font-family:'Open Sans',sans-serif;">
+    <h1>Bem-vindo ao Portal Interativo – Ensaios de Solos (Vol. 1)</h1>
+    <p style="max-width:700px;margin:auto;margin-top:20px;">
+      Você está autenticado e pode acessar todos os módulos do curso.  
+      Utilize o menu acima para navegar entre os ensaios e anotar seus resultados.
+    </p>
+  </main>
 </div>
+
+<!-- Script de autenticação Firebase -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
   import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } 
     from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
 
+  // Configuração do Firebase
   const firebaseConfig = {
     apiKey: "AIzaSyDY5IFakVFbbLn8UQHUCgea7KOx_zZjvlY",
     authDomain: "portal-ensaios-solos-vol1.firebaseapp.com",
@@ -3447,52 +3472,70 @@ background:rgba(1,60,90,.9);color:#fff;flex-direction:column;z-index:9999;">
     appId: "1:217730071254:web:a79fa9cbf49f742ff62777"
   };
 
+  // Inicializa Firebase
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
+  console.log("[DEBUG] Firebase inicializado:", app.name);
 
-  const loginModal = document.getElementById('loginModal');
-  const portalContent = document.getElementById('portalContent');
-  const loginBtn = document.getElementById('loginBtn');
-  const registerBtn = document.getElementById('registerBtn');
-  const logoutBtn = document.getElementById('logoutBtn');
+  // Executa apenas após o DOM carregar
+  document.addEventListener("DOMContentLoaded", () => {
+    const loginModal    = document.getElementById("loginModal");
+    const portalContent = document.getElementById("portalContent");
+    const loginBtn      = document.getElementById("loginBtn");
+    const registerBtn   = document.getElementById("registerBtn");
+    const logoutBtn     = document.getElementById("logoutBtn");
 
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      loginModal.style.display = 'none';
-      portalContent.style.display = 'block';
-    } else {
-      loginModal.style.display = 'flex';
-      portalContent.style.display = 'none';
-    }
-  });
+    // Verifica estado de login
+    onAuthStateChanged(auth, (user) => {
+      console.log("[DEBUG] Estado do usuário:", user);
+      if (user) {
+        loginModal.style.display = "none";
+        portalContent.style.display = "block";
+      } else {
+        loginModal.style.display = "flex";
+        portalContent.style.display = "none";
+      }
+    });
 
-  loginBtn.addEventListener('click', async () => {
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
-    try {
-      await signInWithEmailAndPassword(auth, email, password);
-      alert('Login realizado com sucesso!');
-    } catch (error) {
-      alert('Erro ao fazer login: ' + error.message);
-    }
-  });
+    // Login
+    loginBtn.addEventListener("click", async () => {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+        alert("✅ Login realizado com sucesso!");
+      } catch (error) {
+        console.error("[ERRO] Login:", error.code, error.message);
+        alert("Erro ao fazer login: " + error.message);
+      }
+    });
 
-  registerBtn.addEventListener('click', async () => {
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
-    try {
-      await createUserWithEmailAndPassword(auth, email, password);
-      alert('Conta criada com sucesso!');
-    } catch (error) {
-      alert('Erro ao criar conta: ' + error.message);
-    }
-  });
+    // Registro
+    registerBtn.addEventListener("click", async () => {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      try {
+        await createUserWithEmailAndPassword(auth, email, password);
+        alert("✅ Conta criada com sucesso!");
+      } catch (error) {
+        console.error("[ERRO] Cadastro:", error.code, error.message);
+        alert("Erro ao criar conta: " + error.message);
+      }
+    });
 
-  logoutBtn.addEventListener('click', async () => {
-    await signOut(auth);
-    alert('Você saiu do portal.');
+    // Logout
+    logoutBtn.addEventListener("click", async () => {
+      try {
+        await signOut(auth);
+        alert("Você saiu do portal.");
+      } catch (error) {
+        console.error("[ERRO] Logout:", error.code, error.message);
+        alert("Erro ao sair: " + error.message);
+      }
+    });
   });
 </script>
+
 </div> <!-- fecha o portalContent -->
 
 </body>
