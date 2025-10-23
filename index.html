@@ -3489,6 +3489,13 @@ body::after {
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
   console.log("[DEBUG] Firebase inicializado:", app.name);
+// Força logout ao abrir o site (para testes e novos acessos)
+import { signOut } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+signOut(auth).then(() => {
+  console.log("[DEBUG] Sessão limpa. Usuário precisa logar.");
+}).catch((err) => {
+  console.error("[ERRO] ao limpar sessão:", err);
+});
 
   // Executa apenas após o DOM carregar
   document.addEventListener("DOMContentLoaded", () => {
