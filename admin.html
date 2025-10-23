@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Painel Admin – Ensaios de Solos</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Open+Sans&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      background: linear-gradient(120deg, #013C5A, #025072);
+      font-family: 'Open Sans', sans-serif;
+      color: #fff;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      font-family: 'Montserrat', sans-serif;
+      text-align: center;
+      color: #fff;
+      margin-bottom: 24px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: rgba(255,255,255,0.1);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    th, td {
+      padding: 10px;
+      text-align: center;
+      border-bottom: 1px solid rgba(255,255,255,0.2);
+    }
+    th {
+      background: rgba(1,60,90,0.8);
+      font-weight: 700;
+    }
+    tr:hover {
+      background: rgba(255,255,255,0.15);
+    }
+    .check {
+      color: #28a745;
+      font-weight: 800;
+    }
+    .x {
+      color: #ff4444;
+      font-weight: 800;
+    }
+    .logout {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #ff4444;
+      color: #fff;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 999px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .logout:hover {
+      background: #d63232;
+    }
+  </style>
+</head>
+<body>
+  <button class="logout" id="logoutBtn">Sair</button>
+  <h1>📊 Painel de Alunos — Volume 1</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>Nome</th>
+        <th>E-mail</th>
+        <th>Mód.0</th>
+        <th>Mód.1</th>
+        <th>Mód.2</th>
+        <th>Mód.3</th>
+        <th>Mód.4</th>
+        <th>Data</th>
+      </tr>
+    </thead>
+    <tbody id="tabela-alunos"></tbody>
+  </table>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+    import { getFirestore, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDY5IFakVFbbLn8UQHUCgea7KOx_zZjvlY",
+      authDomain: "portal-ensaios-solos-vol1.firebaseapp.com",
+      projectId: "portal-ensaios-solos-vol1",
+      storageBucket: "portal-ensaios-solos-vol1.firebasestorage.app",
+      messagingSenderId: "217730071254",
+      appId: "1:217730071254:web:a79fa9cbf49f742ff62777"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    // 🔐 Garante que só admin tenha acesso
+    const ADMIN_EMAIL = "diegorodrigues1784@outlook.com"; // troque se quiser
+    onAuthStateChanged(auth, (user) => {
+      if (!user || user.email !== ADMIN_EMAIL) {
+        alert("Acesso restrito. Faça login como administrador.");
+        window.location.href = "./login.html";
+      } else {
+        carregarAlunos();
+      }
+    });
+
+    // 📊 Carrega alunos em tempo real
+    function carregarAlunos() {
+      const tabela = document.getElementById("tabela-alunos");
+      const alunosRef = collection(db, "users");
+
+      onSnapshot(alunosRef, (snapshot) => {
+        tabela.innerHTML = "";
+        snapshot.forEach((doc) => {
+          const data = doc.data();
+          const p = data.progresso || {};
+          const linha = `
+            <tr>
+              <td>${data.nome || "-"}</td>
+              <td>${data.email || "-"}</td>
+              <td>${p.mod0 ? "✅" : "❌"}</td>
+              <td>${p.mod1 ? "✅" : "❌"}</td>
+              <td>${p.mod2 ? "✅" : "❌"}</td>
+              <td>${p.mod3 ? "✅" : "❌"}</td>
+              <td>${p.mod4 ? "✅" : "❌"}</td>
+              <td>${data.criadoEm?.toDate ? data.criadoEm.toDate().toLocaleDateString() : "-"}</td>
+            </tr>`;
+          tabela.innerHTML += linha;
+        });
+      });
+    }
+
+    // 🚪 Logout
+    const logoutBtn = document.getElementById("logoutBtn");
+    logoutBtn.addEventListener("click", async () => {
+      await signOut(auth);
+      alert("Sessão encerrada.");
+      window.location.href = "./login.html";
+    });
+  </script>
+</body>
+</html>
