@@ -163,11 +163,12 @@
 </script>
 </div> <!-- fecha o portalContent -->
 <!-- 🔒 Proteção do Portal - Bloqueia acesso sem login -->
+<!-- 🔒 Proteção do Portal - Redirecionamento estável -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
   import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
 
-  // 🔧 Configuração do Firebase (a mesma usada no login.html)
+  // 🔧 Configuração do Firebase
   const firebaseConfig = {
     apiKey: "AIzaSyDY5IFakVFbbLn8UQHUCgea7KOx_zZjvlY",
     authDomain: "portal-ensaios-solos-vol1.firebaseapp.com",
@@ -180,26 +181,32 @@
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
 
-  // 🔍 Verifica se o usuário está logado
-  onAuthStateChanged(auth, (user) => {
-    if (!user) {
-      console.warn("Usuário não autenticado — redirecionando...");
-      window.location.href = "https://dr8173004-gif.github.io/ortal-ensaios-solos-volume1/main/login.html";// 🔁 redireciona para login
-    } else {
-      console.log("Usuário autenticado:", user.email);
+  // 🚀 Aguarda o carregamento completo do DOM
+  window.addEventListener('load', () => {
+    console.log("⏳ Verificando autenticação...");
+
+    // 🔍 Verifica login de forma segura após o DOM estar pronto
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        console.warn("Usuário não autenticado — redirecionando...");
+        setTimeout(() => {
+          window.location.href = "https://dr8173004-gif.github.io/ortal-ensaios-solos-volume1/main/login.html";
+        }, 500); // pequeno delay garante que o DOM e o Firebase carregaram
+      } else {
+        console.log("✅ Usuário autenticado:", user.email);
+      }
+    });
+
+    // 🔘 Logout manual
+    const logoutBtn = document.getElementById("logoutBtn");
+    if (logoutBtn) {
+      logoutBtn.addEventListener("click", async () => {
+        await signOut(auth);
+        alert("Você saiu do portal.");
+        window.location.href = "https://dr8173004-gif.github.io/ortal-ensaios-solos-volume1/main/login.html";
+      });
     }
   });
-
-  // 🔘 Logout manual
-  const logoutBtn = document.getElementById("logoutBtn");
-  if (logoutBtn) {
-    logoutBtn.addEventListener("click", async () => {
-      await signOut(auth);
-      alert("Você saiu do portal.");
-  window.location.href = "https://dr8173004-gif.github.io/ortal-ensaios-solos-volume1/main/login.html";
-    });
-  }
 </script>
-
 </body>
 </html>
