@@ -1657,6 +1657,42 @@ document.addEventListener('DOMContentLoaded',()=>{
     }
   });
 </script>
+<script>
+// ===== Atualização automática da barra de progresso geral =====
+
+// Função que extrai os números (0–100) das porcentagens mostradas no índice
+function calcularProgressoGeral() {
+  const modulos = document.querySelectorAll('#content-index .progress');
+  let soma = 0, total = 0;
+
+  modulos.forEach(div => {
+    const texto = div.textContent.trim();
+    const match = texto.match(/(\d+)%/);
+    if (match) {
+      soma += parseInt(match[1]);
+      total++;
+    }
+  });
+
+  const media = total > 0 ? Math.round(soma / total) : 0;
+
+  // Atualiza barra geral
+  const barra = document.querySelector('#overall_bar');
+  const texto = document.querySelector('#overall_pct');
+
+  if (barra) barra.style.width = media + '%';
+  if (texto) texto.textContent = media + '%';
+
+  // Salva no localStorage
+  try { localStorage.setItem('overall_progress_pct', media); } catch(e){}
+}
+
+// Roda o cálculo quando a página carrega
+window.addEventListener('DOMContentLoaded', calcularProgressoGeral);
+
+// E também a cada 3 segundos (caso o usuário marque novas caixas sem trocar de página)
+setInterval(calcularProgressoGeral, 3000);
+</script>
 
 </body>
 </html>
