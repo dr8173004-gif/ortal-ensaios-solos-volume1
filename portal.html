@@ -338,17 +338,24 @@ body::after {
 
   <script>
     // ===== Atualiza barras de progresso do Índice =====
-    (function(){
-      const mods=[0,1,2,3,4];
-      function val(k){ try{ return parseInt(localStorage.getItem(k)||'0'); }catch(e){ return 0; } }
-      mods.forEach(i=>{
-        const pct=val(`m${i}_progress_pct`);
-        const bar=document.getElementById(`bar${i}`);
-        const txt=document.getElementById(`pct${i}`);
-        if(bar) bar.style.width=pct+'%';
-        if(txt) txt.textContent=pct+'%';
-      });
-    })();
+   function updateOverallProgress(){
+  // Só considera módulos que realmente têm progresso (0,1,2)
+  const mods = ['m0','m1','m2'];
+  let sum = 0, count = 0;
+  mods.forEach(m=>{
+    const pct = parseFloat(loadKV(`${m}_progress_pct`));
+    if (!isNaN(pct)) {
+      sum += pct; count++;
+    }
+  });
+  const avg = count>0 ? Math.round(sum/count) : 0;
+  const bar = document.getElementById('overall_bar');
+  const txt = document.getElementById('overall_pct');
+  if(bar) bar.style.width = avg + '%';
+  if(txt) txt.textContent = avg + '%';
+  saveKV('overall_progress_pct', avg);
+}
+
   </script>
 </section>
 
