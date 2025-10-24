@@ -1693,20 +1693,61 @@ body::after {
 
     // Boot
     initChecks();
- <!-- 👤 Cabeçalho do usuário logado (visível só após login) -->
-<header id="userHeader" class="user-header" style="display:none;position:fixed;top:12px;right:20px;z-index:9999;background:rgba(1,60,90,.55);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.15);color:#fff;padding:10px 18px;border-radius:40px;display:none;gap:10px;align-items:center;font-family:Montserrat,sans-serif;">
-  <span id="userName" style="font-weight:600;"></span>
-  <button id="logoutBtn" style="background:linear-gradient(135deg,#ff4e50,#f9d423);border:none;color:#fff;padding:6px 16px;border-radius:30px;font-weight:700;cursor:pointer;">Sair</button>
+<!-- 👤 Cabeçalho do usuário logado -->
+<header id="userHeader" class="user-header" style="display:none">
+  <span id="userName">👋 Olá, aluno</span>
+  <button id="logoutBtn" class="logout-btn">Sair</button>
 </header>
 
-<!-- 🔒 Diagnóstico mínimo: Auth + Firestore perfil + Logout -->
+<style>
+  .user-header {
+    position: fixed;
+    top: 12px;
+    right: 20px;
+    display: none;
+    align-items: center;
+    gap: 10px;
+    color: #fff;
+    padding: 10px 18px;
+    border-radius: 40px;
+    background: rgba(1, 60, 90, 0.55);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.15);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
+    z-index: 9999;
+  }
+
+  #userName {
+    font-weight: 600;
+    font-size: 0.95rem;
+    letter-spacing: 0.3px;
+  }
+
+  .logout-btn {
+    background: linear-gradient(135deg, #ff4e50, #f9d423);
+    border: none;
+    color: #fff;
+    padding: 6px 16px;
+    border-radius: 30px;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .logout-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 15px rgba(255,78,80,0.6);
+  }
+</style>
+
+<!-- 🔒 Novo script unificado de login/logout -->
 <script type="module">
-  // ===== Imports Firebase =====
   import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
   import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
-  import { getFirestore, doc, setDoc, getDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
 
-  // ===== Config =====
   const firebaseConfig = {
     apiKey: "AIzaSyDY5IFakVFbbLn8UQHUCgea7KOx_zZjvlY",
     authDomain: "portal-ensaios-solos-vol1.firebaseapp.com",
@@ -1716,79 +1757,33 @@ body::after {
     appId: "1:217730071254:web:a79fa9cbf49f742ff62777"
   };
 
-  // GitHub Pages: URL exata do login
-  const LOGIN_URL = "https://dr8173004-gif.github.io/ortal-ensaios-solos-volume1/main/login.html";
-
-  // ===== Init único =====
   const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
   const auth = getAuth(app);
-  const db   = getFirestore(app);
 
-  // ===== Helpers UI =====
-  function showHeader(user) {
-    const header = document.getElementById("userHeader");
-    const nameEl = document.getElementById("userName");
-    if (!header || !nameEl) return;
-    nameEl.textContent = `👋 Olá, ${user.displayName || user.email.split("@")[0]}`;
-    header.style.display = "flex";
-  }
-  function wireLogout() {
-    const btn = document.getElementById("logoutBtn");
-    if (!btn) return;
-    btn.onclick = async () => {
-      try { await signOut(auth); } finally { window.location.href = LOGIN_URL; }
-    };
-  }
+  const LOGIN_URL = "https://dr8173004-gif.github.io/ortal-ensaios-solos-volume1/main/login.html";
+  const headerEl = document.getElementById("userHeader");
+  const nameEl = document.getElementById("userName");
+  const logoutBtn = document.getElementById("logoutBtn");
 
-  // ===== Cria/Garante perfil (mínimo) =====
-  async function ensureProfile(user) {
-    const ref = doc(db, "users", user.uid);
-    const snap = await getDoc(ref);
-    if (!snap.exists()) {
-      await setDoc(ref, {
-        nome: user.displayName || user.email.split("@")[0],
-        email: user.email,
-        criadoEm: serverTimestamp(),
-        progresso: { mod0:false, mod1:false, mod2:false, mod3:false, mod4:false }
-      });
-      console.log("🆕 Perfil criado:", user.email);
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      const nome = user.displayName || (user.email ? user.email.split("@")[0] : "aluno");
+      nameEl.textContent = `👋 Olá, ${nome}`;
+      headerEl.style.display = "flex";
     } else {
-      // faz um merge leve só para garantir campos essenciais
-      await setDoc(ref, { email: user.email }, { merge: true });
-      console.log("ℹ️ Perfil já existia (atualizado levemente):", user.email);
+      headerEl.style.display = "none";
     }
-  }
+  });
 
-  // ===== Guardião de rota (sem loop) =====
-  function boot() {
-    onAuthStateChanged(auth, async (user) => {
-      const isLoginPage = location.pathname.endsWith("/main/login.html") || location.href.includes("/main/login.html");
-      if (!user) {
-        if (!isLoginPage) {
-          console.warn("⛔ Não autenticado → redirecionando ao login");
-          // pequeno atraso evita “ping-pong”
-          setTimeout(() => (window.location.href = LOGIN_URL), 250);
-        }
-        return;
-      }
-
-      try {
-        console.log("✅ Logado como:", user.email);
-        await ensureProfile(user);    // cria/merge doc users/{uid}
-        showHeader(user);             // mostra header + nome
-        wireLogout();                 // ativa botão Sair
-      } catch (err) {
-        console.error("❌ Falha no boot do portal:", err);
-      }
-    });
-  }
-
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", boot);
-  } else {
-    boot();
-  }
+  logoutBtn.addEventListener("click", async () => {
+    try {
+      await signOut(auth);
+    } finally {
+      window.location.href = LOGIN_URL;
+    }
+  });
 </script>
+
 
 </body>
 </html>
