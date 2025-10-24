@@ -1488,17 +1488,23 @@ function updateModuleProgress(mod, doneOpt, totalOpt){
 }
 
 function updateOverallProgress(){
-  const mods = ['m0','m1','m2','m3','m4'];
+  // Calcula progresso geral com base apenas nos módulos 0, 1 e 2
+  const mods = ['m0','m1','m2'];
   let sum = 0, count = 0;
-  mods.forEach(m=>{
-    const pct = parseFloat(loadKV(`${m}_progress_pct`)) || 0;
-    sum += pct; count++;
+  
+  mods.forEach(m => {
+    const pct = parseFloat(loadKV(`${m}_progress_pct`));
+    if (!isNaN(pct)) {
+      sum += pct;
+      count++;
+    }
   });
-  const avg = count>0 ? Math.round(sum/count) : 0;
+
+  const avg = count > 0 ? Math.round(sum / count) : 0;
   const bar = document.getElementById('overall_bar');
   const txt = document.getElementById('overall_pct');
-  if(bar) bar.style.width = avg + '%';
-  if(txt) txt.textContent = avg + '%';
+  if (bar) bar.style.width = avg + '%';
+  if (txt) txt.textContent = avg + '%';
   saveKV('overall_progress_pct', avg);
 }
 
