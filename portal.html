@@ -1490,11 +1490,14 @@ function updateModuleProgress(mod, doneOpt, totalOpt){
 }
 
 function updateOverallProgress(){
-  const mods = ['m0','m1','m2','m3','m4'];
+  // Só considera módulos que realmente têm progresso (0,1,2)
+  const mods = ['m0','m1','m2'];
   let sum = 0, count = 0;
   mods.forEach(m=>{
-    const pct = parseFloat(loadKV(`${m}_progress_pct`)) || 0;
-    sum += pct; count++;
+    const pct = parseFloat(loadKV(`${m}_progress_pct`));
+    if (!isNaN(pct)) {
+      sum += pct; count++;
+    }
   });
   const avg = count>0 ? Math.round(sum/count) : 0;
   const bar = document.getElementById('overall_bar');
@@ -1503,6 +1506,7 @@ function updateOverallProgress(){
   if(txt) txt.textContent = avg + '%';
   saveKV('overall_progress_pct', avg);
 }
+
 
 // ======= CÁLCULOS (mantidos) =======
 function val(id){ const el=document.getElementById(id); return el?parseFloat((el.value||'').toString().replace(',','.')):NaN }
