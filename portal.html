@@ -1430,39 +1430,58 @@ try {
 function saveKV(key, value){ try{ localStorage.setItem(key, value); }catch(e){} }
 function loadKV(key){ try{ return localStorage.getItem(key); }catch(e){ return null } }
 
+
 // ======= SISTEMA DE PROGRESSO (módulos + geral) =======
+
+// Descobre o módulo da checkbox pelo <section id="modX"> ancestral
+function resolveModFor(el){
+  if (el.dataset.mod) return el.dataset.mod; // já veio marcado
+  const sec = el.closest('section[id^="mod"]');
+  if (sec && /^mod[0-9]+$/.test(sec.id)) {
+    const m = 'm' + sec.id.replace('mod','');
+    el.dataset.mod = m; // grava pra próximas vezes
+    return m;
+  }
+  return null;
+}
+
+// Varre checkboxes, restaura estado, liga eventos e atualiza barras
 function initChecks(){
   const checks = document.querySelectorAll('input.ck');
-  const mods = {};
+  const mods = {}; // m0..m4 => {done,total}
 
   checks.forEach(el=>{
+    // Garante que cada checkbox tenha um módulo
+    const mod = resolveModFor(el);
     const key = el.dataset.key;
-    const mod = el.dataset.mod;
-    if(!key || !mod) return;
+    if (!mod || !key) return;
 
     // Restaura estado salvo
     const saved = loadKV(key);
-    if(saved !== null) el.checked = saved === '1';
+    if (saved !== null) el.checked = (saved === '1');
 
-    // Inicializa contagem por módulo
-    if(!mods[mod]) mods[mod] = {done:0,total:0};
+    // Acumula contagem por módulo
+    if (!mods[mod]) mods[mod] = {done:0,total:0};
     mods[mod].total++;
-    if(el.checked) mods[mod].done++;
+    if (el.checked) mods[mod].done++;
 
-    // Monitora alterações
+    // Atualiza ao marcar/desmarcar
     el.addEventListener('change', ()=>{
-      saveKV(key, el.checked?'1':'0');
+      saveKV(key, el.checked ? '1' : '0');
       updateModuleProgress(mod);
       updateOverallProgress();
     });
   });
 
-  // Atualiza todos os módulos
+  // Primeira pintura das barras por módulo
   Object.keys(mods).forEach(mod=>{
     updateModuleProgress(mod, mods[mod].done, mods[mod].total);
   });
+
+  // Barra geral
   updateOverallProgress();
 }
+
 
 function updateModuleProgress(mod, doneOpt, totalOpt){
   const checks = document.querySelectorAll(`input.ck[data-mod="${mod}"]`);
