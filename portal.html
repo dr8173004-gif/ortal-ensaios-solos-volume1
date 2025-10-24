@@ -1371,15 +1371,6 @@ body::after {
       doc.text(`Data: ${data}`,100,H-70);
       doc.text(`Código de verificação: ${code}`,100,H-52);
 
-      // QR Code + legenda
-      const portalURL='https://dr8173004-gif.github.io/ortal-ensaios-solos-volume1/';
-      const qrCanvas=document.createElement('canvas');
-      await QRCode.toCanvas(qrCanvas,portalURL,{width:80,margin:0,color:{dark:'#013C5AFF',light:'#FFFFFFFF'}});
-      const qrData=qrCanvas.toDataURL('image/png');
-      doc.addImage(qrData,'PNG',100,H-130,70,70);
-      doc.setFontSize(9);doc.setTextColor(60);
-      doc.text('Verifique este certificado online',100,H-42);
-
       // Rodapé
       doc.setFontSize(10);doc.setTextColor(1,60,90);
       doc.text('© Ensaios de Solos — Vol. 1',W-140,H-60);
@@ -1391,361 +1382,225 @@ body::after {
 
   </section>
 
-  <footer class="site">
-    <p>© <span id="year"></span> Curso Interativo – Ensaios de Solos (Vol. 1). Paleta: Azul #013C5A, Cinza #666666, Verde #28a745, Branco #FFFFFF · Fontes: Montserrat & Open Sans.</p>
-  </footer>
+  <!-- =================== SCRIPTS PRINCIPAIS =================== -->
+<script>
+// ======= Atualiza ano automaticamente =======
+const yEl = document.getElementById('year');
+if (yEl) yEl.textContent = new Date().getFullYear();
 
-  <script>
-    // Ano atual
-    document.getElementById('year').textContent = new Date().getFullYear();
+// ======= NAVEGAÇÃO SPA (menu ativo + lembrar última seção) =======
+const sections = ['home','index','mod0','mod1','mod2','mod3','mod4']
+  .map(id => document.getElementById(id))
+  .filter(Boolean);
 
-    // Destacar link ativo no menu conforme rolagem
-    const sections = ['home','index','mod0','mod1','mod2','mod3','mod4'].map(id=>document.getElementById(id));
-    const links = Array.from(document.querySelectorAll('nav a.nav-link'));
-    const byId = id => links.find(a => a.getAttribute('href') === `#${id}`);
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if(entry.isIntersecting){
-          links.forEach(a => a.classList.remove('active'));
-          const id = entry.target.id;
-          const link = byId(id);
-          if(link) link.classList.add('active');
-          try { localStorage.setItem('last-section', `#${id}`); } catch(e){}
-        }
-      })
-    }, { threshold: .5 });
-    sections.forEach(sec => sec && observer.observe(sec));
+const links = Array.from(document.querySelectorAll('nav a'));
+const byId = id => links.find(a => a.getAttribute('href') === `#${id}`);
 
-    // Restaurar última seção visitada
-    try {
-      const last = localStorage.getItem('last-section');
-      if(last && document.querySelector(last)){
-        setTimeout(()=>{ location.hash = last; }, 200);
+if ('IntersectionObserver' in window) {
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        links.forEach(a => a.classList.remove('active'));
+        const id = entry.target.id;
+        const link = byId(id);
+        if(link) link.classList.add('active');
+        try { localStorage.setItem('last-section', `#${id}`); } catch(e){}
       }
-    } catch(e){}
-
-    // Teclas de atalho ← →
-    const order = ['home','index','mod0','mod1','mod2','mod3','mod4'];
-    function goto(delta){
-      const current = location.hash ? location.hash.replace('#','') : 'home';
-      const i = Math.max(0, order.indexOf(current));
-      const j = Math.min(order.length - 1, Math.max(0, i + delta));
-      const target = `#${order[j]}`;
-      if(document.querySelector(target)) location.hash = target;
-    }
-    window.addEventListener('keydown', e => {
-      if(['INPUT','TEXTAREA'].includes(document.activeElement.tagName)) return;
-      if(e.key === 'ArrowRight') goto(+1);
-      if(e.key === 'ArrowLeft') goto(-1);
     });
+  }, { threshold: .5 });
+  sections.forEach(sec => observer.observe(sec));
+}
 
-    // ===== Persistência para checklists =====
-    function saveKV(key, value){ try{ localStorage.setItem(key, value); }catch(e){} }
-    function loadKV(key){ try{ return localStorage.getItem(key); }catch(e){ return null } }
-    function initChecks(){
-      document.querySelectorAll('input.ck').forEach(el=>{
-        const k = el.dataset.key; if(!k) return;
-        const v = loadKV(k); if(v!==null) el.checked = v==='1';
-        el.addEventListener('change', ()=> saveKV(k, el.checked?'1':'0'));
-      })
-    }
+// Restaura última seção aberta
+try {
+  const last = localStorage.getItem('last-section');
+  if(last && document.querySelector(last)){
+    setTimeout(()=>document.querySelector(last).scrollIntoView({behavior:'smooth'}),400);
+  }
+} catch(e){}
 
-    // ===== Calculadora Umidade =====
-    function val(id){ const el = document.getElementById(id); return el ? parseFloat((el.value||'').toString().replace(',','.')) : NaN }
-    function calcUmidade(){
-      const ml = val('m_lata'), mu = val('m_umida'), ms = val('m_seca');
-      if([ml,mu,ms].some(x=>isNaN(x))){ document.getElementById('w_result').textContent = 'Preencha todos os campos (g).'; return; }
-      const magua = mu - ms; const msecSolo = ms - ml; if(msecSolo<=0){ document.getElementById('w_result').textContent='Verifique as massas informadas.'; return; }
-      const w = (magua / msecSolo) * 100; const out = `w = ${w.toFixed(2)} %`;
-      document.getElementById('w_result').textContent = out; saveKV('m1_w', out);
-    }
-    function calcTripla(){
-      const ids=['w1','w2','w3']; const a=ids.map(id=>val(id)).filter(x=>!isNaN(x));
-      if(a.length<2){ document.getElementById('w_stats').textContent='Informe ao menos 2 valores.'; return; }
-      const media = a.reduce((s,x)=>s+x,0)/a.length; const sd = Math.sqrt(a.reduce((s,x)=>s+(x-media)**2,0)/a.length);
-      document.getElementById('w_stats').textContent = `média = ${media.toFixed(2)} % · desvio = ${sd.toFixed(2)} %`;
-      saveKV('m1_w_media', media.toFixed(2));
-    }
+// ======= UTIL: salvar/carregar no localStorage =======
+function saveKV(key, value){ try{ localStorage.setItem(key, value); }catch(e){} }
+function loadKV(key){ try{ return localStorage.getItem(key); }catch(e){ return null } }
 
-    // ===== Peneiramento =====
-    const peneirasPadrao = ['4.8','2.0','0.84','0.42','0.25','0.15','0.075','Fundo'];
-    function initPeneiras(){
-      const tbody = document.querySelector('#tbPeneiras tbody'); if(!tbody) return; tbody.innerHTML='';
-      peneirasPadrao.forEach(size=>{
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td>${size} mm</td>
-          <td style="padding:0;"><input type="number" step="0.01" style="width:100%; padding:8px 10px; border:0" data-size="${size}" class="mRetida"></td>
-          <td class="pctR" style="text-align:right">–</td>
-          <td class="pctP" style="text-align:right">–</td>`;
-        tbody.appendChild(tr);
-      });
-    }
-    function calcPeneiras(){
-      const rows = Array.from(document.querySelectorAll('#tbPeneiras tbody tr')); if(!rows.length) return;
-      const masses = rows.map(r=>parseFloat((r.querySelector('input.mRetida').value||'').replace(',','.'))||0);
-      const total = masses.reduce((s,x)=>s+x,0);
-      let passante = 100;
-      rows.forEach((r,i)=>{
-        const pctR = total>0 ? (masses[i]/total)*100 : 0;
-        passante = i===0 ? 100 - pctR : passante - pctR;
-        r.querySelector('.pctR').textContent = pctR.toFixed(2)+' %';
-        r.querySelector('.pctP').textContent = passante.toFixed(2)+' %';
-      });
-      document.getElementById('sumPeneiras').textContent = total>0 ? `Massa total: ${total.toFixed(2)} g` : '';
-      try{ saveKV('m2_peneiras', JSON.stringify(masses)); }catch(e){}
-    }
+// ======= CHECKLIST + PROGRESSO (módulos + geral) =======
+// OBS: se algum input.ck NÃO tiver data-mod, o script deduz pelo <section id="modX"> ancestral
+function resolveModFor(el){
+  const explicit = el.dataset.mod;
+  if (explicit) return explicit;
+  let p = el.closest('section[id^="mod"]');
+  if (p && /^mod[0-9]+$/.test(p.id)) return p.id.replace('mod','m');
+  return null;
+}
 
-    // ===== Sedimentação (hidrômetro) — leituras =====
-    const temposPadrao = ['30 s','1 min','2 min','5 min','15 min','30 min','1 h','2 h'];
-    function initHidro(){
-      const tbody = document.querySelector('#tbHidro tbody'); if(!tbody) return; tbody.innerHTML='';
-      temposPadrao.forEach(t=>{
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td>${t}</td>
-          <td style="padding:0;"><input type="number" step="0.001" style="width:100%; padding:8px 10px; border:0" class="hidro-leitura" data-t="${t}"></td>
-          <td style="padding:0;"><input type="number" step="0.1" style="width:100%; padding:8px 10px; border:0" class="hidro-temp" data-t="${t}"></td>`;
-        tbody.appendChild(tr);
-      });
-    }
-    function saveHidro(){
-      const linhas = Array.from(document.querySelectorAll('#tbHidro tbody tr'));
-      const dados = linhas.map(r=>({
-        tempo: r.children[0].textContent.trim(),
-        leitura: parseFloat((r.querySelector('.hidro-leitura').value||'').replace(',','.'))||null,
-        temp: parseFloat((r.querySelector('.hidro-temp').value||'').replace(',','.'))||null
-      }));
-      try{ saveKV('m2_hidro', JSON.stringify(dados)); }catch(e){}
-      document.getElementById('sumHidro').textContent = 'Leituras salvas.';
-    }
+function initChecks(){
+  const checks = document.querySelectorAll('input.ck');
+  const mods = {};
 
-    // ===== Hidro — conversão simplificada e curva =====
-    function mu_water_vogel(T){ return 2.414e-5 * Math.pow(10, 247.8/(T + 133.15)); } // Pa·s
-    function rho_water(T){ return 998 - 0.3*(T-20); } // kg/m3 aprox
-    function parseTempoToSeconds(t){
-      if(!t) return null; const x=t.toLowerCase().trim();
-      if(x.includes('h')) return parseFloat(x)*3600;
-      if(x.includes('min')) return parseFloat(x)*60;
-      if(x.includes('s')) return parseFloat(x);
-      const n=parseFloat(x); return isNaN(n)?null:n;
-    }
+  checks.forEach(el=>{
+    // normaliza data-mod se faltar
+    const mod = resolveModFor(el);
+    if (mod && !el.dataset.mod) el.dataset.mod = mod;
 
-    let pontosHidro = []; // {d_mm, passante, tempo_s}
-    let pontosPeneira = []; // {d_mm, passante}
-    let curvaCombined = []; // {d_mm, passante}
+    const key = el.dataset.key;
+    const m = el.dataset.mod;
+    if(!key || !m) return;
 
-    function readHidroTable(){
-      const rows = Array.from(document.querySelectorAll('#tbHidro tbody tr'));
-      return rows.map(r=>{
-        const tempoTxt = r.children[0].textContent.trim();
-        const leitura = parseFloat((r.querySelector('.hidro-leitura').value||'').replace(',','.'));
-        const temp = parseFloat((r.querySelector('.hidro-temp').value||'').replace(',','.'));
-        return {tempoTxt, leitura: isNaN(leitura)?null:leitura, temp: isNaN(temp)?null:temp};
-      });
-    }
+    const saved = loadKV(key);
+    if(saved !== null) el.checked = (saved === '1');
 
-    function converterHidro(){
-      const Ws = parseFloat((document.getElementById('ws').value||'').replace(',','.'));
-      const Gs = parseFloat((document.getElementById('gs').value||'').replace(',','.'));
-      const Tinput = parseFloat((document.getElementById('temp').value||'').replace(',','.'));
-      const L = parseFloat((document.getElementById('L').value||'').replace(',','.'));
-      const Corr = parseFloat((document.getElementById('corr').value||'').replace(',','.'));
-      if([Ws,Gs,Tinput,L].some(x=>isNaN(x)||x<=0)){ document.getElementById('convInfo').textContent='Informe Ws, Gs, T e L válidos.'; return; }
+    if(!mods[m]) mods[m] = {done:0,total:0};
+    mods[m].total++;
+    if(el.checked) mods[m].done++;
 
-      const dados = readHidroTable().filter(r=>r.leitura!==null);
-      if(!dados.length){ document.getElementById('convInfo').textContent='Informe ao menos uma leitura.'; return; }
+    el.addEventListener('change', ()=>{
+      saveKV(key, el.checked?'1':'0');
+      updateModuleProgress(m);
+      updateOverallProgress();
+    });
+  });
 
-      const g = 9.80665;
-      pontosHidro = [];
-      dados.forEach(row=>{
-        const T = isNaN(row.temp)? Tinput : row.temp;
-        const mu = mu_water_vogel(T);
-        const rho_w = rho_water(T);
-        const rho_s = Gs * rho_w;
-        const delta = (rho_s - rho_w);
-        const t = parseTempoToSeconds(row.tempoTxt) || 0;
-        if(t<=0 || delta<=0) return;
+  Object.keys(mods).forEach(m=>{
+    updateModuleProgress(m, mods[m].done, mods[m].total);
+  });
+  updateOverallProgress();
+}
 
-        const D = Math.sqrt( (18 * mu * L) / (delta * g * t) ); // metros
-        const d_mm = D * 1000;
+function updateModuleProgress(mod, doneOpt, totalOpt){
+  const checks = document.querySelectorAll(`input.ck[data-mod="${mod}"]`);
+  const done = (typeof doneOpt === 'number') ? doneOpt : Array.from(checks).filter(c=>c.checked).length;
+  const total = (typeof totalOpt === 'number') ? totalOpt : checks.length;
+  const pct = total>0 ? Math.round((done/total)*100) : 0;
 
-        // % passante (didático, simplificado)
-        const Rcorr = row.leitura + (isNaN(Corr)?0:Corr); // g/L aprox
-        const P = ((Rcorr * (Gs/(Gs-1))) / Ws) * 100;
+  const bar = document.getElementById(`${mod}_bar`);
+  const txt = document.getElementById(`${mod}_pct`);
+  if(bar) bar.style.width = pct + '%';
+  if(txt) txt.textContent = pct + '%';
 
-        if(!isNaN(d_mm) && !isNaN(P)){
-          pontosHidro.push({d_mm, passante: Math.max(0, Math.min(100, P)), tempo_s:t});
-        }
-      });
+  saveKV(`${mod}_progress_pct`, pct);
+}
 
-      pontosHidro.sort((a,b)=>b.d_mm - a.d_mm);
-      document.getElementById('convInfo').textContent = `Convertidos ${pontosHidro.length} pontos de sedimentação (simplificado).`;
-    }
+function updateOverallProgress(){
+  const mods = ['m0','m1','m2','m3','m4'];
+  let sum = 0, count = 0;
+  mods.forEach(m=>{
+    const pct = parseFloat(loadKV(`${m}_progress_pct`)) || 0;
+    sum += pct; count++;
+  });
+  const avg = count>0 ? Math.round(sum/count) : 0;
+  const bar = document.getElementById('overall_bar');
+  const txt = document.getElementById('overall_pct');
+  if(bar) bar.style.width = avg + '%';
+  if(txt) txt.textContent = avg + '%';
+  saveKV('overall_progress_pct', avg);
+}
 
-    function coletarPeneiramento(){
-      const rows = Array.from(document.querySelectorAll('#tbPeneiras tbody tr'));
-      const pts = [];
-      rows.forEach(r=>{
-        const sizeTxt = r.children[0].textContent.trim().replace(' mm','');
-        let d_mm = (sizeTxt==='Fundo')? 0.01 : parseFloat(sizeTxt);
-        if(isNaN(d_mm)) return;
-        const pTxt = r.querySelector('.pctP').textContent.replace('%','').trim();
-        const passante = parseFloat(pTxt);
-        if(!isNaN(passante)){
-          pts.push({d_mm, passante: Math.max(0, Math.min(100, passante))});
-        }
-      });
-      return pts.sort((a,b)=>b.d_mm - a.d_mm);
-    }
+// ======= CÁLCULOS (mantidos) =======
+function val(id){ const el=document.getElementById(id); return el?parseFloat((el.value||'').toString().replace(',','.')):NaN }
 
-    function gerarCurva(){
-      pontosPeneira = coletarPeneiramento();
-      curvaCombined = [...pontosPeneira, ...pontosHidro].filter(p=>!isNaN(p.d_mm)&&!isNaN(p.passante));
-      curvaCombined.sort((a,b)=>a.d_mm - b.d_mm);
-      desenharCurva();
-    }
+function calcUmidade(){
+  const ml=val('m_lata'), mu=val('m_umida'), ms=val('m_seca');
+  if([ml,mu,ms].some(x=>isNaN(x))){ const t=document.getElementById('w_result'); if(t)t.textContent='Preencha todos os campos (g).'; return; }
+  const magua=mu-ms, msecSolo=ms-ml;
+  const t=document.getElementById('w_result');
+  if(msecSolo<=0){ if(t)t.textContent='Verifique as massas informadas.'; return; }
+  const w=(magua/msecSolo)*100;
+  const out=`w = ${w.toFixed(2)} %`;
+  if(t) t.textContent=out;
+  saveKV('m1_w',out);
+}
 
-    function desenharCurva(){
-      const svg = document.getElementById('curvaSVG'); if(!svg) return;
-      const W=800,H=360, padL=70, padR=20, padT=20, padB=40;
-      while(svg.firstChild) svg.removeChild(svg.firstChild);
+function calcTripla(){
+  const ids=['w1','w2','w3']; const a=ids.map(id=>val(id)).filter(x=>!isNaN(x));
+  const t=document.getElementById('w_stats');
+  if(a.length<2){ if(t)t.textContent='Informe ao menos 2 valores.'; return; }
+  const media=a.reduce((s,x)=>s+x,0)/a.length;
+  const sd=Math.sqrt(a.reduce((s,x)=>s+(x-media)**2,0)/a.length);
+  if(t) t.textContent=`média = ${media.toFixed(2)} % · desvio = ${sd.toFixed(2)} %`;
+  saveKV('m1_w_media',media.toFixed(2));
+}
 
-      const xMin=0.001, xMax=10; // mm
-      const yMin=0, yMax=100;
-      function xScale(v){ const t=(Math.log10(v)-Math.log10(xMin))/(Math.log10(xMax)-Math.log10(xMin)); return padL + t*(W-padL-padR); }
-      function yScale(v){ const t=(v-yMin)/(yMax-yMin); return H-padB - t*(H-padT-padB); }
+// ======= Granulometria (mantido) =======
+const peneirasPadrao=['4.8','2.0','0.84','0.42','0.25','0.15','0.075','Fundo'];
 
-      // Grades verticais (décadas)
-      const decades=[0.001,0.01,0.1,1,10];
-      decades.forEach(val=>{
-        const x=xScale(val);
-        const ln=document.createElementNS(svg.namespaceURI,'line');
-        ln.setAttribute('x1',x); ln.setAttribute('x2',x);
-        ln.setAttribute('y1',padT); ln.setAttribute('y2',H-padB);
-        ln.setAttribute('stroke','rgba(1,60,90,.15)'); svg.appendChild(ln);
-        const tx=document.createElementNS(svg.namespaceURI,'text');
-        tx.setAttribute('x',x); tx.setAttribute('y',H-10); tx.setAttribute('text-anchor','middle');
-        tx.setAttribute('font-size','11'); tx.setAttribute('fill','#013C5A'); tx.textContent=val.toString(); svg.appendChild(tx);
-      });
-      // Grades horizontais (cada 20%)
-      for(let v=0; v<=100; v+=20){
-        const y=yScale(v);
-        const ln=document.createElementNS(svg.namespaceURI,'line');
-        ln.setAttribute('x1',padL); ln.setAttribute('x2',W-padR);
-        ln.setAttribute('y1',y); ln.setAttribute('y2',y);
-        ln.setAttribute('stroke','rgba(1,60,90,.12)'); svg.appendChild(ln);
-        const tx=document.createElementNS(svg.namespaceURI,'text');
-        tx.setAttribute('x',50); tx.setAttribute('y',y+4); tx.setAttribute('text-anchor','end');
-        tx.setAttribute('font-size','11'); tx.setAttribute('fill','#013C5A'); tx.textContent=v+'%'; svg.appendChild(tx);
-      }
-      // Títulos
-      const ylab=document.createElementNS(svg.namespaceURI,'text');
-      ylab.setAttribute('x',18); ylab.setAttribute('y',H/2);
-      ylab.setAttribute('transform','rotate(-90 18 '+(H/2)+')');
-      ylab.setAttribute('font-size','12'); ylab.setAttribute('fill','#013C5A'); ylab.textContent='% passante'; svg.appendChild(ylab);
-      const xlab=document.createElementNS(svg.namespaceURI,'text');
-      xlab.setAttribute('x',(W/2)); xlab.setAttribute('y',H-8); xlab.setAttribute('text-anchor','middle');
-      xlab.setAttribute('font-size','12'); xlab.setAttribute('fill','#013C5A'); xlab.textContent='tamanho (mm, eixo log)'; svg.appendChild(xlab);
+function initPeneiras(){
+  const tbody=document.querySelector('#tbPeneiras tbody'); if(!tbody)return; tbody.innerHTML='';
+  peneirasPadrao.forEach(size=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=`
+      <td>${size} mm</td>
+      <td style="padding:0;"><input type="number" step="0.01" style="width:100%;padding:8px 10px;border:0" data-size="${size}" class="mRetida"></td>
+      <td class="pctR" style="text-align:right">–</td>
+      <td class="pctP" style="text-align:right">–</td>`;
+    tbody.appendChild(tr);
+  });
+}
 
-      // Desenhar séries
-      function drawSeries(arr, color, withLine){
-        if(!arr.length) return;
-        if(withLine){
-          let d='';
-          arr.forEach((p,i)=>{
-            const x=xScale(Math.max(xMin, Math.min(xMax, p.d_mm)));
-            const y=yScale(Math.max(0, Math.min(100, p.passante)));
-            d += (i===0? 'M':'L') + x + ' ' + y + ' ';
-          });
-          const path=document.createElementNS(svg.namespaceURI,'path');
-          path.setAttribute('d', d.trim());
-          path.setAttribute('fill','none'); path.setAttribute('stroke', color); path.setAttribute('stroke-width','2');
-          svg.appendChild(path);
-        }
-        arr.forEach(p=>{
-          const x=xScale(Math.max(xMin, Math.min(xMax, p.d_mm)));
-          const y=yScale(Math.max(0, Math.min(100, p.passante)));
-          const c=document.createElementNS(svg.namespaceURI,'circle');
-          c.setAttribute('cx',x); c.setAttribute('cy',y); c.setAttribute('r',3.5); c.setAttribute('fill', color);
-          svg.appendChild(c);
-        });
-      }
-      drawSeries(pontosPeneira, '#013C5A', true);
-      drawSeries(pontosHidro, '#2a7f3e', false);
-      drawSeries(curvaCombined, '#013C5A', true);
-    }
+function calcPeneiras(){
+  const rows=Array.from(document.querySelectorAll('#tbPeneiras tbody tr'));
+  if(!rows.length)return;
+  const masses=rows.map(r=>parseFloat((r.querySelector('input.mRetida').value||'').replace(',','.'))||0);
+  const total=masses.reduce((s,x)=>s+x,0);
+  const sumEl=document.getElementById('sumPeneiras');
+  if(total<=0){ if(sumEl) sumEl.textContent='Informe ao menos uma massa retida.'; return; }
+  let passante=100;
+  rows.forEach((r,i)=>{
+    const pctR=(masses[i]/total)*100;
+    passante=i===0?100-pctR:passante-pctR;
+    r.querySelector('.pctR').textContent=pctR.toFixed(2)+' %';
+    r.querySelector('.pctP').textContent=passante.toFixed(2)+' %';
+  });
+  if(sumEl) sumEl.textContent=`Massa total: ${total.toFixed(2)} g`;
+  saveKV('m2_peneiras',JSON.stringify(masses));
+}
 
-    function exportCSV(){
-      const rows=[['d_mm','passante','fonte']];
-      pontosPeneira.forEach(p=>rows.push([p.d_mm, p.passante, 'peneiramento']));
-      pontosHidro.forEach(p=>rows.push([p.d_mm, p.passante, 'sedimentacao']));
-      curvaCombined.forEach(p=>rows.push([p.d_mm, p.passante, 'combinada']));
-      const csv = rows.map(r=>r.join(',')).join('\n');
-      const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url; a.download = 'curva_granulometrica.csv'; a.click();
-      URL.revokeObjectURL(url);
-    }
+// ======= Boot =======
+document.addEventListener('DOMContentLoaded',()=>{
+  initChecks();
+  initPeneiras();
+});
+</script>
 
-    // ===== Sedimentação helpers end =====
-
-    // Boot
-    initChecks();
-   </script>
- 
-<!-- 👤 Cabeçalho do usuário logado -->
+<!-- =================== CABEÇALHO DO USUÁRIO (botão Sair) =================== -->
 <header id="userHeader" class="user-header" style="display:none">
   <span id="userName">👋 Olá, aluno</span>
   <button id="logoutBtn" class="logout-btn">Sair</button>
 </header>
 
 <style>
-  .user-header {
-    position: fixed;
-    top: 12px;
-    right: 20px;
-    display: none;
-    align-items: center;
-    gap: 10px;
-    color: #fff;
-    padding: 10px 18px;
-    border-radius: 40px;
-    background: rgba(1, 60, 90, 0.55);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255,255,255,0.15);
-    box-shadow: 0 4px 20px rgba(0,0,0,0.25);
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 500;
-    z-index: 9999;
-  }
-
-  #userName {
-    font-weight: 600;
-    font-size: 0.95rem;
-    letter-spacing: 0.3px;
-  }
-
-  .logout-btn {
-    background: linear-gradient(135deg, #ff4e50, #f9d423);
-    border: none;
-    color: #fff;
-    padding: 6px 16px;
-    border-radius: 30px;
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
-
-  .logout-btn:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 15px rgba(255,78,80,0.6);
-  }
+.user-header {
+  position: fixed;
+  top: 12px;
+  right: 20px;
+  display: none;
+  align-items: center;
+  gap: 10px;
+  color: #fff;
+  padding: 10px 18px;
+  border-radius: 40px;
+  background: rgba(1, 60, 90, 0.55);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.15);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  z-index: 9999;
+}
+.logout-btn {
+  background: linear-gradient(135deg, #ff4e50, #f9d423);
+  border: none;
+  color: #fff;
+  padding: 6px 16px;
+  border-radius: 30px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.logout-btn:hover { transform: scale(1.05); box-shadow: 0 0 15px rgba(255,78,80,0.6); }
 </style>
 
-<!-- 🔒 Novo script unificado de login/logout -->
+<!-- =================== FIREBASE AUTH (sem loop) =================== -->
 <script type="module">
   import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
   import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
@@ -1762,31 +1617,33 @@ body::after {
   const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
   const auth = getAuth(app);
 
-  const LOGIN_URL = "https://dr8173004-gif.github.io/ortal-ensaios-solos-volume1/main/login.html";
   const headerEl = document.getElementById("userHeader");
   const nameEl = document.getElementById("userName");
   const logoutBtn = document.getElementById("logoutBtn");
 
+  // IMPORTANTE: o portal NÃO redireciona automaticamente quando sem usuário.
+  // Ele só esconde o cabeçalho. Quem redireciona é o index.html (quando logado).
   onAuthStateChanged(auth, (user) => {
     if (user) {
       const nome = user.displayName || (user.email ? user.email.split("@")[0] : "aluno");
-      nameEl.textContent = `👋 Olá, ${nome}`;
-      headerEl.style.display = "flex";
+      if (nameEl) nameEl.textContent = `👋 Olá, ${nome}`;
+      if (headerEl) headerEl.style.display = "flex";
     } else {
-      headerEl.style.display = "none";
+      if (headerEl) headerEl.style.display = "none";
     }
   });
 
-  logoutBtn.addEventListener("click", async () => {
+  logoutBtn?.addEventListener("click", async () => {
     try {
-      await signOut(auth);
+      await signOut(auth);     // garante que a sessão encerrou
+    } catch (e) {
+      console.error(e);
     } finally {
-      window.location.href = LOGIN_URL;
+      // e só então vai para o login (index.html na raiz)
+      window.location.href = "./index.html";
     }
   });
 </script>
 
-
 </body>
 </html>
-
