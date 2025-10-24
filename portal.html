@@ -1418,7 +1418,6 @@ if ('IntersectionObserver' in window) {
   sections.forEach(sec => observer.observe(sec));
 }
 
-// Restaura última seção aberta
 try {
   const last = localStorage.getItem('last-section');
   if(last && document.querySelector(last)){
@@ -1430,42 +1429,37 @@ try {
 function saveKV(key, value){ try{ localStorage.setItem(key, value); }catch(e){} }
 function loadKV(key){ try{ return localStorage.getItem(key); }catch(e){ return null } }
 
-
 // ======= SISTEMA DE PROGRESSO (módulos + geral) =======
 
-// Descobre o módulo da checkbox pelo <section id="modX"> ancestral
+// Descobre o módulo da checkbox pelo <section id="modX">
 function resolveModFor(el){
-  if (el.dataset.mod) return el.dataset.mod; // já veio marcado
+  if (el.dataset.mod) return el.dataset.mod;
   const sec = el.closest('section[id^="mod"]');
   if (sec && /^mod[0-9]+$/.test(sec.id)) {
     const m = 'm' + sec.id.replace('mod','');
-    el.dataset.mod = m; // grava pra próximas vezes
+    el.dataset.mod = m;
     return m;
   }
   return null;
 }
 
-// Varre checkboxes, restaura estado, liga eventos e atualiza barras
+// Inicializa as checkboxes e barras de progresso
 function initChecks(){
   const checks = document.querySelectorAll('input.ck');
-  const mods = {}; // m0..m4 => {done,total}
+  const mods = {};
 
   checks.forEach(el=>{
-    // Garante que cada checkbox tenha um módulo
     const mod = resolveModFor(el);
     const key = el.dataset.key;
-    if (!mod || !key) return;
+    if(!mod || !key) return;
 
-    // Restaura estado salvo
     const saved = loadKV(key);
-    if (saved !== null) el.checked = (saved === '1');
+    if(saved !== null) el.checked = saved === '1';
 
-    // Acumula contagem por módulo
-    if (!mods[mod]) mods[mod] = {done:0,total:0};
+    if(!mods[mod]) mods[mod] = {done:0,total:0};
     mods[mod].total++;
-    if (el.checked) mods[mod].done++;
+    if(el.checked) mods[mod].done++;
 
-    // Atualiza ao marcar/desmarcar
     el.addEventListener('change', ()=>{
       saveKV(key, el.checked ? '1' : '0');
       updateModuleProgress(mod);
@@ -1473,16 +1467,14 @@ function initChecks(){
     });
   });
 
-  // Primeira pintura das barras por módulo
   Object.keys(mods).forEach(mod=>{
     updateModuleProgress(mod, mods[mod].done, mods[mod].total);
   });
 
-  // Barra geral
   updateOverallProgress();
 }
 
-
+// Atualiza barra de progresso de um módulo específico
 function updateModuleProgress(mod, doneOpt, totalOpt){
   const checks = document.querySelectorAll(`input.ck[data-mod="${mod}"]`);
   const done = doneOpt ?? Array.from(checks).filter(c=>c.checked).length;
@@ -1497,8 +1489,9 @@ function updateModuleProgress(mod, doneOpt, totalOpt){
   saveKV(`${mod}_progress_pct`, pct);
 }
 
+// Atualiza barra geral de progresso (só módulos 0,1,2)
 function updateOverallProgress(){
-  const mods = ['m0','m1','m2']; // ignora mod3 e mod4
+  const mods = ['m0','m1','m2'];
   let sum = 0, count = 0;
 
   mods.forEach(m=>{
@@ -1518,7 +1511,7 @@ function updateOverallProgress(){
   saveKV('overall_progress_pct', avg);
 }
 
-// ======= FUNÇÕES DE CÁLCULO DOS ENSAIOS =======
+// ======= CÁLCULOS =======
 function val(id){ const el=document.getElementById(id); return el?parseFloat((el.value||'').toString().replace(',','.')):NaN }
 
 function calcUmidade(){
