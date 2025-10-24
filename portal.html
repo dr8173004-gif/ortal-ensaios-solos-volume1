@@ -1694,13 +1694,72 @@ body::after {
     // Boot
     initChecks();
   </script>
+   <!-- 👤 Cabeçalho do usuário logado -->
+<header id="userHeader" class="user-header glass fade-in" style="display:none;">
+  <span id="userName">👋 Olá, aluno</span>
+  <button id="logoutBtn" class="logout-btn">Sair</button>
+</header>
+
+<style>
+  /* 🎨 Header fixo com efeito glass premium */
+  .user-header {
+    position: fixed;
+    top: 12px;
+    right: 20px;
+    display: none; /* é ativado pelo script */
+    align-items: center;
+    gap: 10px;
+    color: #fff;
+    padding: 10px 18px;
+    border-radius: 40px;
+    background: rgba(1, 60, 90, 0.55);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.15);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
+    z-index: 9999;
+  }
+
+  #userName {
+    font-weight: 600;
+    font-size: 0.95rem;
+    letter-spacing: 0.3px;
+  }
+
+  .logout-btn {
+    background: linear-gradient(135deg, #ff4e50, #f9d423);
+    border: none;
+    color: #fff;
+    padding: 6px 16px;
+    border-radius: 30px;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .logout-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 15px rgba(255,78,80,0.6);
+  }
+
+  @media (max-width: 600px) {
+    #userName { display: none; }
+    .logout-btn {
+      padding: 6px 12px;
+      font-size: 0.85rem;
+    }
+  }
+</style>
+ 
 <!-- 🔒 Proteção, Logout e Firestore unificados -->
 <script type="module">
   import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
   import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
   import { getFirestore, doc, getDoc, setDoc, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
 
-  // ⚙️ Configuração
+  // ⚙️ Config Firebase
   const firebaseConfig = {
     apiKey: "AIzaSyDY5IFakVFbbLn8UQHUCgea7KOx_zZjvlY",
     authDomain: "portal-ensaios-solos-vol1.firebaseapp.com",
@@ -1715,71 +1774,91 @@ body::after {
   const auth = getAuth(app);
   const db = getFirestore(app);
 
-  // 🔐 Redirecionamento seguro (corrige loop infinito)
+  // 🔁 URL de login (caminho correto no seu Pages)
   const LOGIN_URL = "https://dr8173004-gif.github.io/ortal-ensaios-solos-volume1/main/login.html";
 
-  // 🧠 Monitora estado de autenticação
-  onAuthStateChanged(auth, async (user) => {
-    if (!user) {
-      console.warn("Usuário não autenticado — redirecionando...");
-      setTimeout(() => (window.location.href = LOGIN_URL), 500);
-      return;
-    }
+  // Util: extrai a chave do módulo (mod0..mod4) a partir do id da section
+  function getModuloKeyFromSection(section) {
+    const id = section?.id || "";
+    // aceita "mod0" ou "content-mod-0"
+    const m = id.match(/mod(\d)/) || id.match(/content-mod-(\d)/);
+    return m ? `mod${m[1]}` : "modX";
+  }
 
-    console.log("✅ Usuário logado:", user.email);
-    await garantirPerfil(user);
-    monitorarProgresso(user);
-    exibirUsuario(user);
-  });
+  // Atualiza UI local (barrinha e %), se existir
+  function atualizarBarraLocal(section) {
+    const key = getModuloKeyFromSection(section);          // ex: "mod1"
+    const idx = key.replace("mod","");                     // ex: "1"
+    const todas = section.querySelectorAll(".ck");
+    const concluidas = [...todas].filter(c => c.checked).length;
+    const total = Math.max(todas.length, 1);
+    const pct = Math.round((concluidas/total)*100);
 
-  // 👤 Cria perfil automático
+    const bar = document.getElementById(`bar${idx}`);
+    const pctEl = document.getElementById(`pct${idx}`);
+    if (bar) bar.style.width = `${pct}%`;
+    if (pctEl) pctEl.textContent = `${pct}%`;
+    return { completo: concluidas === total };
+  }
+
+  // 🧠 Cria/garante perfil do usuário
   async function garantirPerfil(user) {
-    try {
-      const ref = doc(db, "users", user.uid);
-      const snap = await getDoc(ref);
-      if (!snap.exists()) {
-        await setDoc(ref, {
-          nome: user.displayName || user.email.split("@")[0],
-          email: user.email,
-          criadoEm: serverTimestamp(),
-          progresso: { mod0: false, mod1: false, mod2: false, mod3: false, mod4: false }
-        });
-        console.log("🆕 Perfil criado:", user.email);
-      } else {
-        console.log("ℹ️ Perfil já existente:", user.email);
-      }
-    } catch (err) {
-      console.error("❌ Erro ao criar perfil:", err);
+    const ref = doc(db, "users", user.uid);
+    const snap = await getDoc(ref);
+    if (!snap.exists()) {
+      await setDoc(ref, {
+        nome: user.displayName || user.email.split("@")[0],
+        email: user.email,
+        criadoEm: serverTimestamp(),
+        progresso: { mod0: false, mod1: false, mod2: false, mod3: false, mod4: false }
+      });
+      console.log("🆕 Perfil criado:", user.email);
+    } else {
+      console.log("ℹ️ Perfil já existe:", user.email);
     }
   }
 
-  // 💾 Salvamento de progresso
-  function monitorarProgresso(user) {
-    const checks = document.querySelectorAll(".ck");
-    checks.forEach((ck) => {
-      ck.addEventListener("change", async () => {
-        const modulo = ck.closest("section.module")?.id || "modX";
-        const todas = ck.closest("section.module").querySelectorAll(".ck");
-        const concluidas = [...todas].filter(c => c.checked).length;
-        const total = todas.length;
-        const completo = concluidas === total;
-
+  // 💾 Escuta e salva progresso por módulo
+  function ligarListenersDeProgresso(user) {
+    const sections = document.querySelectorAll("section.module");
+    sections.forEach(section => {
+      // 1) calcular e refletir na UI na carga
+      const { completo } = atualizarBarraLocal(section);
+      // 2) já persistir o estado inicial (merge) — idempotente
+      (async () => {
         try {
-          const ref = doc(db, "users", user.uid);
-          await updateDoc(ref, { [`progresso.${modulo}`]: completo });
-          console.log(`📊 ${modulo} → ${completo ? "100%" : `${concluidas}/${total}`}`);
+          await setDoc(
+            doc(db, "users", user.uid),
+            { progresso: { [getModuloKeyFromSection(section)]: completo } },
+            { merge: true }
+          );
         } catch (e) {
-          console.warn("⚠️ Documento ainda não existe, criando...");
-          await setDoc(doc(db, "users", user.uid), {
-            progresso: { [modulo]: completo },
-            criadoEm: serverTimestamp(),
-          }, { merge: true });
+          console.error("Falha ao salvar estado inicial do módulo:", e);
         }
+      })();
+
+      // 3) listeners de mudança
+      section.querySelectorAll(".ck").forEach(ck => {
+        ck.addEventListener("change", async () => {
+          const { completo } = atualizarBarraLocal(section);
+          const key = getModuloKeyFromSection(section);
+          try {
+            await updateDoc(doc(db, "users", user.uid), { [`progresso.${key}`]: completo });
+            console.log(`📊 ${key} → ${completo ? "100%" : "em andamento"}`);
+          } catch {
+            // se ainda não existe (primeiro login), garante com merge
+            await setDoc(
+              doc(db, "users", user.uid),
+              { progresso: { [key]: completo } },
+              { merge: true }
+            );
+          }
+        });
       });
     });
   }
 
-  // 👋 Exibe nome do usuário e botão logout
+  // 👋 Exibe nome e mostra header + botão Sair
   function exibirUsuario(user) {
     const header = document.getElementById("userHeader");
     const nameEl = document.getElementById("userName");
@@ -1791,14 +1870,40 @@ body::after {
   }
 
   // 🚪 Logout
-  const logout = document.getElementById("logoutBtn");
-  if (logout) {
-    logout.addEventListener("click", async () => {
-      await signOut(auth);
-      alert("Sessão encerrada com sucesso.");
-      window.location.href = LOGIN_URL;
-    });
+  function ligarLogout() {
+    const logoutBtn = document.getElementById("logoutBtn");
+    if (logoutBtn) {
+      logoutBtn.addEventListener("click", async () => {
+        try {
+          await signOut(auth);
+        } finally {
+          window.location.href = LOGIN_URL;
+        }
+      });
+    }
   }
+
+  // 🔐 Guarda de rota (evita loop e garante DOM pronto)
+  document.addEventListener("DOMContentLoaded", () => {
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        // só redireciona se NÃO estamos já na página de login
+        if (!location.pathname.endsWith("/main/login.html")) {
+          setTimeout(() => (window.location.href = LOGIN_URL), 400);
+        }
+        return;
+      }
+
+      try {
+        await garantirPerfil(user);          // cria perfil se necessário
+        exibirUsuario(user);                 // mostra header e nome
+        ligarLogout();                       // ativa botão sair
+        ligarListenersDeProgresso(user);     // salva progresso
+      } catch (e) {
+        console.error("Erro no boot do portal:", e);
+      }
+    });
+  });
 </script>
 
 </body>
