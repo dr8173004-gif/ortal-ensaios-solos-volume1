@@ -1658,46 +1658,70 @@ document.addEventListener('DOMContentLoaded',()=>{
   });
 </script>
 <script>
-// ===== Atualização automática da barra de progresso geral =====
+// === Progresso Geral (somente M0, M1 e M2) ===
 
-// Função principal
-function atualizarProgressoGeral() {
-  // Busca as porcentagens apenas dos módulos 0, 1 e 2
-  const modulosValidos = ['m0', 'm1', 'm2'];
-  let soma = 0;
-  let total = 0;
+// Tenta em ordem: 1) localStorage  2) #mX_pct  3) cartão do índice que aponta pra #modX
+function lerPct(modIndex){
+  // 1) localStorage (m0_progress_pct etc.)
+  try {
+    const vLS = parseFloat(localStorage.getItem(`m${modIndex}_progress_pct`));
+    if (!isNaN(vLS)) return vLS;
+  } catch(e){}
 
-  modulosValidos.forEach(id => {
-    // Cada módulo no índice tem o span com ID tipo "m0_pct", "m1_pct", etc.
-    const el = document.getElementById(id + '_pct');
-    if (el) {
-      const valor = parseInt(el.textContent.replace('%', '').trim());
-      if (!isNaN(valor)) {
-        soma += valor;
-        total++;
+  // 2) elemento com id mX_pct (se existir)
+  const elId = document.getElementById(`m${modIndex}_pct`);
+  if (elId){
+    const n = parseInt((elId.textContent||'').replace('%','').trim(), 10);
+    if (!isNaN(n)) return n;
+  }
+
+  // 3) cartão do índice: procura link para #modX e lê a .progress
+  //    (pega o último número % dentro do bloco .progress do mesmo cartão)
+  try {
+    // link apontando para a seção do módulo no índice
+    const link = document.querySelector(`#index a[href="#mod${modIndex}"], #content-index a[href="#mod${modIndex}"]`);
+    const card = link ? (link.closest('.panel, .card, .cardy, section, article, div')) : null;
+    const pDiv = card ? card.querySelector('.progress') : null;
+    if (pDiv){
+      const txt = pDiv.textContent || '';
+      const ms = [...txt.matchAll(/(\d+)\s*%/g)];
+      if (ms.length){
+        const ultimo = parseInt(ms[ms.length-1][1], 10);
+        if (!isNaN(ultimo)) return ultimo;
       }
     }
+  } catch(e){}
+
+  return NaN;
+}
+
+function atualizarProgressoGeral(){
+  const mods = [0,1,2]; // só M0, M1, M2
+  let soma = 0, count = 0;
+
+  mods.forEach(i=>{
+    const v = lerPct(i);
+    if (!isNaN(v)) { soma += v; count++; }
   });
 
-  // Calcula a média geral
-  const media = total > 0 ? Math.round(soma / total) : 0;
+  const media = count ? Math.round(soma / count) : 0;
 
-  // Atualiza a barra geral (topo)
+  // Atualiza a barra/label geral (IDs já existentes no seu portal)
   const barra = document.getElementById('overall_bar');
   const texto = document.getElementById('overall_pct');
   if (barra) barra.style.width = media + '%';
   if (texto) texto.textContent = media + '%';
 
-  // Salva no localStorage
-  try { localStorage.setItem('overall_progress_pct', media); } catch(e){}
+  try { localStorage.setItem('overall_progress_pct', String(media)); } catch(e){}
 }
 
-// Executa quando a página carregar
+// roda quando a página carrega
 window.addEventListener('DOMContentLoaded', atualizarProgressoGeral);
 
-// E também atualiza periodicamente (caso o aluno marque novas caixas)
-setInterval(atualizarProgressoGeral, 2000);
+// roda periodicamente (se o aluno marcar novas checkboxes sem trocar de seção)
+setInterval(atualizarProgressoGeral, 1500);
 </script>
+
 
 </body>
 </html>
