@@ -1694,7 +1694,72 @@ body::after {
     // Boot
     initChecks();
   </script>
-<!-- 🔒 Proteção do Portal + Logout + Progresso Firestore -->
+<!-- 🔒 Proteção do Portal + Logout + Firestore Progresso -->
+<!-- 🔘 Cabeçalho fixo do usuário -->
+<div id="userHeader">
+  <span id="userName">👋 Olá, aluno</span>
+  <button id="logoutBtn">Sair</button>
+</div>
+
+<style>
+  /* 🔷 Cabeçalho do usuário logado */
+  #userHeader {
+    position: fixed;
+    top: 16px;
+    right: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(1, 60, 90, 0.6);
+    backdrop-filter: blur(12px);
+    padding: 8px 16px;
+    border-radius: 40px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    z-index: 99999;
+    animation: fadeInUser 0.6s ease-out forwards;
+  }
+
+  #userName {
+    color: #fff;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    font-size: 0.95rem;
+    font-family: 'Montserrat', sans-serif;
+  }
+
+  #logoutBtn {
+    background: linear-gradient(135deg, #ff4e50, #f9d423);
+    border: none;
+    color: white;
+    padding: 6px 16px;
+    border-radius: 30px;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+  }
+
+  #logoutBtn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 15px rgba(255, 78, 80, 0.6);
+  }
+
+  @keyframes fadeInUser {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* 📱 Responsivo */
+  @media (max-width: 600px) {
+    #userName { display: none; }
+    #userHeader {
+      padding: 6px 10px;
+      right: 12px;
+    }
+  }
+</style>
+
+<!-- 🔥 Script Firebase -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
   import {
@@ -1721,12 +1786,11 @@ body::after {
     appId: "1:217730071254:web:a79fa9cbf49f742ff62777"
   };
 
-  // 🚀 Inicialização
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
   const db = getFirestore(app);
 
-  // 🔐 Protege o portal (só entra logado)
+  // 🔐 Proteção do portal
   onAuthStateChanged(auth, async (user) => {
     if (!user) {
       alert("Sessão expirada. Faça login novamente.");
@@ -1734,12 +1798,12 @@ body::after {
     } else {
       console.log("✅ Usuário autenticado:", user.email);
       await criarPerfilUsuario(user);
-      inicializarSalvamentoProgresso(user);
+      inicializarProgresso(user);
       exibirNomeUsuario(user);
     }
   });
 
-  // 👤 Cria o perfil no Firestore se ainda não existir
+  // 🧠 Cria o perfil do usuário no Firestore
   async function criarPerfilUsuario(user) {
     try {
       const userRef = doc(db, "users", user.uid);
@@ -1761,7 +1825,7 @@ body::after {
   }
 
   // 💾 Salvamento automático do progresso
-  function inicializarSalvamentoProgresso(user) {
+  function inicializarProgresso(user) {
     const checkboxes = document.querySelectorAll(".ck");
     checkboxes.forEach((ck) => {
       ck.addEventListener("change", async () => {
@@ -1789,7 +1853,7 @@ body::after {
     });
   }
 
-  // 🧠 Mostra o nome do usuário logado no topo
+  // 👤 Exibe nome do usuário
   function exibirNomeUsuario(user) {
     const userHeader = document.getElementById("userHeader");
     const userName = document.getElementById("userName");
@@ -1797,7 +1861,11 @@ body::after {
       const nome = user.displayName || user.email.split("@")[0];
       userName.textContent = `👋 Olá, ${nome}`;
     }
-    if (userHeader) userHeader.style.display = "flex";
+    if (userHeader) {
+      userHeader.style.display = "flex";
+      userHeader.style.visibility = "visible";
+      userHeader.style.opacity = "1";
+    }
   }
 
   // 🚪 Logout
