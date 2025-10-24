@@ -91,50 +91,61 @@
   </div>
 
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged } 
-      from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+  import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+  import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged } 
+    from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyDY5IFakVFbbLn8UQHUCgea7KOx_zZjvlY",
-      authDomain: "portal-ensaios-solos-vol1.firebaseapp.com",
-      projectId: "portal-ensaios-solos-vol1",
-      storageBucket: "portal-ensaios-solos-vol1.firebasestorage.app",
-      messagingSenderId: "217730071254",
-      appId: "1:217730071254:web:a79fa9cbf49f742ff62777"
-    };
+  const firebaseConfig = {
+    apiKey: "AIzaSyDY5IFakVFbbLn8UQHUCgea7KOx_zZjvlY",
+    authDomain: "portal-ensaios-solos-vol1.firebaseapp.com",
+    projectId: "portal-ensaios-solos-vol1",
+    storageBucket: "portal-ensaios-solos-vol1.firebasestorage.app",
+    messagingSenderId: "217730071254",
+    appId: "1:217730071254:web:a79fa9cbf49f742ff62777"
+  };
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
+  // Evita re-inicialização duplicada
+  const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
+  const auth = getAuth(app);
 
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        window.location.href = "./portal.html";
-      }
-    });
+  // Redireciona apenas se o usuário estiver logado e ainda NÃO estiver no portal
+  onAuthStateChanged(auth, (user) => {
+    if (user && !window.location.href.includes("portal.html")) {
+      window.location.href = "./portal.html";
+    }
+  });
 
-    document.getElementById("loginBtn").addEventListener("click", async () => {
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
-      try {
-        await signInWithEmailAndPassword(auth, email, password);
-        alert("Login realizado com sucesso!");
-        window.location.href = "./portal.html";
-      } catch (error) {
-        alert("Erro ao fazer login: " + error.message);
-      }
-    });
+  // Botão de login
+  document.getElementById("loginBtn").addEventListener("click", async () => {
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value.trim();
+    if (!email || !password) { alert("Preencha e-mail e senha."); return; }
 
-    document.getElementById("registerBtn").addEventListener("click", async () => {
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
-      try {
-        await createUserWithEmailAndPassword(auth, email, password);
-        alert("Conta criada com sucesso!");
-      } catch (error) {
-        alert("Erro ao criar conta: " + error.message);
-      }
-    });
-  </script>
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      alert("✔️ Login realizado com sucesso!");
+      window.location.href = "./portal.html";
+    } catch (error) {
+      console.error(error);
+      alert("❌ Erro ao fazer login: " + (error.message || ""));
+    }
+  });
+
+  // Botão de cadastro
+  document.getElementById("registerBtn").addEventListener("click", async () => {
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value.trim();
+    if (!email || !password) { alert("Preencha e-mail e senha."); return; }
+
+    try {
+      await createUserWithEmailAndPassword(auth, email, password);
+      alert("✅ Conta criada com sucesso!");
+    } catch (error) {
+      console.error(error);
+      alert("❌ Erro ao criar conta: " + (error.message || ""));
+    }
+  });
+</script>
+
 </body>
 </html>
