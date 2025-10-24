@@ -1693,50 +1693,20 @@ body::after {
 
     // Boot
     initChecks();
-  </script>
- <!-- 👤 Cabeçalho do usuário logado -->
-<header id="userHeader" class="user-header glass fade-in" style="display:none;">
-  <span id="userName">👋 Olá, aluno</span>
-  <button id="logoutBtn" class="logout-btn">Sair</button>
+ <!-- 👤 Cabeçalho do usuário logado (visível só após login) -->
+<header id="userHeader" class="user-header" style="display:none;position:fixed;top:12px;right:20px;z-index:9999;background:rgba(1,60,90,.55);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.15);color:#fff;padding:10px 18px;border-radius:40px;display:none;gap:10px;align-items:center;font-family:Montserrat,sans-serif;">
+  <span id="userName" style="font-weight:600;"></span>
+  <button id="logoutBtn" style="background:linear-gradient(135deg,#ff4e50,#f9d423);border:none;color:#fff;padding:6px 16px;border-radius:30px;font-weight:700;cursor:pointer;">Sair</button>
 </header>
 
-<style>
-  .user-header {
-    position: fixed;
-    top: 12px;
-    right: 20px;
-    display: none;
-    align-items: center;
-    gap: 10px;
-    color: #fff;
-    padding: 10px 18px;
-    border-radius: 40px;
-    background: rgba(1, 60, 90, 0.55);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255,255,255,0.15);
-    box-shadow: 0 4px 20px rgba(0,0,0,0.25);
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 500;
-    z-index: 9999;
-  }
-  #userName { font-weight: 600; font-size: 0.95rem; letter-spacing: 0.3px; }
-  .logout-btn {
-    background: linear-gradient(135deg, #ff4e50, #f9d423);
-    border: none; color: #fff; padding: 6px 16px;
-    border-radius: 30px; font-family: 'Montserrat', sans-serif;
-    font-weight: 600; cursor: pointer; transition: all 0.3s ease;
-  }
-  .logout-btn:hover { transform: scale(1.05); box-shadow: 0 0 15px rgba(255,78,80,0.6); }
-  @media (max-width: 600px) { #userName{display:none} .logout-btn{padding:6px 12px;font-size:.85rem} }
-</style>
-
-<!-- 🔒 Proteção, Logout e Firestore unificados -->
+<!-- 🔒 Diagnóstico mínimo: Auth + Firestore perfil + Logout -->
 <script type="module">
+  // ===== Imports Firebase =====
   import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
   import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
-  import { getFirestore, doc, getDoc, setDoc, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+  import { getFirestore, doc, setDoc, getDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
 
-  // ⚙️ Config Firebase
+  // ===== Config =====
   const firebaseConfig = {
     apiKey: "AIzaSyDY5IFakVFbbLn8UQHUCgea7KOx_zZjvlY",
     authDomain: "portal-ensaios-solos-vol1.firebaseapp.com",
@@ -1746,38 +1716,32 @@ body::after {
     appId: "1:217730071254:web:a79fa9cbf49f742ff62777"
   };
 
-  // 🚀 Inicializa apenas uma vez
-  const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db = getFirestore(app);
-
-  // ✅ Caminho correto do seu login no GitHub Pages
+  // GitHub Pages: URL exata do login
   const LOGIN_URL = "https://dr8173004-gif.github.io/ortal-ensaios-solos-volume1/main/login.html";
 
-  // Util: id -> mod0..mod4 (aceita #mod1 ou #content-mod-1)
-  function getModuloKeyFromSection(section) {
-    const id = section?.id || "";
-    const m = id.match(/mod(\d)/) || id.match(/content-mod-(\d)/);
-    return m ? `mod${m[1]}` : "modX";
+  // ===== Init único =====
+  const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db   = getFirestore(app);
+
+  // ===== Helpers UI =====
+  function showHeader(user) {
+    const header = document.getElementById("userHeader");
+    const nameEl = document.getElementById("userName");
+    if (!header || !nameEl) return;
+    nameEl.textContent = `👋 Olá, ${user.displayName || user.email.split("@")[0]}`;
+    header.style.display = "flex";
+  }
+  function wireLogout() {
+    const btn = document.getElementById("logoutBtn");
+    if (!btn) return;
+    btn.onclick = async () => {
+      try { await signOut(auth); } finally { window.location.href = LOGIN_URL; }
+    };
   }
 
-  // Atualiza barra/percentual local
-  function atualizarBarraLocal(section) {
-    const key = getModuloKeyFromSection(section); // "mod1"
-    const idx = key.replace("mod","");            // "1"
-    const todas = section.querySelectorAll(".ck");
-    const concluidas = [...todas].filter(c => c.checked).length;
-    const total = Math.max(todas.length, 1);
-    const pct = Math.round((concluidas/total)*100);
-    const bar = document.getElementById(`bar${idx}`);
-    const pctEl = document.getElementById(`pct${idx}`);
-    if (bar) bar.style.width = `${pct}%`;
-    if (pctEl) pctEl.textContent = `${pct}%`;
-    return { completo: concluidas === total };
-  }
-
-  // 👤 Garante perfil no Firestore
-  async function garantirPerfil(user) {
+  // ===== Cria/Garante perfil (mínimo) =====
+  async function ensureProfile(user) {
     const ref = doc(db, "users", user.uid);
     const snap = await getDoc(ref);
     if (!snap.exists()) {
@@ -1785,93 +1749,44 @@ body::after {
         nome: user.displayName || user.email.split("@")[0],
         email: user.email,
         criadoEm: serverTimestamp(),
-        progresso: { mod0: false, mod1: false, mod2: false, mod3: false, mod4: false }
+        progresso: { mod0:false, mod1:false, mod2:false, mod3:false, mod4:false }
       });
       console.log("🆕 Perfil criado:", user.email);
     } else {
-      console.log("ℹ️ Perfil já existe:", user.email);
+      // faz um merge leve só para garantir campos essenciais
+      await setDoc(ref, { email: user.email }, { merge: true });
+      console.log("ℹ️ Perfil já existia (atualizado levemente):", user.email);
     }
   }
 
-  // 💾 Liga listeners de progresso (por seção)
-  function ligarListenersDeProgresso(user) {
-    const sections = document.querySelectorAll("section.module");
-    sections.forEach(section => {
-      // Reflete UI na carga
-      const { completo } = atualizarBarraLocal(section);
-      // Persiste estado inicial (idempotente)
-      setDoc(
-        doc(db, "users", user.uid),
-        { progresso: { [getModuloKeyFromSection(section)]: completo } },
-        { merge: true }
-      ).catch(e => console.error("Falha ao salvar estado inicial:", e));
-
-      // Listener de mudança
-      section.querySelectorAll(".ck").forEach(ck => {
-        ck.addEventListener("change", async () => {
-          const { completo } = atualizarBarraLocal(section);
-          const key = getModuloKeyFromSection(section);
-          try {
-            await updateDoc(doc(db, "users", user.uid), { [`progresso.${key}`]: completo });
-            console.log(`📊 ${key} → ${completo ? "100%" : "em andamento"}`);
-          } catch (e) {
-            await setDoc(
-              doc(db, "users", user.uid),
-              { progresso: { [key]: completo } },
-              { merge: true }
-            );
-          }
-        });
-      });
-    });
-  }
-
-  // 👋 Mostra header e nome + liga logout
-  function exibirUsuario(user) {
-    const header = document.getElementById("userHeader");
-    const nameEl = document.getElementById("userName");
-    if (nameEl) {
-      const nome = user.displayName || user.email.split("@")[0];
-      nameEl.textContent = `👋 Olá, ${nome}`;
-    }
-    if (header) header.style.display = "flex";
-    const logoutBtn = document.getElementById("logoutBtn");
-    if (logoutBtn) {
-      logoutBtn.onclick = async () => {
-        try { await signOut(auth); } finally { window.location.href = LOGIN_URL; }
-      };
-    }
-  }
-
-  // 🔐 Guarda de rota: redireciona se não logado (sem loop)
-  function protegerRotaOuBoot() {
+  // ===== Guardião de rota (sem loop) =====
+  function boot() {
     onAuthStateChanged(auth, async (user) => {
-      // Se não logado e não estamos já na tela de login → redireciona
+      const isLoginPage = location.pathname.endsWith("/main/login.html") || location.href.includes("/main/login.html");
       if (!user) {
-        const isLoginPage = location.pathname.endsWith("/main/login.html") ||
-                            location.href.includes("/main/login.html");
         if (!isLoginPage) {
-          setTimeout(() => (window.location.href = LOGIN_URL), 300);
+          console.warn("⛔ Não autenticado → redirecionando ao login");
+          // pequeno atraso evita “ping-pong”
+          setTimeout(() => (window.location.href = LOGIN_URL), 250);
         }
         return;
       }
 
-      // Logado → inicializa portal
       try {
-        await garantirPerfil(user);          // cria/garante perfil
-        exibirUsuario(user);                 // header + logout
-        ligarListenersDeProgresso(user);     // progresso
-      } catch (e) {
-        console.error("Erro no boot do portal:", e);
+        console.log("✅ Logado como:", user.email);
+        await ensureProfile(user);    // cria/merge doc users/{uid}
+        showHeader(user);             // mostra header + nome
+        wireLogout();                 // ativa botão Sair
+      } catch (err) {
+        console.error("❌ Falha no boot do portal:", err);
       }
     });
   }
 
-  // Garante DOM pronto antes de ligar os handlers de UI
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", protegerRotaOuBoot);
+    document.addEventListener("DOMContentLoaded", boot);
   } else {
-    protegerRotaOuBoot();
+    boot();
   }
 </script>
 
