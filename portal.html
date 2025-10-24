@@ -1156,6 +1156,32 @@
   <script>
     // Ano atual
     document.getElementById('year').textContent = new Date().getFullYear();
+// =================== CONTROLE DE NAVEGAÇÃO SPA ===================
+
+// Ativar link ativo conforme rolagem
+const sections = ['home','index','mod0','mod1','mod2','mod3','mod4'].map(id => document.getElementById(id));
+const links = Array.from(document.querySelectorAll('nav a'));
+const byId = id => links.find(a => a.getAttribute('href') === `#${id}`);
+
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if(entry.isIntersecting){
+      links.forEach(a => a.classList.remove('active'));
+      const id = entry.target.id;
+      const link = byId(id);
+      if(link) link.classList.add('active');
+      try { localStorage.setItem('last-section', `#${id}`); } catch(e){}
+    }
+  });
+}, { threshold: .5 });
+
+sections.forEach(sec => sec && observer.observe(sec));
+
+// Restaura última seção aberta
+const last = localStorage.getItem('last-section');
+if(last && document.querySelector(last)){
+  setTimeout(()=>document.querySelector(last).scrollIntoView({behavior:'smooth'}),400);
+}
 
     // Destacar link ativo no menu conforme rolagem
     const sections = ['home','index','mod0','mod1','mod2','mod3','mod4'].map(id=>document.getElementById(id));
