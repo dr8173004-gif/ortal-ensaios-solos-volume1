@@ -1426,57 +1426,48 @@ try {
   }
 } catch(e){}
 
-// ======= UTIL: salvar/carregar no localStorage =======
+// ======= FUNÇÕES DE SALVAMENTO =======
 function saveKV(key, value){ try{ localStorage.setItem(key, value); }catch(e){} }
 function loadKV(key){ try{ return localStorage.getItem(key); }catch(e){ return null } }
 
-// ======= CHECKLIST + PROGRESSO (módulos + geral) =======
-// OBS: se algum input.ck NÃO tiver data-mod, o script deduz pelo <section id="modX"> ancestral
-function resolveModFor(el){
-  const explicit = el.dataset.mod;
-  if (explicit) return explicit;
-  let p = el.closest('section[id^="mod"]');
-  if (p && /^mod[0-9]+$/.test(p.id)) return p.id.replace('mod','m');
-  return null;
-}
-
+// ======= SISTEMA DE PROGRESSO (módulos + geral) =======
 function initChecks(){
   const checks = document.querySelectorAll('input.ck');
   const mods = {};
 
   checks.forEach(el=>{
-    // normaliza data-mod se faltar
-    const mod = resolveModFor(el);
-    if (mod && !el.dataset.mod) el.dataset.mod = mod;
-
     const key = el.dataset.key;
-    const m = el.dataset.mod;
-    if(!key || !m) return;
+    const mod = el.dataset.mod;
+    if(!key || !mod) return;
 
+    // Restaura estado salvo
     const saved = loadKV(key);
-    if(saved !== null) el.checked = (saved === '1');
+    if(saved !== null) el.checked = saved === '1';
 
-    if(!mods[m]) mods[m] = {done:0,total:0};
-    mods[m].total++;
-    if(el.checked) mods[m].done++;
+    // Inicializa contagem por módulo
+    if(!mods[mod]) mods[mod] = {done:0,total:0};
+    mods[mod].total++;
+    if(el.checked) mods[mod].done++;
 
+    // Monitora alterações
     el.addEventListener('change', ()=>{
       saveKV(key, el.checked?'1':'0');
-      updateModuleProgress(m);
+      updateModuleProgress(mod);
       updateOverallProgress();
     });
   });
 
-  Object.keys(mods).forEach(m=>{
-    updateModuleProgress(m, mods[m].done, mods[m].total);
+  // Atualiza todos os módulos
+  Object.keys(mods).forEach(mod=>{
+    updateModuleProgress(mod, mods[mod].done, mods[mod].total);
   });
   updateOverallProgress();
 }
 
 function updateModuleProgress(mod, doneOpt, totalOpt){
   const checks = document.querySelectorAll(`input.ck[data-mod="${mod}"]`);
-  const done = (typeof doneOpt === 'number') ? doneOpt : Array.from(checks).filter(c=>c.checked).length;
-  const total = (typeof totalOpt === 'number') ? totalOpt : checks.length;
+  const done = doneOpt ?? Array.from(checks).filter(c=>c.checked).length;
+  const total = totalOpt ?? checks.length;
   const pct = total>0 ? Math.round((done/total)*100) : 0;
 
   const bar = document.getElementById(`${mod}_bar`);
@@ -1488,11 +1479,10 @@ function updateModuleProgress(mod, doneOpt, totalOpt){
 }
 
 function updateOverallProgress(){
-  // Calcula progresso geral com base apenas nos módulos 0, 1 e 2
-  const mods = ['m0','m1','m2'];
+  const mods = ['m0','m1','m2']; // ignora mod3 e mod4
   let sum = 0, count = 0;
-  
-  mods.forEach(m => {
+
+  mods.forEach(m=>{
     const pct = parseFloat(loadKV(`${m}_progress_pct`));
     if (!isNaN(pct)) {
       sum += pct;
@@ -1500,15 +1490,16 @@ function updateOverallProgress(){
     }
   });
 
-  const avg = count > 0 ? Math.round(sum / count) : 0;
+  const avg = count>0 ? Math.round(sum/count) : 0;
   const bar = document.getElementById('overall_bar');
   const txt = document.getElementById('overall_pct');
-  if (bar) bar.style.width = avg + '%';
-  if (txt) txt.textContent = avg + '%';
+  if(bar) bar.style.width = avg + '%';
+  if(txt) txt.textContent = avg + '%';
+
   saveKV('overall_progress_pct', avg);
 }
 
-// ======= CÁLCULOS (mantidos) =======
+// ======= FUNÇÕES DE CÁLCULO DOS ENSAIOS =======
 function val(id){ const el=document.getElementById(id); return el?parseFloat((el.value||'').toString().replace(',','.')):NaN }
 
 function calcUmidade(){
@@ -1533,7 +1524,7 @@ function calcTripla(){
   saveKV('m1_w_media',media.toFixed(2));
 }
 
-// ======= Granulometria (mantido) =======
+// ======= GRANULOMETRIA =======
 const peneirasPadrao=['4.8','2.0','0.84','0.42','0.25','0.15','0.075','Fundo'];
 
 function initPeneiras(){
@@ -1567,7 +1558,7 @@ function calcPeneiras(){
   saveKV('m2_peneiras',JSON.stringify(masses));
 }
 
-// ======= Boot =======
+// ======= INICIALIZAÇÃO =======
 document.addEventListener('DOMContentLoaded',()=>{
   initChecks();
   initPeneiras();
