@@ -1658,47 +1658,34 @@ document.addEventListener('DOMContentLoaded',()=>{
   });
 </script>
 <script>
-// === Progresso Geral Dinâmico (somente Módulos 0, 1 e 2) ===
+// ===== Progresso Geral lendo diretamente dos módulos 0,1,2 =====
 
-function getProgressFromModule(n) {
-  // procura texto de porcentagem do módulo no índice
-  const section = document.querySelector(`#content-index, #index, main, body`);
-  if (!section) return 0;
+function updateOverallBarFromStorage() {
+  const mods = ['m0', 'm1', 'm2'];
+  let soma = 0, total = 0;
 
-  const regex = new RegExp(`Módulo\\s*${n}[^%]*(\\d+)\\s*%`, 'i');
-  const match = section.innerText.match(regex);
-  return match ? parseInt(match[1]) : 0;
-}
-
-function updateOverallBar() {
-  const modulos = [0, 1, 2];
-  let soma = 0, count = 0;
-
-  modulos.forEach(m => {
-    const pct = getProgressFromModule(m);
-    if (!isNaN(pct)) {
-      soma += pct;
-      count++;
-    }
+  mods.forEach(m => {
+    const valor = parseFloat(localStorage.getItem(`${m}_progress_pct`)) || 0;
+    soma += valor;
+    total++;
   });
 
-  const media = count ? Math.round(soma / count) : 0;
+  const media = total ? Math.round(soma / total) : 0;
 
-  // Atualiza a barra geral
-  const bar = document.getElementById('overall_bar');
-  const text = document.getElementById('overall_pct');
-  if (bar) bar.style.width = media + '%';
-  if (text) text.textContent = media + '%';
-
-  // Salva localmente
+  const barra = document.getElementById('overall_bar');
+  const texto = document.getElementById('overall_pct');
+  if (barra) barra.style.width = media + '%';
+  if (texto) texto.textContent = media + '%';
+  
+  // salva a média geral também
   try { localStorage.setItem('overall_progress_pct', media); } catch(e){}
 }
 
-// Atualiza quando a página carrega
-window.addEventListener('DOMContentLoaded', updateOverallBar);
+// Atualiza quando a página carregar
+window.addEventListener('DOMContentLoaded', updateOverallBarFromStorage);
 
-// E a cada 2 segundos
-setInterval(updateOverallBar, 2000);
+// E a cada 2 segundos (caso o usuário marque novas checkboxes)
+setInterval(updateOverallBarFromStorage, 2000);
 </script>
 
 </body>
