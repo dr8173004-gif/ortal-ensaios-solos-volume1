@@ -1658,34 +1658,41 @@ document.addEventListener('DOMContentLoaded',()=>{
   });
 </script>
 <script>
-// ===== Progresso Geral lendo diretamente dos módulos 0,1,2 =====
+// === Barra de Progresso Geral (Módulos 0, 1 e 2) ===
 
-function updateOverallBarFromStorage() {
-  const mods = ['m0', 'm1', 'm2'];
-  let soma = 0, total = 0;
+// Função para calcular a média com base nos valores salvos no localStorage
+function calcularProgressoGeral() {
+  const modulos = ['m0', 'm1', 'm2'];
+  let soma = 0;
+  let total = 0;
 
-  mods.forEach(m => {
-    const valor = parseFloat(localStorage.getItem(`${m}_progress_pct`)) || 0;
+  modulos.forEach(mod => {
+    const valor = parseFloat(localStorage.getItem(`${mod}_progress_pct`)) || 0;
     soma += valor;
     total++;
   });
 
   const media = total ? Math.round(soma / total) : 0;
 
-  const barra = document.getElementById('overall_bar');
-  const texto = document.getElementById('overall_pct');
-  if (barra) barra.style.width = media + '%';
-  if (texto) texto.textContent = media + '%';
-  
-  // salva a média geral também
-  try { localStorage.setItem('overall_progress_pct', media); } catch(e){}
+  // Atualiza os elementos reais do seu portal
+  const secao = document.getElementById('progresso-geral');
+  if (secao) {
+    const texto = secao.querySelector('b, strong, span') || secao.querySelector('*');
+    if (texto) texto.textContent = `Seu Progresso Geral: ${media}%`;
+
+    // Atualiza a barra interna (linha de progresso visual)
+    const barra = secao.querySelector('div[role="progressbar"], .meter, .progress-bar, i');
+    if (barra) barra.style.width = `${media}%`;
+  }
+
+  try { localStorage.setItem('overall_progress_pct', media); } catch (e) {}
 }
 
-// Atualiza quando a página carregar
-window.addEventListener('DOMContentLoaded', updateOverallBarFromStorage);
+// Atualiza ao carregar
+window.addEventListener('DOMContentLoaded', calcularProgressoGeral);
 
-// E a cada 2 segundos (caso o usuário marque novas checkboxes)
-setInterval(updateOverallBarFromStorage, 2000);
+// E também a cada 2 segundos (para refletir alterações em tempo real)
+setInterval(calcularProgressoGeral, 2000);
 </script>
 
 </body>
