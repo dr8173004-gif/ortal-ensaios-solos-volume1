@@ -1694,19 +1694,18 @@ body::after {
     // Boot
     initChecks();
   </script>
-   <!-- 👤 Cabeçalho do usuário logado -->
+ <!-- 👤 Cabeçalho do usuário logado -->
 <header id="userHeader" class="user-header glass fade-in" style="display:none;">
   <span id="userName">👋 Olá, aluno</span>
   <button id="logoutBtn" class="logout-btn">Sair</button>
 </header>
 
 <style>
-  /* 🎨 Header fixo com efeito glass premium */
   .user-header {
     position: fixed;
     top: 12px;
     right: 20px;
-    display: none; /* é ativado pelo script */
+    display: none;
     align-items: center;
     gap: 10px;
     color: #fff;
@@ -1720,39 +1719,17 @@ body::after {
     font-weight: 500;
     z-index: 9999;
   }
-
-  #userName {
-    font-weight: 600;
-    font-size: 0.95rem;
-    letter-spacing: 0.3px;
-  }
-
+  #userName { font-weight: 600; font-size: 0.95rem; letter-spacing: 0.3px; }
   .logout-btn {
     background: linear-gradient(135deg, #ff4e50, #f9d423);
-    border: none;
-    color: #fff;
-    padding: 6px 16px;
-    border-radius: 30px;
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
+    border: none; color: #fff; padding: 6px 16px;
+    border-radius: 30px; font-family: 'Montserrat', sans-serif;
+    font-weight: 600; cursor: pointer; transition: all 0.3s ease;
   }
-
-  .logout-btn:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 15px rgba(255,78,80,0.6);
-  }
-
-  @media (max-width: 600px) {
-    #userName { display: none; }
-    .logout-btn {
-      padding: 6px 12px;
-      font-size: 0.85rem;
-    }
-  }
+  .logout-btn:hover { transform: scale(1.05); box-shadow: 0 0 15px rgba(255,78,80,0.6); }
+  @media (max-width: 600px) { #userName{display:none} .logout-btn{padding:6px 12px;font-size:.85rem} }
 </style>
- 
+
 <!-- 🔒 Proteção, Logout e Firestore unificados -->
 <script type="module">
   import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
@@ -1774,26 +1751,24 @@ body::after {
   const auth = getAuth(app);
   const db = getFirestore(app);
 
-  // 🔁 URL de login (caminho correto no seu Pages)
+  // ✅ Caminho correto do seu login no GitHub Pages
   const LOGIN_URL = "https://dr8173004-gif.github.io/ortal-ensaios-solos-volume1/main/login.html";
 
-  // Util: extrai a chave do módulo (mod0..mod4) a partir do id da section
+  // Util: id -> mod0..mod4 (aceita #mod1 ou #content-mod-1)
   function getModuloKeyFromSection(section) {
     const id = section?.id || "";
-    // aceita "mod0" ou "content-mod-0"
     const m = id.match(/mod(\d)/) || id.match(/content-mod-(\d)/);
     return m ? `mod${m[1]}` : "modX";
   }
 
-  // Atualiza UI local (barrinha e %), se existir
+  // Atualiza barra/percentual local
   function atualizarBarraLocal(section) {
-    const key = getModuloKeyFromSection(section);          // ex: "mod1"
-    const idx = key.replace("mod","");                     // ex: "1"
+    const key = getModuloKeyFromSection(section); // "mod1"
+    const idx = key.replace("mod","");            // "1"
     const todas = section.querySelectorAll(".ck");
     const concluidas = [...todas].filter(c => c.checked).length;
     const total = Math.max(todas.length, 1);
     const pct = Math.round((concluidas/total)*100);
-
     const bar = document.getElementById(`bar${idx}`);
     const pctEl = document.getElementById(`pct${idx}`);
     if (bar) bar.style.width = `${pct}%`;
@@ -1801,7 +1776,7 @@ body::after {
     return { completo: concluidas === total };
   }
 
-  // 🧠 Cria/garante perfil do usuário
+  // 👤 Garante perfil no Firestore
   async function garantirPerfil(user) {
     const ref = doc(db, "users", user.uid);
     const snap = await getDoc(ref);
@@ -1818,26 +1793,20 @@ body::after {
     }
   }
 
-  // 💾 Escuta e salva progresso por módulo
+  // 💾 Liga listeners de progresso (por seção)
   function ligarListenersDeProgresso(user) {
     const sections = document.querySelectorAll("section.module");
     sections.forEach(section => {
-      // 1) calcular e refletir na UI na carga
+      // Reflete UI na carga
       const { completo } = atualizarBarraLocal(section);
-      // 2) já persistir o estado inicial (merge) — idempotente
-      (async () => {
-        try {
-          await setDoc(
-            doc(db, "users", user.uid),
-            { progresso: { [getModuloKeyFromSection(section)]: completo } },
-            { merge: true }
-          );
-        } catch (e) {
-          console.error("Falha ao salvar estado inicial do módulo:", e);
-        }
-      })();
+      // Persiste estado inicial (idempotente)
+      setDoc(
+        doc(db, "users", user.uid),
+        { progresso: { [getModuloKeyFromSection(section)]: completo } },
+        { merge: true }
+      ).catch(e => console.error("Falha ao salvar estado inicial:", e));
 
-      // 3) listeners de mudança
+      // Listener de mudança
       section.querySelectorAll(".ck").forEach(ck => {
         ck.addEventListener("change", async () => {
           const { completo } = atualizarBarraLocal(section);
@@ -1845,8 +1814,7 @@ body::after {
           try {
             await updateDoc(doc(db, "users", user.uid), { [`progresso.${key}`]: completo });
             console.log(`📊 ${key} → ${completo ? "100%" : "em andamento"}`);
-          } catch {
-            // se ainda não existe (primeiro login), garante com merge
+          } catch (e) {
             await setDoc(
               doc(db, "users", user.uid),
               { progresso: { [key]: completo } },
@@ -1858,7 +1826,7 @@ body::after {
     });
   }
 
-  // 👋 Exibe nome e mostra header + botão Sair
+  // 👋 Mostra header e nome + liga logout
   function exibirUsuario(user) {
     const header = document.getElementById("userHeader");
     const nameEl = document.getElementById("userName");
@@ -1867,43 +1835,44 @@ body::after {
       nameEl.textContent = `👋 Olá, ${nome}`;
     }
     if (header) header.style.display = "flex";
-  }
-
-  // 🚪 Logout
-  function ligarLogout() {
     const logoutBtn = document.getElementById("logoutBtn");
     if (logoutBtn) {
-      logoutBtn.addEventListener("click", async () => {
-        try {
-          await signOut(auth);
-        } finally {
-          window.location.href = LOGIN_URL;
-        }
-      });
+      logoutBtn.onclick = async () => {
+        try { await signOut(auth); } finally { window.location.href = LOGIN_URL; }
+      };
     }
   }
 
-  // 🔐 Guarda de rota (evita loop e garante DOM pronto)
-  document.addEventListener("DOMContentLoaded", () => {
+  // 🔐 Guarda de rota: redireciona se não logado (sem loop)
+  function protegerRotaOuBoot() {
     onAuthStateChanged(auth, async (user) => {
+      // Se não logado e não estamos já na tela de login → redireciona
       if (!user) {
-        // só redireciona se NÃO estamos já na página de login
-        if (!location.pathname.endsWith("/main/login.html")) {
-          setTimeout(() => (window.location.href = LOGIN_URL), 400);
+        const isLoginPage = location.pathname.endsWith("/main/login.html") ||
+                            location.href.includes("/main/login.html");
+        if (!isLoginPage) {
+          setTimeout(() => (window.location.href = LOGIN_URL), 300);
         }
         return;
       }
 
+      // Logado → inicializa portal
       try {
-        await garantirPerfil(user);          // cria perfil se necessário
-        exibirUsuario(user);                 // mostra header e nome
-        ligarLogout();                       // ativa botão sair
-        ligarListenersDeProgresso(user);     // salva progresso
+        await garantirPerfil(user);          // cria/garante perfil
+        exibirUsuario(user);                 // header + logout
+        ligarListenersDeProgresso(user);     // progresso
       } catch (e) {
         console.error("Erro no boot do portal:", e);
       }
     });
-  });
+  }
+
+  // Garante DOM pronto antes de ligar os handlers de UI
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", protegerRotaOuBoot);
+  } else {
+    protegerRotaOuBoot();
+  }
 </script>
 
 </body>
