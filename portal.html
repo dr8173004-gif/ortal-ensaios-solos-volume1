@@ -1694,6 +1694,61 @@ window.addEventListener('DOMContentLoaded', calcularProgressoGeral);
 // E também a cada 2 segundos (para refletir alterações em tempo real)
 setInterval(calcularProgressoGeral, 2000);
 </script>
+<script>
+// ===== Versão aprimorada — barra visual animada =====
+function calcularProgressoGeral() {
+  const modulos = ['m0', 'm1', 'm2'];
+  let soma = 0, total = 0;
+
+  modulos.forEach(mod => {
+    const valor = parseFloat(localStorage.getItem(`${mod}_progress_pct`)) || 0;
+    soma += valor;
+    total++;
+  });
+
+  const media = total ? Math.round(soma / total) : 0;
+
+  // Atualiza texto dentro da seção
+  const secao = document.getElementById('progresso-geral');
+  if (secao) {
+    // Atualiza o texto
+    const texto = secao.querySelector('b, strong, span, p');
+    if (texto) texto.textContent = `Seu Progresso Geral: ${media}%`;
+
+    // Atualiza ou cria uma barra interna animada
+    let barra = secao.querySelector('.barra-geral');
+    if (!barra) {
+      const trilho = document.createElement('div');
+      trilho.style.width = '80%';
+      trilho.style.margin = '10px auto';
+      trilho.style.height = '10px';
+      trilho.style.borderRadius = '10px';
+      trilho.style.background = '#dcdcdc';
+      trilho.style.overflow = 'hidden';
+      trilho.style.position = 'relative';
+
+      barra = document.createElement('div');
+      barra.className = 'barra-geral';
+      barra.style.height = '100%';
+      barra.style.width = '0%';
+      barra.style.background = 'linear-gradient(90deg,#28a745,#8df28d)';
+      barra.style.transition = 'width 0.8s ease-in-out';
+
+      trilho.appendChild(barra);
+      secao.appendChild(trilho);
+    }
+
+    // Anima a largura da barra
+    barra.style.width = `${media}%`;
+  }
+
+  // Salva no localStorage
+  try { localStorage.setItem('overall_progress_pct', media); } catch(e){}
+}
+
+window.addEventListener('DOMContentLoaded', calcularProgressoGeral);
+setInterval(calcularProgressoGeral, 2000);
+</script>
 
 </body>
 </html>
