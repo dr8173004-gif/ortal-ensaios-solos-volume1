@@ -1694,82 +1694,123 @@ body::after {
     // Boot
     initChecks();
   </script>
-<!-- Firebase unificado -->
+<!-- 🔒 Proteção do Portal + Logout + Progresso Firestore -->
 <script type="module">
-import { auth, db } from "./main/firebase-init.js";
-import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
-import { doc, setDoc, updateDoc, getDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+  import {
+    getAuth,
+    onAuthStateChanged,
+    signOut
+  } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+  import {
+    getFirestore,
+    doc,
+    setDoc,
+    updateDoc,
+    getDoc,
+    serverTimestamp
+  } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
 
-// Protege e inicializa
-onAuthStateChanged(auth, async (user) => {
-  if (!user) {
-    window.location.href = "./main/login.html";
-    return;
-  }
+  // 🔧 Configuração Firebase
+  const firebaseConfig = {
+    apiKey: "AIzaSyDY5IFakVFbbLn8UQHUCgea7KOx_zZjvlY",
+    authDomain: "portal-ensaios-solos-vol1.firebaseapp.com",
+    projectId: "portal-ensaios-solos-vol1",
+    storageBucket: "portal-ensaios-solos-vol1.firebasestorage.app",
+    messagingSenderId: "217730071254",
+    appId: "1:217730071254:web:a79fa9cbf49f742ff62777"
+  };
 
-  // Cria perfil
-  const ref = doc(db, "users", user.uid);
-  const snap = await getDoc(ref);
-  if (!snap.exists()) {
-    await setDoc(ref, {
-      nome: user.displayName || user.email.split("@")[0],
-      email: user.email,
-      criadoEm: serverTimestamp(),
-      progresso: { mod0: false, mod1: false, mod2: false, mod3: false, mod4: false }
-    });
-  }
+  // 🚀 Inicialização
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
 
-  // Atualiza progresso
-  const cks = document.querySelectorAll(".ck");
-  cks.forEach((ck) => {
-    ck.addEventListener("change", async () => {
-      const section = ck.closest("main[id^='content-mod-']");
-      const modulo = section ? section.id.replace("content-", "") : "modX";
-      const todas = section.querySelectorAll(".ck");
-      const concluidas = Array.from(todas).filter(c => c.checked).length;
-      const completo = concluidas === todas.length;
-      await updateDoc(ref, { [`progresso.${modulo}`]: completo });
-      console.log(`💾 ${modulo} atualizado: ${completo}`);
-    });
+  // 🔐 Protege o portal (só entra logado)
+  onAuthStateChanged(auth, async (user) => {
+    if (!user) {
+      alert("Sessão expirada. Faça login novamente.");
+      window.location.href = "/ortal-ensaios-solos-volume1/main/login.html";
+    } else {
+      console.log("✅ Usuário autenticado:", user.email);
+      await criarPerfilUsuario(user);
+      inicializarSalvamentoProgresso(user);
+      exibirNomeUsuario(user);
+    }
   });
-});
 
-// Logout
-document.getElementById("logoutBtn")?.addEventListener("click", async () => {
-  await signOut(auth);
-  window.location.href = "./main/login.html";
-});
+  // 👤 Cria o perfil no Firestore se ainda não existir
+  async function criarPerfilUsuario(user) {
+    try {
+      const userRef = doc(db, "users", user.uid);
+      const snap = await getDoc(userRef);
+      if (!snap.exists()) {
+        await setDoc(userRef, {
+          nome: user.displayName || user.email.split("@")[0],
+          email: user.email,
+          criadoEm: serverTimestamp(),
+          progresso: { mod0: false, mod1: false, mod2: false, mod3: false, mod4: false }
+        });
+        console.log("🆕 Perfil criado:", user.email);
+      } else {
+        console.log("ℹ️ Perfil já existente:", user.email);
+      }
+    } catch (e) {
+      console.error("❌ Erro ao criar perfil:", e);
+    }
+  }
+
+  // 💾 Salvamento automático do progresso
+  function inicializarSalvamentoProgresso(user) {
+    const checkboxes = document.querySelectorAll(".ck");
+    checkboxes.forEach((ck) => {
+      ck.addEventListener("change", async () => {
+        const modulo = ck.closest("section.module")?.id || "modX";
+        const todas = ck.closest("section.module").querySelectorAll(".ck");
+        const concluidas = Array.from(todas).filter(c => c.checked).length;
+        const total = todas.length;
+        const completo = concluidas === total;
+
+        try {
+          const userRef = doc(db, "users", user.uid);
+          const snap = await getDoc(userRef);
+
+          if (snap.exists()) {
+            await updateDoc(userRef, { [`progresso.${modulo}`]: completo });
+          } else {
+            await setDoc(userRef, { progresso: { [modulo]: completo } });
+          }
+
+          console.log(`📊 Progresso salvo (${modulo}): ${concluidas}/${total}`);
+        } catch (e) {
+          console.error("Erro ao salvar progresso:", e);
+        }
+      });
+    });
+  }
+
+  // 🧠 Mostra o nome do usuário logado no topo
+  function exibirNomeUsuario(user) {
+    const userHeader = document.getElementById("userHeader");
+    const userName = document.getElementById("userName");
+    if (userName) {
+      const nome = user.displayName || user.email.split("@")[0];
+      userName.textContent = `👋 Olá, ${nome}`;
+    }
+    if (userHeader) userHeader.style.display = "flex";
+  }
+
+  // 🚪 Logout
+  const logoutBtn = document.getElementById("logoutBtn");
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", async () => {
+      await signOut(auth);
+      alert("Você saiu do portal com sucesso!");
+      window.location.href = "/ortal-ensaios-solos-volume1/main/login.html";
+    });
+  }
 </script>
 
-<!-- 🔵 Cabeçalho do usuário -->
-<div id="userHeader" class="user-header glass fade-in">
-  <span id="userName">👋 Olá, aluno</span>
-  <button id="logoutBtn" class="logout-btn">Sair</button>
-</div>
-
-<style>
-  .glass {
-    backdrop-filter: blur(12px);
-    background: rgba(1,60,90,0.45);
-    border: 1px solid rgba(255,255,255,0.15);
-  }
-  .fade-in {opacity:0;transform:translateY(-15px);animation:fadeInHeader .7s ease-out forwards}
-  @keyframes fadeInHeader{to{opacity:1;transform:translateY(0)}}
-  .user-header {
-    position:fixed;top:12px;right:20px;display:flex;align-items:center;gap:10px;
-    color:#fff;padding:10px 18px;border-radius:40px;box-shadow:0 6px 20px rgba(0,0,0,.25);
-    font-family:'Montserrat',sans-serif;font-weight:500;z-index:99999;
-  }
-  .logout-btn {
-    background:linear-gradient(135deg,#ff4e50,#f9d423);
-    border:none;color:white;padding:6px 16px;border-radius:30px;
-    font-family:'Montserrat',sans-serif;font-weight:600;cursor:pointer;
-    transition:all .3s ease-in-out;
-  }
-  .logout-btn:hover{transform:scale(1.05);box-shadow:0 0 15px rgba(255,78,80,.6)}
-  @media(max-width:600px){#userName{display:none}}
-</style>
-    
 </body>
 </html>
 
