@@ -1658,44 +1658,8 @@ document.addEventListener('DOMContentLoaded',()=>{
   });
 </script>
 <script>
-// === Barra de Progresso Geral (Módulos 0, 1 e 2) ===
+// ===== Progresso Geral (usa a barra original do portal) =====
 
-// Função para calcular a média com base nos valores salvos no localStorage
-function calcularProgressoGeral() {
-  const modulos = ['m0', 'm1', 'm2'];
-  let soma = 0;
-  let total = 0;
-
-  modulos.forEach(mod => {
-    const valor = parseFloat(localStorage.getItem(`${mod}_progress_pct`)) || 0;
-    soma += valor;
-    total++;
-  });
-
-  const media = total ? Math.round(soma / total) : 0;
-
-  // Atualiza os elementos reais do seu portal
-  const secao = document.getElementById('progresso-geral');
-  if (secao) {
-    const texto = secao.querySelector('b, strong, span') || secao.querySelector('*');
-    if (texto) texto.textContent = `Seu Progresso Geral: ${media}%`;
-
-    // Atualiza a barra interna (linha de progresso visual)
-    const barra = secao.querySelector('div[role="progressbar"], .meter, .progress-bar, i');
-    if (barra) barra.style.width = `${media}%`;
-  }
-
-  try { localStorage.setItem('overall_progress_pct', media); } catch (e) {}
-}
-
-// Atualiza ao carregar
-window.addEventListener('DOMContentLoaded', calcularProgressoGeral);
-
-// E também a cada 2 segundos (para refletir alterações em tempo real)
-setInterval(calcularProgressoGeral, 2000);
-</script>
-<script>
-// ===== Versão aprimorada — barra visual animada =====
 function calcularProgressoGeral() {
   const modulos = ['m0', 'm1', 'm2'];
   let soma = 0, total = 0;
@@ -1708,41 +1672,23 @@ function calcularProgressoGeral() {
 
   const media = total ? Math.round(soma / total) : 0;
 
-  // Atualiza texto dentro da seção
+  // Atualiza o texto
   const secao = document.getElementById('progresso-geral');
   if (secao) {
-    // Atualiza o texto
     const texto = secao.querySelector('b, strong, span, p');
     if (texto) texto.textContent = `Seu Progresso Geral: ${media}%`;
 
-    // Atualiza ou cria uma barra interna animada
-    let barra = secao.querySelector('.barra-geral');
-    if (!barra) {
-      const trilho = document.createElement('div');
-      trilho.style.width = '80%';
-      trilho.style.margin = '10px auto';
-      trilho.style.height = '10px';
-      trilho.style.borderRadius = '10px';
-      trilho.style.background = '#dcdcdc';
-      trilho.style.overflow = 'hidden';
-      trilho.style.position = 'relative';
-
-      barra = document.createElement('div');
-      barra.className = 'barra-geral';
-      barra.style.height = '100%';
-      barra.style.width = '0%';
-      barra.style.background = 'linear-gradient(90deg,#28a745,#8df28d)';
-      barra.style.transition = 'width 0.8s ease-in-out';
-
-      trilho.appendChild(barra);
-      secao.appendChild(trilho);
+    // Atualiza a barra original (a cinza, com role="progressbar")
+    const barraOriginal = secao.querySelector('[role="progressbar"]');
+    if (barraOriginal) {
+      barraOriginal.style.background = 'linear-gradient(90deg, #28a745, #a6f5a6)';
+      barraOriginal.style.height = '10px';
+      barraOriginal.style.borderRadius = '10px';
+      barraOriginal.style.transition = 'width 0.8s ease-in-out';
+      barraOriginal.style.width = `${media}%`;
     }
-
-    // Anima a largura da barra
-    barra.style.width = `${media}%`;
   }
 
-  // Salva no localStorage
   try { localStorage.setItem('overall_progress_pct', media); } catch(e){}
 }
 
