@@ -1660,26 +1660,31 @@ document.addEventListener('DOMContentLoaded',()=>{
 <script>
 // ===== Atualização automática da barra de progresso geral =====
 
-// Função que extrai os números (0–100) das porcentagens mostradas no índice
-function calcularProgressoGeral() {
-  const modulos = document.querySelectorAll('#content-index .progress');
-  let soma = 0, total = 0;
+// Função principal
+function atualizarProgressoGeral() {
+  // Busca as porcentagens apenas dos módulos 0, 1 e 2
+  const modulosValidos = ['m0', 'm1', 'm2'];
+  let soma = 0;
+  let total = 0;
 
-  modulos.forEach(div => {
-    const texto = div.textContent.trim();
-    const match = texto.match(/(\d+)%/);
-    if (match) {
-      soma += parseInt(match[1]);
-      total++;
+  modulosValidos.forEach(id => {
+    // Cada módulo no índice tem o span com ID tipo "m0_pct", "m1_pct", etc.
+    const el = document.getElementById(id + '_pct');
+    if (el) {
+      const valor = parseInt(el.textContent.replace('%', '').trim());
+      if (!isNaN(valor)) {
+        soma += valor;
+        total++;
+      }
     }
   });
 
+  // Calcula a média geral
   const media = total > 0 ? Math.round(soma / total) : 0;
 
-  // Atualiza barra geral
-  const barra = document.querySelector('#overall_bar');
-  const texto = document.querySelector('#overall_pct');
-
+  // Atualiza a barra geral (topo)
+  const barra = document.getElementById('overall_bar');
+  const texto = document.getElementById('overall_pct');
   if (barra) barra.style.width = media + '%';
   if (texto) texto.textContent = media + '%';
 
@@ -1687,11 +1692,11 @@ function calcularProgressoGeral() {
   try { localStorage.setItem('overall_progress_pct', media); } catch(e){}
 }
 
-// Roda o cálculo quando a página carrega
-window.addEventListener('DOMContentLoaded', calcularProgressoGeral);
+// Executa quando a página carregar
+window.addEventListener('DOMContentLoaded', atualizarProgressoGeral);
 
-// E também a cada 3 segundos (caso o usuário marque novas caixas sem trocar de página)
-setInterval(calcularProgressoGeral, 3000);
+// E também atualiza periodicamente (caso o aluno marque novas caixas)
+setInterval(atualizarProgressoGeral, 2000);
 </script>
 
 </body>
