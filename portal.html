@@ -1658,7 +1658,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   });
 </script>
 <script>
-// ===== Progresso Geral (usa a barra original do portal) =====
+// ===== Progresso Geral Colorido (usa a barra original do portal) =====
 
 function calcularProgressoGeral() {
   const modulos = ['m0', 'm1', 'm2'];
@@ -1681,10 +1681,16 @@ function calcularProgressoGeral() {
     // Atualiza a barra original (a cinza, com role="progressbar")
     const barraOriginal = secao.querySelector('[role="progressbar"]');
     if (barraOriginal) {
-      barraOriginal.style.background = 'linear-gradient(90deg, #28a745, #a6f5a6)';
+      // Define cor conforme o nível
+      let cor = '#dc3545'; // vermelho padrão
+      if (media > 30 && media <= 70) cor = '#ffc107'; // amarelo
+      if (media > 70) cor = '#28a745'; // verde
+
+      // Aplica estilo
+      barraOriginal.style.background = cor;
       barraOriginal.style.height = '10px';
       barraOriginal.style.borderRadius = '10px';
-      barraOriginal.style.transition = 'width 0.8s ease-in-out';
+      barraOriginal.style.transition = 'width 0.8s ease-in-out, background 0.8s ease-in-out';
       barraOriginal.style.width = `${media}%`;
     }
   }
