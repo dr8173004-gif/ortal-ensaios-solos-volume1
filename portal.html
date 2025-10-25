@@ -1658,59 +1658,49 @@ document.addEventListener('DOMContentLoaded',()=>{
   });
 </script>
 <script>
-// ===== Progresso Geral - Ajuste final (estrutura <div class="meter"><i></i></div>) =====
+// ===== Progresso Geral — compatível com estrutura <section id="progresso-geral"><div></div> =====
 
-function calcularProgressoGeral() {
+function atualizarProgressoGeral() {
+  // Módulos considerados no cálculo
   const modulos = ['m0', 'm1', 'm2'];
-  let soma = 0, total = 0;
 
-  modulos.forEach(mod => {
-    const valor = parseFloat(localStorage.getItem(`${mod}_progress_pct`)) || 0;
+  let soma = 0;
+  let total = 0;
+
+  modulos.forEach(m => {
+    const valor = parseFloat(localStorage.getItem(`${m}_progress_pct`)) || 0;
     soma += valor;
     total++;
   });
 
   const media = total ? Math.round(soma / total) : 0;
 
-  // Atualiza o texto
+  // Atualiza o texto do progresso
   const secao = document.getElementById('progresso-geral');
   if (secao) {
-    const titulo = secao.querySelector('h3, p, span, strong');
-    if (titulo) titulo.textContent = `Seu Progresso Geral: ${media}%`;
+    const texto = secao.querySelector('h3, p, span, strong');
+    if (texto) texto.textContent = `Seu Progresso Geral: ${media}%`;
 
-    // Encontra a barrinha <i> dentro de .meter
-    const barra = secao.querySelector('.meter > i');
+    // Atualiza o DIV da barrinha
+    const barra = secao.querySelector('div');
     if (barra) {
-      let cor = '#dc3545'; // vermelho
+      barra.style.height = '10px';
+      barra.style.borderRadius = '10px';
+      barra.style.transition = 'width 0.8s ease, background 0.8s ease';
+
+      let cor = '#dc3545'; // vermelho até 30%
       if (media > 30 && media <= 70) cor = '#ffc107'; // amarelo
       if (media > 70) cor = '#28a745'; // verde
 
-      // Garante que a barra é visível e cobre a altura da .meter
-      barra.style.display = 'block';
-      barra.style.height = '100%';
-      barra.style.borderRadius = '10px';
-      barra.style.transition = 'width 0.8s ease-in-out, background 0.8s ease-in-out';
       barra.style.background = cor;
       barra.style.width = `${media}%`;
-
-      // Garante que a .meter não "tape" a cor
-      const meter = barra.parentElement;
-      if (meter) {
-        meter.style.background = '#e0e0e0';
-        meter.style.height = '10px';
-        meter.style.borderRadius = '10px';
-        meter.style.overflow = 'hidden';
-      }
     }
   }
-
-  try { localStorage.setItem('overall_progress_pct', media); } catch(e){}
 }
 
-// Executa quando carrega e a cada 2 segundos
-window.addEventListener('DOMContentLoaded', calcularProgressoGeral);
-setInterval(calcularProgressoGeral, 2000);
+// Atualiza ao carregar e a cada 2 segundos
+window.addEventListener('DOMContentLoaded', atualizarProgressoGeral);
+setInterval(atualizarProgressoGeral, 2000);
 </script>
 
-</body>
 </html>
