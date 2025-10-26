@@ -4,184 +4,189 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Curso Interativo – Ensaios de Solos (Vol. 1)</title>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
   <style>
     :root {
-      --green: #28a745;
+      --gold: #d4af37;
+      --dark: #0a0a0a;
+      --gray: #1a1a1a;
       --white: #ffffff;
-      --black: #0a0a0a;
-      --gray-dark: #1c1c1c;
+      --green: #28a745;
     }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
       font-family: 'Open Sans', sans-serif;
+      background: radial-gradient(circle at center, #111 0%, #000 100%);
       color: var(--white);
-      background: url('assets/bg_vitrine.jpg.png') no-repeat center center fixed;
-      background-size: cover;
-      backdrop-filter: brightness(0.6);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      text-align: center;
       overflow-x: hidden;
+      background-image: url('assets/bg_vitrine.jpg.png');
+      background-size: cover;
+      background-attachment: fixed;
+      background-position: center;
     }
 
     header {
-      background: rgba(0, 0, 0, 0.85);
+      position: fixed;
+      top: 0;
+      left: 0;
       width: 100%;
-      padding: 40px 20px 20px;
-      backdrop-filter: blur(10px);
-      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-    }
-
-    header h1 {
+      padding: 16px 0;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(8px);
+      text-align: center;
+      color: var(--gold);
       font-family: 'Montserrat', sans-serif;
-      font-size: 1.9rem;
       font-weight: 700;
-      color: var(--white);
-      text-shadow: 0 0 12px rgba(0, 0, 0, 0.8);
+      font-size: 1.4rem;
+      letter-spacing: 0.5px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.6);
+      z-index: 1000;
     }
 
-    header p {
-      margin-top: 10px;
-      font-size: 1rem;
-      color: #dcdcdc;
+    header span {
+      color: var(--white);
       font-weight: 400;
-      text-shadow: 0 0 8px rgba(0,0,0,0.6);
+      font-size: 1rem;
+      display: block;
+      margin-top: 4px;
+      letter-spacing: 0.3px;
     }
 
     main {
-      background: rgba(10,10,10,0.8);
-      border-radius: 20px;
+      margin-top: 100px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
       padding: 40px 20px;
-      max-width: 750px;
-      margin: 50px 20px;
-      box-shadow: 0 0 40px rgba(0,0,0,0.7);
+      animation: fadeIn 1.5s ease-in-out;
     }
 
-    h2 {
-      color: var(--green);
-      font-size: 1.8rem;
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .cover {
+      width: 320px;
+      height: 560px;
+      background: url('assets/cover_course.png') no-repeat center/cover;
+      border-radius: 20px;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.8), inset 0 0 20px rgba(212,175,55,0.3);
+      transform: rotateY(-8deg) rotateX(4deg);
+      transition: transform 0.6s ease, box-shadow 0.6s ease;
+      margin-bottom: 30px;
+    }
+
+    .cover:hover {
+      transform: rotateY(0) rotateX(0) scale(1.05);
+      box-shadow: 0 30px 80px rgba(212,175,55,0.4);
+    }
+
+    h1 {
       font-family: 'Montserrat', sans-serif;
+      font-size: 1.8rem;
+      color: var(--gold);
       margin-bottom: 10px;
     }
 
+    h2 {
+      color: var(--white);
+      font-size: 1.2rem;
+      margin-bottom: 20px;
+    }
+
     .price {
-      font-size: 1.6rem;
+      background: linear-gradient(90deg, #cfa93a, #d4af37, #f5d76e);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
       font-weight: 700;
-      color: var(--green);
-      margin: 20px 0 5px;
-      text-shadow: 0 0 10px rgba(40,167,69,0.6);
+      font-size: 1.8rem;
+      margin-bottom: 10px;
     }
 
-    .old-price {
-      color: #999;
-      text-decoration: line-through;
+    .button {
+      background: linear-gradient(90deg, #d4af37, #b8860b);
+      color: #000;
+      font-weight: 700;
+      font-family: 'Montserrat';
+      border: none;
+      border-radius: 50px;
+      padding: 16px 40px;
       font-size: 1rem;
-    }
-
-    .subtext {
-      font-size: 0.95rem;
-      color: #ccc;
-      margin-bottom: 25px;
-    }
-
-    .btn {
-      display: inline-block;
-      background: linear-gradient(90deg, #00ff99, #00cc66);
-      color: var(--black);
-      padding: 15px 30px;
-      border-radius: 40px;
-      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 0 15px rgba(212,175,55,0.3);
+      transition: all 0.3s ease;
       text-decoration: none;
-      font-family: 'Montserrat', sans-serif;
-      transition: all 0.3s ease-in-out;
-      box-shadow: 0 0 25px rgba(0,255,150,0.5);
+      display: inline-block;
+      margin-top: 15px;
     }
 
-    .btn:hover {
+    .button:hover {
+      box-shadow: 0 0 25px rgba(212,175,55,0.7);
       transform: scale(1.05);
-      box-shadow: 0 0 35px rgba(0,255,150,0.8);
     }
 
     .features {
-      margin-top: 30px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 25px;
       text-align: left;
-      line-height: 1.8;
-      color: #eee;
-      font-size: 0.95rem;
+      max-width: 340px;
+    }
+
+    .feature-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1rem;
+    }
+
+    .feature-item i {
+      color: var(--gold);
+      font-size: 1.2rem;
     }
 
     footer {
-      margin-top: auto;
-      padding: 30px 0;
-      font-size: 0.8rem;
-      color: #aaa;
+      text-align: center;
+      margin-top: 60px;
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.6);
     }
 
-    a.link {
-      color: #00ff99;
-      text-decoration: none;
-      transition: opacity 0.3s;
-    }
-
-    a.link:hover {
-      opacity: 0.7;
-    }
-
-    /* Vinheta cinematográfica */
-    body::before {
-      content: '';
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: radial-gradient(circle at center, rgba(0,0,0,0) 60%, rgba(0,0,0,0.8) 100%);
-      z-index: -1;
-    }
-
-    @media (max-width: 600px) {
-      header h1 { font-size: 1.4rem; }
-      h2 { font-size: 1.5rem; }
-      main { padding: 30px 15px; margin: 40px 10px; }
+    @media (max-width: 768px) {
+      .cover { width: 260px; height: 460px; }
+      h1 { font-size: 1.5rem; }
     }
   </style>
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </head>
-<body>
 
+<body>
   <header>
-    <h1>Do Laboratório à Obra: Domine os Ensaios de Solos com Excelência Profissional</h1>
-    <p>Simule, calcule e conquiste sua certificação com metodologia prática e moderna.</p>
+    Do Laboratório à Obra: Domine os Ensaios de Solos com Excelência Profissional
+    <span>Simule, calcule e conquiste sua certificação com metodologia prática e moderna.</span>
   </header>
 
   <main>
-    <h2>Transforme-se em um Laboratorista Completo</h2>
-    <p class="old-price">De R$197,00</p>
-    <p class="price">Por apenas R$97,00</p>
-    <p class="subtext">ou 10x de R$10,70 no cartão</p>
-    <a href="https://mpago.la/1JsMZZy" target="_blank" class="btn">💳 Quero garantir meu acesso agora</a>
+    <div class="cover"></div>
+
+    <h1>Transforme-se em um Laboratorista Completo</h1>
+    <h2>De <s>R$197,00</s> por apenas <span class="price">R$97,00</span><br>ou 10x de R$10,70 no cartão</h2>
+
+    <a href="https://mpago.la/1JsMZZy" target="_blank" class="button">💳 Quero garantir meu acesso agora</a>
 
     <div class="features">
-      <p>✅ Acesso completo ao Portal Interativo</p>
-      <p>🧮 Calculadoras e simuladores práticos</p>
-      <p>📜 Certificado digital personalizado</p>
-      <p>🎥 Mentoria bônus (45 min ao vivo)</p>
+      <div class="feature-item"><i class="fas fa-unlock-alt"></i> Acesso completo ao Portal Interativo</div>
+      <div class="feature-item"><i class="fas fa-calculator"></i> Calculadoras e simuladores práticos</div>
+      <div class="feature-item"><i class="fas fa-certificate"></i> Certificado digital personalizado</div>
+      <div class="feature-item"><i class="fas fa-video"></i> Mentoria bônus (45 min ao vivo)</div>
     </div>
 
-    <p style="margin-top:25px;">
-      <a href="index.html" class="link">Já comprei? Acessar o Portal</a>
-    </p>
+    <footer>© 2025 Curso Interativo – Ensaios de Solos. Todos os direitos reservados.</footer>
   </main>
-
-  <footer>
-    © 2025 Curso Interativo – Ensaios de Solos (Vol. 1). Todos os direitos reservados.
-  </footer>
-
 </body>
 </html>
