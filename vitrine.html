@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
->
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -12,7 +11,7 @@
     :root {
       --gold: #d4af37;
       --black: #0a0a0a;
-      --glass: rgba(15, 15, 15, 0.75);
+      --glass: rgba(15,15,15,0.75);
       --green: #25d366;
     }
 
@@ -31,7 +30,7 @@
       content: "";
       position: fixed;
       inset: 0;
-      background: 
+      background:
         radial-gradient(circle at 50% 20%, rgba(255,255,255,0.12) 0%, transparent 60%),
         radial-gradient(circle at 80% 70%, rgba(212,175,55,0.15) 0%, transparent 70%),
         linear-gradient(180deg, rgba(0,0,0,0.7), rgba(0,0,0,0.9));
@@ -44,6 +43,7 @@
       backdrop-filter: blur(8px);
       padding: 22px 10px;
       box-shadow: inset 0 -1px 0 rgba(255,255,255,0.1);
+      animation: fadeDown 2s ease-in-out;
     }
 
     header h1 {
@@ -58,11 +58,22 @@
       font-size: 1rem;
     }
 
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-40px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
     main {
       display: flex;
       flex-direction: column;
       align-items: center;
       padding: 80px 20px;
+      animation: fadeInBody 2.5s ease;
+    }
+
+    @keyframes fadeInBody {
+      from { opacity: 0; }
+      to { opacity: 1; }
     }
 
     .content {
@@ -87,6 +98,12 @@
       filter: blur(60px);
       z-index: 0;
       transform: translate(-50%, -50%);
+      animation: glowPulse 6s ease-in-out infinite;
+    }
+
+    @keyframes glowPulse {
+      0%,100% { opacity: 0.6; }
+      50% { opacity: 1; }
     }
 
     /* 🖼️ Capa 3D */
@@ -96,14 +113,14 @@
       background: url('assets/cover_course.png') no-repeat center/cover;
       border-radius: 18px;
       box-shadow: 0 30px 80px rgba(0,0,0,0.8), 0 0 50px rgba(212,175,55,0.4);
-      transform: perspective(1000px) rotateY(-8deg);
-      animation: float 6s ease-in-out infinite alternate;
-      z-index: 1;
+      transform: perspective(1000px) scale(0.96);
+      opacity: 0;
+      animation: coverEnter 2.5s ease forwards;
     }
 
-    @keyframes float {
-      from { transform: perspective(1000px) rotateY(-8deg) translateY(0); }
-      to { transform: perspective(1000px) rotateY(-8deg) translateY(-10px); }
+    @keyframes coverEnter {
+      0% { opacity: 0; transform: perspective(1000px) scale(0.92) translateY(40px); }
+      100% { opacity: 1; transform: perspective(1000px) scale(1) translateY(0); }
     }
 
     /* 💰 Painel de compra */
@@ -118,6 +135,14 @@
       position: relative;
       z-index: 1;
       box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+      opacity: 0;
+      animation: panelEnter 2.5s ease forwards;
+      animation-delay: 0.5s;
+    }
+
+    @keyframes panelEnter {
+      0% { opacity: 0; transform: translateY(40px); }
+      100% { opacity: 1; transform: translateY(0); }
     }
 
     .panel h2 {
@@ -175,15 +200,20 @@
       border-radius: 15px;
       padding: 20px;
       text-align: center;
-      transition: all .3s ease;
       box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+      opacity: 0;
+      transform: translateY(40px);
+      animation: benefitEnter 1.2s ease forwards;
     }
 
-    .benefit-card:hover {
-      transform: translateY(-6px);
-      border-color: var(--gold);
-      box-shadow: 0 0 25px rgba(212,175,55,0.3);
+    @keyframes benefitEnter {
+      to { opacity: 1; transform: translateY(0); }
     }
+
+    .benefit-card:nth-child(1) { animation-delay: 1.5s; }
+    .benefit-card:nth-child(2) { animation-delay: 1.7s; }
+    .benefit-card:nth-child(3) { animation-delay: 1.9s; }
+    .benefit-card:nth-child(4) { animation-delay: 2.1s; }
 
     .benefit-card i {
       color: var(--gold);
@@ -210,8 +240,7 @@
         width: 90%;
         height: auto;
         aspect-ratio: 9/16;
-        transform: none;
-        animation: none;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.8);
       }
       .panel {
         max-width: 95%;
@@ -222,11 +251,6 @@
         gap: 15px;
         padding: 0 15px;
       }
-      .benefit-card {
-        background: rgba(20,20,20,0.8);
-        padding: 18px;
-      }
-      .content::before { display: none; }
     }
 
     /* 💬 WhatsApp */
@@ -261,6 +285,12 @@
       margin: 80px 0 40px;
       color: #aaa;
       font-size: 0.9rem;
+      animation: fadeIn 2s ease 2.5s forwards;
+      opacity: 0;
+    }
+
+    @keyframes fadeIn {
+      to { opacity: 1; }
     }
   </style>
 </head>
