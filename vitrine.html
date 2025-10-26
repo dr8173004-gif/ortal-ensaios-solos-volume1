@@ -1,281 +1,187 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Formação de Laboratoristas – Vitrine</title>
-<meta name="description" content="Curso premium e prático de ensaios de solos (ABNT), com simuladores, calculadoras e certificado. Acesso imediato.">
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Curso Interativo – Ensaios de Solos (Vol. 1)</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --green: #28a745;
+      --white: #ffffff;
+      --black: #0a0a0a;
+      --gray-dark: #1c1c1c;
+    }
 
-<style>
-  :root{
-    --blue:#00B0FF; --green:#19D27E; --white:#fff; --ink:#0e1116; --soft:#dfe6ee;
-    --glass: rgba(17,24,39,.35); --stroke: rgba(255,255,255,.15);
-    --neon: linear-gradient(90deg, #0fd, #19d27e 40%, #46ff9a 80%, #0fd);
-  }
-  *{box-sizing:border-box}
-  html,body{height:100%}
-  body{
-    margin:0; color:#eaf2ff; font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto;
-    background:#000; overflow-x:hidden;
-  }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-  /* ====== background cinema ====== */
-  .bg{
-    position:fixed; inset:0; z-index:-3;
-    background: #0a0d10 url("./assets/bg_vitrine.jpg") center/cover no-repeat fixed;
-    filter:saturate(.85) brightness(.62);
-  }
-  .gradient{
-    position:fixed; inset:-10% -10% -10% -10%; z-index:-2;
-    background:
-      radial-gradient(1200px 600px at 20% -10%, rgba(0,176,255,.35), transparent 60%),
-      radial-gradient(900px 600px at 120% 30%, rgba(25,210,126,.30), transparent 65%),
-      linear-gradient(180deg, rgba(0,0,0,.35), rgba(0,0,0,.65) 42%, rgba(0,0,0,.8) 85%);
-    pointer-events:none;
-  }
-  .vignette{
-    position:fixed; inset:0; z-index:-1;
-    background: radial-gradient(120% 120% at 50% 30%, rgba(0,0,0,0) 50%, rgba(0,0,0,.65) 100%);
-    pointer-events:none;
-  }
+    body {
+      font-family: 'Open Sans', sans-serif;
+      color: var(--white);
+      background: url('assets/bg_vitrine.jpg.png') no-repeat center center fixed;
+      background-size: cover;
+      backdrop-filter: brightness(0.6);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      text-align: center;
+      overflow-x: hidden;
+    }
 
-  header{
-    width:100%; position:sticky; top:0; z-index:10;
-    backdrop-filter:saturate(140%) blur(8px);
-    background:linear-gradient(0deg, rgba(0,0,0,.0), rgba(0,0,0,.42));
-    border-bottom:1px solid rgba(255,255,255,.08);
-  }
-  .top{
-    max-width:1120px; margin:0 auto; padding:14px 18px; display:flex; align-items:center; gap:16px;
-  }
-  .brand{
-    display:flex; align-items:center; gap:10px; font-family:'Montserrat'; font-weight:800; letter-spacing:.3px;
-    font-size:clamp(18px,2.2vw,24px);
-  }
-  .brand .dot{width:12px;height:12px;border-radius:50%;background:linear-gradient(135deg,#19d27e,#0fd)}
-  .spacer{flex:1}
-  .muter{
-    display:inline-flex; align-items:center; gap:10px;
-    padding:10px 14px; border-radius:999px; cursor:pointer; border:1px solid var(--stroke);
-    backdrop-filter: blur(8px) saturate(140%);
-    background: rgba(255,255,255,.06);
-    color:#eaf2ff; font-weight:700;
-  }
-  .muter:hover{ box-shadow:0 0 0 2px rgba(79,255,197,.15) inset }
+    header {
+      background: rgba(0, 0, 0, 0.85);
+      width: 100%;
+      padding: 40px 20px 20px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    }
 
-  main{ padding:42px 18px 96px }
-  .container{ max-width:1120px; margin:0 auto }
+    header h1 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1.9rem;
+      font-weight: 700;
+      color: var(--white);
+      text-shadow: 0 0 12px rgba(0, 0, 0, 0.8);
+    }
 
-  /* ====== hero ====== */
-  .hero{
-    text-align:center; margin:18px auto 28px;
-  }
-  .hero h1{
-    margin:0 0 8px; font-family:'Montserrat'; font-weight:800;
-    font-size: clamp(22px, 3.3vw, 40px);
-    letter-spacing:.2px; line-height:1.15;
-    text-shadow: 0 6px 28px rgba(0,0,0,.65);
-  }
-  .hero p{
-    margin:0; opacity:.9; font-size:clamp(14px,1.2vw,16px);
-  }
+    header p {
+      margin-top: 10px;
+      font-size: 1rem;
+      color: #dcdcdc;
+      font-weight: 400;
+      text-shadow: 0 0 8px rgba(0,0,0,0.6);
+    }
 
-  /* ====== glass card ====== */
-  .card{
-    margin:40px auto 28px; max-width:980px; border-radius:28px;
-    background: radial-gradient(120% 120% at 20% 0%, rgba(15,222,203,.07), transparent 40%) ,
-                linear-gradient(180deg, rgba(17,24,39,.42), rgba(17,24,39,.62));
-    border:1px solid var(--stroke);
-    box-shadow: 0 30px 80px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.04);
-    backdrop-filter: blur(12px) saturate(160%);
-    padding: clamp(22px, 3.2vw, 38px);
-  }
-  .card h2{
-    text-align:center; font-family:'Montserrat'; font-weight:800;
-    font-size:clamp(22px,2.8vw,36px); margin:6px 0 8px;
-    color:#bfffe8; letter-spacing:.2px;
-    text-shadow: 0 0 25px rgba(79,255,197,.25);
-  }
-  .card h2 .accent{ color:#19d27e }
-  .sub{
-    text-align:center; color:#d9e6ff; opacity:.9; margin:0 auto 22px; max-width:820px;
-  }
+    main {
+      background: rgba(10,10,10,0.8);
+      border-radius: 20px;
+      padding: 40px 20px;
+      max-width: 750px;
+      margin: 50px 20px;
+      box-shadow: 0 0 40px rgba(0,0,0,0.7);
+    }
 
-  /* pricing box */
-  .pricing{
-    margin:18px auto 14px; max-width:760px; border-radius:20px; padding:18px 18px 16px;
-    background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01));
-    border:1px solid rgba(255,255,255,.1);
-    box-shadow: inset 0 1px 0 rgba(255,255,255,.06);
-  }
-  .from{
-    text-align:center; color:#b7c2d0; font-weight:700; letter-spacing:.2px;
-    text-decoration: line-through; opacity:.6; margin-bottom:6px;
-  }
-  .big{
-    text-align:center; margin:0; font-family:'Montserrat'; font-weight:900;
-    font-size: clamp(26px, 4.2vw, 44px);
-    background: linear-gradient(180deg, #eafff7, #8cffd0);
-    -webkit-background-clip:text; background-clip:text; color:transparent;
-    text-shadow: 0 0 22px rgba(79,255,197,.18);
-  }
-  .installments{
-    text-align:center; color:#cfe7ff; opacity:.85; margin-top:6px; font-weight:700;
-  }
+    h2 {
+      color: var(--green);
+      font-size: 1.8rem;
+      font-family: 'Montserrat', sans-serif;
+      margin-bottom: 10px;
+    }
 
-  /* CTA */
-  .cta{
-    display:flex; justify-content:center; margin:18px 0 6px;
-  }
-  .btn{
-    --pad: clamp(12px, 1.4vw, 16px);
-    padding: var(--pad) clamp(18px, 2.6vw, 28px);
-    border-radius:999px; border:none; cursor:pointer;
-    font-family:'Montserrat'; font-weight:800; letter-spacing:.3px;
-    color:#002316;
-    background: var(--neon);
-    box-shadow:
-      0 10px 30px rgba(79,255,197,.25),
-      0 0 0 1px rgba(0,0,0,.25) inset;
-    transition: transform .15s ease, box-shadow .25s ease;
-  }
-  .btn:hover{ transform: translateY(-2px); box-shadow: 0 16px 40px rgba(79,255,197,.32) }
-  .btn:active{ transform: translateY(0) scale(.99) }
-  .btn.secondary{
-    background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
-    color:#dce9ff; border:1px solid rgba(255,255,255,.12);
-    box-shadow:none;
-  }
-  .btn.secondary:hover{ box-shadow: 0 10px 26px rgba(0,0,0,.35) }
+    .price {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--green);
+      margin: 20px 0 5px;
+      text-shadow: 0 0 10px rgba(40,167,69,0.6);
+    }
 
-  /* benefits */
-  .benefits{
-    display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap:14px 18px;
-    margin:18px auto 0; max-width:760px;
-  }
-  .benefits li{ list-style:none; display:flex; gap:10px; align-items:flex-start }
-  .i{ width:22px; height:22px; border-radius:6px; background: var(--neon); flex:0 0 22px; box-shadow:0 0 18px rgba(79,255,197,.35) }
-  .txt{ color:#d9e6ff }
+    .old-price {
+      color: #999;
+      text-decoration: line-through;
+      font-size: 1rem;
+    }
 
-  .footlinks{
-    margin-top:22px; display:flex; gap:12px; justify-content:center; flex-wrap:wrap
-  }
-  .footlinks a{
-    color:#b7ffde; font-weight:800; text-decoration:none; border-bottom:1px dashed rgba(79,255,197,.4)
-  }
+    .subtext {
+      font-size: 0.95rem;
+      color: #ccc;
+      margin-bottom: 25px;
+    }
 
-  /* footer */
-  footer{
-    padding:28px 18px 48px; text-align:center; color:#a6b3c2; font-size:14px;
-  }
+    .btn {
+      display: inline-block;
+      background: linear-gradient(90deg, #00ff99, #00cc66);
+      color: var(--black);
+      padding: 15px 30px;
+      border-radius: 40px;
+      font-weight: 700;
+      text-decoration: none;
+      font-family: 'Montserrat', sans-serif;
+      transition: all 0.3s ease-in-out;
+      box-shadow: 0 0 25px rgba(0,255,150,0.5);
+    }
 
-  /* responsive */
-  @media (max-width:740px){
-    .benefits{ grid-template-columns: 1fr }
-  }
-</style>
+    .btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 35px rgba(0,255,150,0.8);
+    }
+
+    .features {
+      margin-top: 30px;
+      text-align: left;
+      line-height: 1.8;
+      color: #eee;
+      font-size: 0.95rem;
+    }
+
+    footer {
+      margin-top: auto;
+      padding: 30px 0;
+      font-size: 0.8rem;
+      color: #aaa;
+    }
+
+    a.link {
+      color: #00ff99;
+      text-decoration: none;
+      transition: opacity 0.3s;
+    }
+
+    a.link:hover {
+      opacity: 0.7;
+    }
+
+    /* Vinheta cinematográfica */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: radial-gradient(circle at center, rgba(0,0,0,0) 60%, rgba(0,0,0,0.8) 100%);
+      z-index: -1;
+    }
+
+    @media (max-width: 600px) {
+      header h1 { font-size: 1.4rem; }
+      h2 { font-size: 1.5rem; }
+      main { padding: 30px 15px; margin: 40px 10px; }
+    }
+  </style>
 </head>
 <body>
-  <!-- BG layers -->
-  <div class="bg"></div>
-  <div class="gradient"></div>
-  <div class="vignette"></div>
 
   <header>
-    <div class="top">
-      <div class="brand"><span class="dot"></span> Formação em Ensaios de Solos (Vol. 1)</div>
-      <div class="spacer"></div>
-      <button id="muteBtn" class="muter" aria-pressed="true">🔊 Música: <b id="muteState">Ligado</b></button>
-    </div>
+    <h1>Do Laboratório à Obra: Domine os Ensaios de Solos com Excelência Profissional</h1>
+    <p>Simule, calcule e conquiste sua certificação com metodologia prática e moderna.</p>
   </header>
 
   <main>
-    <div class="container">
-      <section class="hero" aria-label="Apresentação">
-        <h1>Aprenda ensaios de solos na prática com <b>portal cinematográfico</b> e <b>certificado profissional</b></h1>
-        <p>Acesso imediato • Conteúdo premium • Simuladores e calculadoras • Suporte e mentoria bônus</p>
-      </section>
+    <h2>Transforme-se em um Laboratorista Completo</h2>
+    <p class="old-price">De R$197,00</p>
+    <p class="price">Por apenas R$97,00</p>
+    <p class="subtext">ou 10x de R$10,70 no cartão</p>
+    <a href="https://mpago.la/1JsMZZy" target="_blank" class="btn">💳 Quero garantir meu acesso agora</a>
 
-      <section class="card" aria-label="Oferta do curso">
-        <h2><span class="accent">Transforme-se</span> em um <span class="accent">Laboratorista Completo</span></h2>
-        <p class="sub">Domine os ensaios de solos mais utilizados em obras e laboratórios — com calculadoras automáticas, simuladores práticos e uma sessão de mentoria bônus.</p>
-
-        <div class="pricing" role="group" aria-label="Preço do curso">
-          <div class="from">De R$197,00</div>
-          <p class="big">Por apenas <b>R$97,00</b></p>
-          <div class="installments">ou 10x de <b>R$10,70</b> no cartão</div>
-        </div>
-
-        <div class="cta">
-          <a class="btn" href="https://mpago.la/1JsMZZy" target="_blank" rel="noopener">💳 Comprar agora</a>
-        </div>
-
-        <ul class="benefits">
-          <li><span class="i"></span><span class="txt">Acesso completo ao Portal Interativo</span></li>
-          <li><span class="i"></span><span class="txt">Simuladores práticos e calculadoras automáticas</span></li>
-          <li><span class="i"></span><span class="txt">Certificado digital personalizado</span></li>
-          <li><span class="i"></span><span class="txt">Mentoria bônus (45 minutos ao vivo)</span></li>
-          <li><span class="i"></span><span class="txt">Garantia de 7 dias: satisfação ou reembolso</span></li>
-          <li><span class="i"></span><span class="txt">Conteúdo atualizado e suporte</span></li>
-        </ul>
-
-        <div class="footlinks">
-          <a href="https://dr8173004-gif.github.io/ortal-ensaios-solos-volume1/index.html">Já comprei? Acessar o Portal</a>
-        </div>
-
-        <div class="cta" style="margin-top:8px">
-          <a class="btn secondary" href="https://mpago.la/1JsMZZy" target="_blank" rel="noopener">Pagar por Pix / Cartão (Mercado Pago)</a>
-        </div>
-      </section>
+    <div class="features">
+      <p>✅ Acesso completo ao Portal Interativo</p>
+      <p>🧮 Calculadoras e simuladores práticos</p>
+      <p>📜 Certificado digital personalizado</p>
+      <p>🎥 Mentoria bônus (45 min ao vivo)</p>
     </div>
+
+    <p style="margin-top:25px;">
+      <a href="index.html" class="link">Já comprei? Acessar o Portal</a>
+    </p>
   </main>
 
   <footer>
-    © 2025 Formação de Laboratoristas — Todos os direitos reservados.
+    © 2025 Curso Interativo – Ensaios de Solos (Vol. 1). Todos os direitos reservados.
   </footer>
 
-  <!-- ====== Áudio (trilha cinematográfica) ====== -->
-  <!-- Coloque um arquivo em ./assets/ambient.mp3 (ou troque abaixo por uma URL sua) -->
-  <audio id="bgm" src="./assets/ambient.mp3" preload="auto" loop></audio>
-
-<script>
-  // ===== Música com autoplay amigável às políticas dos navegadores =====
-  const audio = document.getElementById('bgm');
-  const btn = document.getElementById('muteBtn');
-  const state = document.getElementById('muteState');
-
-  // inicia tentando reproduzir (muted primeiro – alguns browsers exigem interação)
-  (async () => {
-    try {
-      audio.volume = 0.22;
-      audio.muted = false;             // se falhar, o catch liga muted e tenta tocar
-      await audio.play();
-      state.textContent = 'Ligado';
-      btn.setAttribute('aria-pressed','true');
-    } catch(e){
-      // fallback: tenta tocar silencioso até o usuário clicar no botão
-      audio.muted = true;
-      try { await audio.play(); } catch(_) {}
-      state.textContent = 'Silencioso';
-      btn.setAttribute('aria-pressed','false');
-    }
-  })();
-
-  btn.addEventListener('click', async () => {
-    const isMuted = audio.muted || audio.paused;
-    if(isMuted){
-      audio.muted = false;
-      try { await audio.play(); } catch(_) {}
-      state.textContent = 'Ligado';
-      btn.setAttribute('aria-pressed','true');
-    }else{
-      audio.muted = true;
-      audio.pause();
-      state.textContent = 'Silencioso';
-      btn.setAttribute('aria-pressed','false');
-    }
-  });
-</script>
 </body>
 </html>
