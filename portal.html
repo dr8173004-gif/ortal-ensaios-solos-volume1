@@ -1657,15 +1657,11 @@ document.addEventListener('DOMContentLoaded',()=>{
     }
   });
 </script>
-<script>
-// ===== Progresso Geral — compatível com estrutura <section id="progresso-geral"><div></div> =====
-
+    <script>
+// ===== Progresso Geral Cinematográfico (com Pulso de Conquista) =====
 function atualizarProgressoGeral() {
-  // Módulos considerados no cálculo
-  const modulos = ['m0', 'm1', 'm2'];
-
-  let soma = 0;
-  let total = 0;
+  const modulos = ['m0', 'm1', 'm2']; // módulos válidos para o cálculo
+  let soma = 0, total = 0;
 
   modulos.forEach(m => {
     const valor = parseFloat(localStorage.getItem(`${m}_progress_pct`)) || 0;
@@ -1675,32 +1671,57 @@ function atualizarProgressoGeral() {
 
   const media = total ? Math.round(soma / total) : 0;
 
-  // Atualiza o texto do progresso
   const secao = document.getElementById('progresso-geral');
-  if (secao) {
-    const texto = secao.querySelector('h3, p, span, strong');
-    if (texto) texto.textContent = `Seu Progresso Geral: ${media}%`;
+  if (!secao) return;
 
-    // Atualiza o DIV da barrinha
-    const barra = secao.querySelector('div');
-    if (barra) {
-      barra.style.height = '10px';
-      barra.style.borderRadius = '10px';
-      barra.style.transition = 'width 0.8s ease, background 0.8s ease';
+  const texto = secao.querySelector('h3, p, span, strong');
+  if (texto) texto.textContent = `Seu Progresso Geral: ${media}%`;
 
-      let cor = '#dc3545'; // vermelho até 30%
-      if (media > 30 && media <= 70) cor = '#ffc107'; // amarelo
-      if (media > 70) cor = '#28a745'; // verde
+  const barra = secao.querySelector('div');
+  if (!barra) return;
 
-      barra.style.background = cor;
-      barra.style.width = `${media}%`;
+  // ==== Estilo base da barra ====
+  barra.style.height = '10px';
+  barra.style.borderRadius = '10px';
+  barra.style.transition = 'width 1s ease, background 1s ease, box-shadow 1s ease';
+  barra.style.width = `${media}%`;
+  barra.style.maxWidth = '100%';
+  barra.style.background = `linear-gradient(90deg, rgba(1,60,90,1) 0%, rgba(40,167,69,1) ${media}%)`;
+  barra.style.boxShadow = '0 0 12px rgba(40,167,69,0.25)';
+  barra.style.position = 'relative';
+  secao.style.background = 'rgba(1,60,90,0.05)';
+  secao.style.padding = '14px 0';
+  secao.style.borderBottom = '1px solid rgba(0,0,0,0.08)';
+
+  // ==== Quando atingir 100%: ativa efeito de conquista ====
+  if (media === 100) {
+    if (!barra.classList.contains('pulso-conquista')) {
+      barra.classList.add('pulso-conquista');
     }
+  } else {
+    barra.classList.remove('pulso-conquista');
   }
 }
 
-// Atualiza ao carregar e a cada 2 segundos
+// ==== Animação de pulso aplicada via CSS ====
+const estiloPulso = document.createElement('style');
+estiloPulso.textContent = `
+@keyframes pulsoGradiente {
+  0% { box-shadow: 0 0 15px rgba(40,167,69,0.4), 0 0 30px rgba(1,60,90,0.2); transform: scaleX(1); }
+  50% { box-shadow: 0 0 30px rgba(40,167,69,0.8), 0 0 60px rgba(1,60,90,0.4); transform: scaleX(1.02); }
+  100% { box-shadow: 0 0 15px rgba(40,167,69,0.4), 0 0 30px rgba(1,60,90,0.2); transform: scaleX(1); }
+}
+.pulso-conquista {
+  animation: pulsoGradiente 2.5s ease-in-out infinite;
+  background: linear-gradient(90deg, rgba(1,60,90,1) 0%, rgba(40,167,69,1) 100%);
+}
+`;
+document.head.appendChild(estiloPulso);
+
+// ==== Executa e atualiza a cada 2s ====
 window.addEventListener('DOMContentLoaded', atualizarProgressoGeral);
 setInterval(atualizarProgressoGeral, 2000);
 </script>
 
+</body>
 </html>
