@@ -1,232 +1,200 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Curso Interativo – Ensaios de Solos (Vol. 1)</title>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
   <style>
     :root {
       --blue: #013C5A;
       --green: #28a745;
-      --gray: #666;
       --white: #fff;
+      --shadow: 0 8px 25px rgba(0,0,0,.35);
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    * {box-sizing: border-box; margin: 0; padding: 0;}
     body {
       font-family: 'Open Sans', sans-serif;
-      color: var(--gray);
-      background: #f6f8fb;
-      overflow-x: hidden;
-    }
-
-    /* === Fundo Cinematográfico === */
-    .hero {
-      position: relative;
+      background: url('A_promotional_landing_webpage_showcases_a_soil_lab.png') center/cover no-repeat fixed;
       color: var(--white);
-      text-align: center;
-      padding: 130px 20px;
-      background: linear-gradient(120deg, rgba(1,60,90,0.85), rgba(40,167,69,0.7));
-      background-size: 300% 300%;
-      animation: gradientFlow 12s ease-in-out infinite;
-      overflow: hidden;
-    }
-    @keyframes gradientFlow {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-
-    .hero::after {
-      content: "";
-      position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: url('./assets/background_portal.png') center/cover no-repeat;
-      opacity: 0.25;
-      z-index: 0;
-    }
-
-    .hero-content {
-      position: relative;
-      z-index: 1;
-      max-width: 800px;
-      margin: 0 auto;
-    }
-
-    h1, h2, h3, h4 {
-      font-family: 'Montserrat', sans-serif;
+      min-height: 100vh;
+      backdrop-filter: blur(5px);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
     }
 
     header {
       text-align: center;
-      background: var(--blue);
-      color: var(--white);
-      padding: 20px;
+      padding: 30px 10px;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(5px);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    header h1 {
       font-family: 'Montserrat', sans-serif;
+      font-size: 2rem;
+      letter-spacing: 0.5px;
+    }
+    header p {
+      font-size: 1rem;
+      opacity: 0.9;
+      margin-top: 6px;
     }
 
-    .hero h2 {
-      font-size: 2.3rem;
-      margin-bottom: 15px;
+    main {
+      text-align: center;
+      padding: 100px 20px;
+      flex-grow: 1;
+    }
+    .panel {
+      background: rgba(0,0,0,0.55);
+      border: 1px solid rgba(255,255,255,0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 50px 30px;
+      max-width: 700px;
+      margin: 0 auto;
+      box-shadow: var(--shadow);
     }
 
-    .hero p {
-      font-size: 1.15rem;
-      margin-bottom: 35px;
-      opacity: 0.95;
+    h2 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 2rem;
+      margin-bottom: 20px;
+      background: linear-gradient(90deg,#28a745,#25d366);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    p.desc {
+      font-size: 1.1rem;
+      margin-bottom: 40px;
+      opacity: 0.9;
+      line-height: 1.6;
+    }
+
+    .price-box {
+      background: rgba(255,255,255,0.05);
+      border-radius: 15px;
+      padding: 25px;
+      margin-bottom: 30px;
+    }
+    .price-box .de {
+      text-decoration: line-through;
+      color: #ccc;
+      font-size: 1rem;
+    }
+    .price-box .por {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #00ff90;
+      margin: 5px 0;
+    }
+    .price-box .parcelado {
+      color: #ddd;
+      font-size: 1rem;
     }
 
     .btn {
       display: inline-block;
-      background: linear-gradient(135deg, var(--green), #25d366);
+      background: linear-gradient(135deg,#28a745,#25d366);
       color: #fff;
+      font-family: 'Montserrat', sans-serif;
       font-weight: 700;
-      padding: 16px 32px;
+      padding: 16px 40px;
       border-radius: 999px;
       text-decoration: none;
-      font-family: 'Montserrat', sans-serif;
-      transition: all 0.3s ease;
+      box-shadow: 0 0 25px rgba(40,167,69,0.6);
+      transition: all .4s ease;
       animation: pulse 2.5s infinite;
-      box-shadow: 0 0 20px rgba(40,167,69,0.4);
-    }
-    @keyframes pulse {
-      0% { transform: scale(1); box-shadow: 0 0 15px rgba(40,167,69,0.3); }
-      50% { transform: scale(1.08); box-shadow: 0 0 35px rgba(40,167,69,0.6); }
-      100% { transform: scale(1); box-shadow: 0 0 15px rgba(40,167,69,0.3); }
     }
     .btn:hover {
-      transform: scale(1.1);
-      box-shadow: 0 0 45px rgba(40,167,69,0.8);
+      transform: scale(1.07);
+      box-shadow: 0 0 40px rgba(40,167,69,0.8);
+    }
+    @keyframes pulse {
+      0%,100% {transform: scale(1);}
+      50% {transform: scale(1.05);}
     }
 
-    section {
-      max-width: 1100px;
-      margin: 70px auto;
-      padding: 0 20px;
+    .bonus {
+      margin-top: 25px;
+      background: rgba(255,255,255,0.08);
+      padding: 12px 18px;
+      border-radius: 12px;
+      display: inline-block;
+      font-size: 0.95rem;
+      color: #fff;
+      box-shadow: inset 0 0 10px rgba(40,167,69,0.3);
     }
 
-    h3 {
-      color: var(--blue);
-      margin-bottom: 30px;
-      text-align: center;
-    }
-
-    .modules {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 20px;
-    }
-
-    .module {
-      background: #fff;
-      border-radius: 16px;
-      box-shadow: 0 4px 20px rgba(1,60,90,0.12);
-      padding: 28px;
-      text-align: center;
-      transition: transform 0.3s;
-    }
-    .module:hover { transform: translateY(-6px); }
-    .module img { width: 60px; margin-bottom: 12px; }
-
-    .buy {
-      text-align: center;
-      margin-top: 80px;
-    }
-    .price {
-      font-size: 1.8rem;
-      font-weight: 700;
-      color: var(--blue);
-      margin-bottom: 10px;
+    .selo {
+      margin-top: 20px;
+      font-weight: 600;
+      color: #28a745;
+      font-size: 1rem;
+      background: rgba(255,255,255,0.1);
+      padding: 8px 14px;
+      border-radius: 10px;
+      display: inline-block;
     }
 
     footer {
       text-align: center;
-      padding: 25px;
-      color: #888;
-      background: #f1f3f5;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
+      padding: 20px;
+      background: rgba(0,0,0,0.5);
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+    footer a {
+      color: #25d366;
+      text-decoration: underline;
+      font-weight: 600;
+    }
+
+    @media(max-width:600px) {
+      main {padding: 60px 15px;}
+      .panel {padding: 40px 20px;}
+      h2 {font-size: 1.7rem;}
     }
   </style>
 </head>
 <body>
   <header>
     <h1>Curso Interativo – Ensaios de Solos (Vol. 1)</h1>
-    <p>Aprenda os ensaios de solos com um portal 100% prático e interativo</p>
+    <p>Aprenda os ensaios de solos na prática com um portal cinematográfico e certificado profissional</p>
   </header>
 
-  <section class="hero">
-    <div class="hero-content">
-      <h2>Transforme-se em um laboratorista de solos completo</h2>
-      <p>Aprenda os ensaios fundamentais seguindo as normas ABNT, com simuladores, calculadoras e certificado profissional.</p>
-      <a href="https://www.mercadopago.com.br/checkout/v1/redirect?pref_id=SEU_ID_AQUI" class="btn">💳 Comprar Agora</a>
+  <main>
+    <div class="panel">
+      <h2>Transforme-se em um Laboratorista Completo</h2>
+      <p class="desc">Domine os ensaios de solos mais utilizados em obras e laboratórios – com calculadoras automáticas, simuladores práticos e mentoria bônus.</p>
+
+      <div class="price-box">
+        <p class="de">De R$197,00</p>
+        <p class="por">Por apenas R$97,00</p>
+        <p class="parcelado">ou 10x de R$10,70 no cartão</p>
+      </div>
+
+      <a href="https://mpago.la/1JsMZZy" target="_blank" class="btn">💳 Quero garantir meu acesso agora</a>
+
+      <div class="bonus">🎁 Bônus: Mentoria ao vivo (45min) para dúvidas e dicas profissionais</div>
+      <div class="selo">📘 Acesso vitalício garantido</div>
+
+      <p style="margin-top:25px;font-size:0.9rem;">Pagamento 100% seguro via Mercado Pago</p>
+
+      <p style="margin-top:25px;">
+        <a href="https://dr8173004-gif.github.io/ortal-ensaios-solos-volume1/index.html" style="color:#00ff90;text-decoration:underline;font-weight:600;">
+          Já comprei? Acessar o Portal
+        </a>
+      </p>
     </div>
-  </section>
-
-  <section>
-    <h3>📘 O que você vai aprender</h3>
-    <div class="modules">
-      <div class="module">
-        <img src="./assets/icon-mod0.png" alt="">
-        <h4>Módulo 0 – Introdução & Contexto</h4>
-        <p>Entenda o papel do laboratorista e as oportunidades na área geotécnica.</p>
-      </div>
-      <div class="module">
-        <img src="./assets/icon-mod1.png" alt="">
-        <h4>Módulo 1 – Teor de Umidade Natural</h4>
-        <p>Aprenda o método ABNT com passo a passo e calculadora interativa.</p>
-      </div>
-      <div class="module">
-        <img src="./assets/icon-mod2.png" alt="">
-        <h4>Módulo 2 – Granulometria (Peneiramento + Sedimentação)</h4>
-        <p>Realize os ensaios e veja os cálculos automáticos com curva granulométrica.</p>
-      </div>
-      <div class="module">
-        <img src="./assets/icon-mod3.png" alt="">
-        <h4>Módulo 3 – Mentoria Técnica</h4>
-        <p>Agende uma mentoria e tire dúvidas direto com o instrutor.</p>
-      </div>
-      <div class="module">
-        <img src="./assets/icon-mod4.png" alt="">
-        <h4>Módulo 4 – Certificado Profissional</h4>
-        <p>Receba seu certificado nominal ao concluir o Volume 1.</p>
-      </div>
-    </div>
-  </section>
-
-<section class="buy">
-  <h3>💡 Garanta seu acesso agora mesmo</h3>
-  <p class="price">
-    <span style="text-decoration:line-through;color:#888;">De R$197,00</span><br>
-    <strong style="font-size:2rem;color:#28a745;">Por apenas R$97,00</strong><br>
-    <span style="font-size:1rem;color:#013C5A;">ou 10x de R$10,70 no cartão</span>
-  </p>
-
-  <a href="https://mpago.la/1ybCHDR" class="btn" target="_blank" rel="noopener">
-    💳 Quero garantir meu acesso agora
-  </a>
-
-  <p style="margin-top:15px;font-size:0.9rem;color:#013C5A;">
-    Pagamento 100% seguro via Mercado Pago
-  </p>
-
-  <div style="margin-top:25px;background:#fff;padding:15px;border-radius:14px;box-shadow:0 4px 14px rgba(1,60,90,.15);display:inline-block;text-align:left;max-width:320px;">
-    <p style="font-weight:600;color:#013C5A;margin-bottom:6px;">✅ Você recebe:</p>
-    <ul style="color:#333;line-height:1.5;font-size:0.95rem;">
-      <li>📘 Acesso completo ao Portal Interativo</li>
-      <li>🧮 Calculadoras e simuladores práticos</li>
-      <li>🎓 Certificado digital personalizado</li>
-      <li>🎥 Mentoria bônus (45 min ao vivo)</li>
-    </ul>
-  </div>
-
-  <a href="./login.html" style="display:block;margin-top:25px;color:#013C5A;text-decoration:underline;font-weight:600;">
-    Já comprei? Acessar o Portal
-  </a>
-</section>
+  </main>
 
   <footer>
-    © 2025 Curso Interativo – Ensaios de Solos. Todos os direitos reservados.<br>
-    Desenvolvido por <strong>Diego R. Jesus</strong>.
+    © 2025 Curso Interativo – Ensaios de Solos • Desenvolvido por <strong>Diego R. Jesus</strong>
   </footer>
 </body>
 </html>
