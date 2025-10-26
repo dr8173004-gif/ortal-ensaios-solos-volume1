@@ -5,14 +5,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Curso Interativo – Ensaios de Solos (Vol. 1)</title>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
 <style>
   :root {
     --gold: #d4af37;
-    --dark: #0a0a0a;
-    --glass: rgba(15, 15, 15, 0.75);
+    --glass: rgba(15,15,15,0.75);
+    --black: #0a0a0a;
+    --green: #25d366;
   }
 
-  * {margin:0;padding:0;box-sizing:border-box}
+  * { margin:0; padding:0; box-sizing:border-box; }
+
   body {
     font-family:'Open Sans',sans-serif;
     color:#fff;
@@ -21,7 +25,7 @@
     overflow-x:hidden;
   }
 
-  /* Fundo com iluminação cinematográfica */
+  /* 🔆 Fundo cinematográfico desktop */
   body::before {
     content:"";
     position:fixed;
@@ -40,12 +44,13 @@
     padding:22px 10px;
     box-shadow:inset 0 -1px 0 rgba(255,255,255,0.1);
   }
+
   header h1 {
     font-family:'Montserrat',sans-serif;
     font-size:1.8rem;
     color:var(--gold);
   }
-  header p {margin-top:6px;color:#ddd;font-size:1rem;}
+  header p { margin-top:6px; color:#ddd; font-size:1rem; }
 
   main {
     display:flex;
@@ -63,6 +68,7 @@
     max-width:1200px;
   }
 
+  /* 🖼️ Capa */
   .cover {
     width:340px;
     height:600px;
@@ -73,10 +79,11 @@
     animation:float 6s ease-in-out infinite alternate;
   }
   @keyframes float {
-    from {transform:perspective(1000px) rotateY(-8deg) translateY(0);}
-    to {transform:perspective(1000px) rotateY(-8deg) translateY(-12px);}
+    from { transform:perspective(1000px) rotateY(-8deg) translateY(0); }
+    to { transform:perspective(1000px) rotateY(-8deg) translateY(-12px); }
   }
 
+  /* 💰 Painel */
   .panel {
     background:var(--glass);
     border:1px solid rgba(255,255,255,0.08);
@@ -89,22 +96,16 @@
     overflow:hidden;
   }
 
-  /* ✨ Reflexo dourado dinâmico */
+  /* ✨ Reflexo dourado */
   .panel::after {
     content:"";
     position:absolute;
-    top:0;
-    left:-75%;
-    width:50%;
-    height:100%;
+    top:0; left:-75%;
+    width:50%; height:100%;
     background:linear-gradient(120deg,transparent,rgba(212,175,55,0.3),transparent);
     animation:shine 6s infinite;
   }
-  @keyframes shine {
-    0% {left:-75%;}
-    50% {left:125%;}
-    100% {left:125%;}
-  }
+  @keyframes shine { 0%{left:-75%;} 50%{left:125%;} 100%{left:125%;} }
 
   .panel h2 {
     font-family:'Montserrat',sans-serif;
@@ -112,12 +113,7 @@
     color:var(--gold);
     margin-bottom:10px;
   }
-
-  .old-price {
-    color:#aaa;
-    text-decoration:line-through;
-    margin-bottom:8px;
-  }
+  .old-price { color:#aaa; text-decoration:line-through; margin-bottom:8px; }
   .price {
     font-size:2rem;
     font-weight:700;
@@ -144,7 +140,7 @@
     box-shadow:0 0 40px rgba(212,175,55,0.8);
   }
 
-  /* Benefícios premium */
+  /* Benefícios */
   .benefits {
     display:grid;
     grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
@@ -177,35 +173,56 @@
     color:var(--gold);
     margin-bottom:6px;
   }
-  .benefit-card p {font-size:0.9rem;color:#ccc;}
+  .benefit-card p { font-size:0.9rem; color:#ccc; }
 
-  @media(max-width:800px){
-    .content{flex-direction:column;}
-    .cover{width:260px;height:460px;}
-    .panel{max-width:90%;padding:25px;}
+  /* 📱 MOBILE 9:16 */
+  @media(max-width:980px){
+    header {padding:18px;}
+    header h1 {font-size:1.3rem;}
+    main {padding:40px 10px;}
+    .content {flex-direction:column; gap:25px;}
+    .cover {
+      width:90%;
+      height:auto;
+      aspect-ratio:9/16;
+      transform:none;
+      animation:none;
+      box-shadow:0 20px 40px rgba(0,0,0,0.8);
+    }
+    .panel {
+      max-width:95%;
+      padding:25px 18px;
+      backdrop-filter:blur(6px);
+    }
+    body::before {
+      background:
+        linear-gradient(180deg,rgba(0,0,0,0.8),rgba(0,0,0,0.95)),
+        radial-gradient(circle at center,rgba(212,175,55,0.08) 0%,transparent 70%);
+    }
   }
 
-  /* Botão WhatsApp flutuante */
+  /* 💬 WhatsApp */
   .whatsapp {
     position:fixed;
     bottom:20px;
     right:20px;
-    background:linear-gradient(135deg,#25d366,#128c7e);
+    background:var(--green);
     width:60px;
     height:60px;
     border-radius:50%;
     display:flex;
     align-items:center;
     justify-content:center;
-    box-shadow:0 0 20px rgba(37,211,102,0.5);
+    box-shadow:0 0 15px rgba(37,211,102,0.6);
     animation:pulse 2s infinite;
     z-index:1000;
   }
+  .whatsapp:hover { box-shadow:0 0 25px rgba(37,211,102,0.9); transform:scale(1.05); }
   @keyframes pulse {
-    0%,100%{transform:scale(1);box-shadow:0 0 15px rgba(37,211,102,0.6);}
-    50%{transform:scale(1.05);box-shadow:0 0 30px rgba(37,211,102,0.9);}
+    0%,100%{transform:scale(1);}
+    50%{transform:scale(1.07);}
   }
-  .whatsapp i {color:#fff;font-size:1.8rem;}
+  .whatsapp i { color:#fff; font-size:1.8rem; }
 
   footer {
     text-align:center;
@@ -214,7 +231,6 @@
     font-size:0.9rem;
   }
 </style>
-<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </head>
 
 <body>
@@ -262,6 +278,10 @@
   <footer>© 2025 Curso Interativo – Ensaios de Solos (Vol. 1). Todos os direitos reservados.</footer>
 </main>
 
-<a href="https://wa.me/5531987670863" target="_blank" class="whatsapp"><i class="fab fa-whatsapp"></i></a>
+<a href="https://wa.me/5531987670863?text=Ol%C3%A1!%20Gostaria%20de%20mais%20informa%C3%A7%C3%B5es%20sobre%20o%20Curso%20Interativo%20–%20Ensaios%20de%20Solos%20(Vol.%201)" 
+   target="_blank" class="whatsapp">
+  <i class="fab fa-whatsapp"></i>
+</a>
+
 </body>
 </html>
