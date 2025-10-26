@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Curso Interativo – Ensaios de Solos (Vol. 1)</title>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
-<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <style>
   :root {
@@ -25,7 +25,7 @@
     overflow-x:hidden;
   }
 
-  /* 🔆 Fundo cinematográfico desktop */
+  /* 🔆 Fundo cinematográfico */
   body::before {
     content:"";
     position:fixed;
@@ -39,7 +39,7 @@
 
   header {
     text-align:center;
-    background:rgba(0,0,0,0.55);
+    background:rgba(0,0,0,0.6);
     backdrop-filter:blur(8px);
     padding:22px 10px;
     box-shadow:inset 0 -1px 0 rgba(255,255,255,0.1);
@@ -96,17 +96,6 @@
     overflow:hidden;
   }
 
-  /* ✨ Reflexo dourado */
-  .panel::after {
-    content:"";
-    position:absolute;
-    top:0; left:-75%;
-    width:50%; height:100%;
-    background:linear-gradient(120deg,transparent,rgba(212,175,55,0.3),transparent);
-    animation:shine 6s infinite;
-  }
-  @keyframes shine { 0%{left:-75%;} 50%{left:125%;} 100%{left:125%;} }
-
   .panel h2 {
     font-family:'Montserrat',sans-serif;
     font-size:1.5rem;
@@ -149,18 +138,18 @@
     max-width:1000px;
   }
   .benefit-card {
-    background:rgba(255,255,255,0.05);
-    border:1px solid rgba(255,255,255,0.1);
+    background:rgba(0,0,0,0.5);
+    border:1px solid rgba(255,255,255,0.15);
     border-radius:15px;
     padding:20px;
     text-align:left;
     transition:all .3s ease;
-    box-shadow:0 10px 30px rgba(0,0,0,0.4);
+    box-shadow:0 10px 25px rgba(0,0,0,0.4);
   }
   .benefit-card:hover {
     transform:translateY(-8px);
     border-color:var(--gold);
-    box-shadow:0 0 30px rgba(212,175,55,0.3);
+    box-shadow:0 0 25px rgba(212,175,55,0.3);
   }
   .benefit-card i {
     color:var(--gold);
@@ -175,7 +164,7 @@
   }
   .benefit-card p { font-size:0.9rem; color:#ccc; }
 
-  /* 📱 MOBILE 9:16 */
+  /* 📱 MOBILE */
   @media(max-width:980px){
     header {padding:18px;}
     header h1 {font-size:1.3rem;}
@@ -194,10 +183,15 @@
       padding:25px 18px;
       backdrop-filter:blur(6px);
     }
-    body::before {
-      background:
-        linear-gradient(180deg,rgba(0,0,0,0.8),rgba(0,0,0,0.95)),
-        radial-gradient(circle at center,rgba(212,175,55,0.08) 0%,transparent 70%);
+    .benefits {
+      grid-template-columns:1fr;
+      gap:15px;
+      padding:0 15px;
+    }
+    .benefit-card {
+      text-align:center;
+      background:rgba(15,15,15,0.75);
+      padding:18px;
     }
   }
 
@@ -214,15 +208,17 @@
     align-items:center;
     justify-content:center;
     box-shadow:0 0 15px rgba(37,211,102,0.6);
-    animation:pulse 2s infinite;
     z-index:1000;
+    transition:transform .3s ease, box-shadow .3s ease;
   }
-  .whatsapp:hover { box-shadow:0 0 25px rgba(37,211,102,0.9); transform:scale(1.05); }
-  @keyframes pulse {
-    0%,100%{transform:scale(1);}
-    50%{transform:scale(1.07);}
+  .whatsapp:hover {
+    transform:scale(1.05);
+    box-shadow:0 0 25px rgba(37,211,102,0.9);
   }
-  .whatsapp i { color:#fff; font-size:1.8rem; }
+  .whatsapp i {
+    color:white;
+    font-size:1.8rem;
+  }
 
   footer {
     text-align:center;
