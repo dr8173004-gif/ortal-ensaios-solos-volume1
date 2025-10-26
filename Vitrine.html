@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Curso Interativo – Ensaios de Solos (Vol. 1)</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --blue: #013C5A;
+      --green: #28a745;
+      --gray: #666;
+      --white: #fff;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Open Sans', sans-serif;
+      color: var(--gray);
+      background: #f6f8fb;
+      overflow-x: hidden;
+    }
+
+    /* === Fundo Cinematográfico === */
+    .hero {
+      position: relative;
+      color: var(--white);
+      text-align: center;
+      padding: 130px 20px;
+      background: linear-gradient(120deg, rgba(1,60,90,0.85), rgba(40,167,69,0.7));
+      background-size: 300% 300%;
+      animation: gradientFlow 12s ease-in-out infinite;
+      overflow: hidden;
+    }
+    @keyframes gradientFlow {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: url('./assets/background_portal.png') center/cover no-repeat;
+      opacity: 0.25;
+      z-index: 0;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    h1, h2, h3, h4 {
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    header {
+      text-align: center;
+      background: var(--blue);
+      color: var(--white);
+      padding: 20px;
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    .hero h2 {
+      font-size: 2.3rem;
+      margin-bottom: 15px;
+    }
+
+    .hero p {
+      font-size: 1.15rem;
+      margin-bottom: 35px;
+      opacity: 0.95;
+    }
+
+    .btn {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--green), #25d366);
+      color: #fff;
+      font-weight: 700;
+      padding: 16px 32px;
+      border-radius: 999px;
+      text-decoration: none;
+      font-family: 'Montserrat', sans-serif;
+      transition: all 0.3s ease;
+      animation: pulse 2.5s infinite;
+      box-shadow: 0 0 20px rgba(40,167,69,0.4);
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); box-shadow: 0 0 15px rgba(40,167,69,0.3); }
+      50% { transform: scale(1.08); box-shadow: 0 0 35px rgba(40,167,69,0.6); }
+      100% { transform: scale(1); box-shadow: 0 0 15px rgba(40,167,69,0.3); }
+    }
+    .btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 45px rgba(40,167,69,0.8);
+    }
+
+    section {
+      max-width: 1100px;
+      margin: 70px auto;
+      padding: 0 20px;
+    }
+
+    h3 {
+      color: var(--blue);
+      margin-bottom: 30px;
+      text-align: center;
+    }
+
+    .modules {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+    }
+
+    .module {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(1,60,90,0.12);
+      padding: 28px;
+      text-align: center;
+      transition: transform 0.3s;
+    }
+    .module:hover { transform: translateY(-6px); }
+    .module img { width: 60px; margin-bottom: 12px; }
+
+    .buy {
+      text-align: center;
+      margin-top: 80px;
+    }
+    .price {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--blue);
+      margin-bottom: 10px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 25px;
+      color: #888;
+      background: #f1f3f5;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Curso Interativo – Ensaios de Solos (Vol. 1)</h1>
+    <p>Aprenda os ensaios de solos com um portal 100% prático e interativo</p>
+  </header>
+
+  <section class="hero">
+    <div class="hero-content">
+      <h2>Transforme-se em um laboratorista de solos completo</h2>
+      <p>Aprenda os ensaios fundamentais seguindo as normas ABNT, com simuladores, calculadoras e certificado profissional.</p>
+      <a href="https://www.mercadopago.com.br/checkout/v1/redirect?pref_id=SEU_ID_AQUI" class="btn">💳 Comprar Agora</a>
+    </div>
+  </section>
+
+  <section>
+    <h3>📘 O que você vai aprender</h3>
+    <div class="modules">
+      <div class="module">
+        <img src="./assets/icon-mod0.png" alt="">
+        <h4>Módulo 0 – Introdução & Contexto</h4>
+        <p>Entenda o papel do laboratorista e as oportunidades na área geotécnica.</p>
+      </div>
+      <div class="module">
+        <img src="./assets/icon-mod1.png" alt="">
+        <h4>Módulo 1 – Teor de Umidade Natural</h4>
+        <p>Aprenda o método ABNT com passo a passo e calculadora interativa.</p>
+      </div>
+      <div class="module">
+        <img src="./assets/icon-mod2.png" alt="">
+        <h4>Módulo 2 – Granulometria (Peneiramento + Sedimentação)</h4>
+        <p>Realize os ensaios e veja os cálculos automáticos com curva granulométrica.</p>
+      </div>
+      <div class="module">
+        <img src="./assets/icon-mod3.png" alt="">
+        <h4>Módulo 3 – Mentoria Técnica</h4>
+        <p>Agende uma mentoria e tire dúvidas direto com o instrutor.</p>
+      </div>
+      <div class="module">
+        <img src="./assets/icon-mod4.png" alt="">
+        <h4>Módulo 4 – Certificado Profissional</h4>
+        <p>Receba seu certificado nominal ao concluir o Volume 1.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="buy">
+    <h3>💡 Garanta seu acesso agora mesmo</h3>
+    <p class="price">Por apenas <strong>R$197</strong> – acesso vitalício</p>
+    <a href="https://www.mercadopago.com.br/checkout/v1/redirect?pref_id=SEU_ID_AQUI" class="btn">Comprar Agora</a>
+    <p style="margin-top:15px; font-size:0.9rem;">Pagamento 100% seguro via Mercado Pago</p>
+    <a href="./login.html" style="display:block;margin-top:12px;color:var(--blue);text-decoration:underline;font-weight:600;">Já comprei? Acessar Portal</a>
+  </section>
+
+  <footer>
+    © 2025 Curso Interativo – Ensaios de Solos. Todos os direitos reservados.<br>
+    Desenvolvido por <strong>Diego R. Jesus</strong>.
+  </footer>
+</body>
+</html>
