@@ -114,23 +114,32 @@
     const db = getFirestore(app);
 
     // === Cria documento do usuário ===
-    async function ensureUserDoc(user) {
-      if (!user) return;
-      const ref = doc(db, "users", user.uid);
-      const snap = await getDoc(ref);
-      if (!snap.exists()) {
-        await setDoc(ref, {
-          email: user.email || "",
-          nome: user.displayName || "",
-          acesso: false,
-          dataCadastro: serverTimestamp(),
-          progresso: { mod0: false, mod1: false, mod2: false, mod3: false, mod4: false }
-        });
-        console.log("📄 Documento criado para:", user.email);
-      } else {
-        console.log("✅ Documento já existia para:", user.email);
-      }
+  async function ensureUserDoc(user) {
+  if (!user) return;
+
+  // 🔹 Garante um pequeno delay para sincronizar UID (essencial no Firestore)
+  await new Promise(resolve => setTimeout(resolve, 500));
+
+  const ref = doc(db, "users", user.uid);
+  const snap = await getDoc(ref);
+
+  if (!snap.exists()) {
+    try {
+      await setDoc(ref, {
+        email: user.email || "",
+        nome: user.displayName || "",
+        acesso: false,
+        dataCadastro: serverTimestamp(),
+        progresso: { mod0: false, mod1: false, mod2: false, mod3: false, mod4: false }
+      });
+      console.log("📄 Documento criado no Firestore:", user.email);
+    } catch (err) {
+      console.error("🔥 Erro ao salvar no Firestore:", err.message);
     }
+  } else {
+    console.log("✅ Documento já existia:", user.email);
+  }
+}
 
     // === Redirecionamento automático se logado ===
     onAuthStateChanged(auth, (user) => {
