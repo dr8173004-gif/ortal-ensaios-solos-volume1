@@ -106,45 +106,60 @@
       50% { opacity: 1; }
     }
 
-    /* 🖼️ Capa 3D Cinematográfica */
+/* 🖼️ Capa 3D com brilho cinematográfico animado */
 .cover {
   width: 360px;
   height: 560px;
   background: url('assets/cover_course.png') no-repeat center/contain;
   border-radius: 20px;
   transform: perspective(1000px) rotateY(-15deg) rotateX(3deg) scale(0.95);
-  box-shadow:
-    0 25px 80px rgba(0, 0, 0, 0.9),
-    inset 0 0 25px rgba(255, 215, 0, 0.15),
-    0 0 80px rgba(212, 175, 55, 0.35);
-  transition: transform 0.8s ease, box-shadow 0.8s ease;
+  filter: drop-shadow(0 25px 80px rgba(0, 0, 0, 0.9)) drop-shadow(0 0 40px rgba(212, 175, 55, 0.3));
   position: relative;
+  z-index: 2;
+  overflow: hidden;
+  transition: all 0.6s ease;
   opacity: 0;
   animation: coverEnter 2s ease forwards;
 }
 
+/* ✨ Reflexo dourado animado */
 .cover::after {
   content: "";
   position: absolute;
   top: 0;
-  left: 0;
-  width: 100%;
+  left: -100%;
+  width: 60%;
   height: 100%;
-  border-radius: 20px;
-  background: radial-gradient(circle at 30% 20%, rgba(255,255,255,0.08), transparent 60%);
+  background: linear-gradient(120deg, rgba(255, 215, 0, 0.0) 0%, rgba(255, 215, 0, 0.25) 50%, rgba(255, 215, 0, 0.0) 100%);
+  transform: skewX(-20deg);
+  animation: lightSweep 6s linear infinite;
   pointer-events: none;
 }
 
-/* ✨ Efeito hover de destaque */
-.cover:hover {
-  transform: perspective(1000px) rotateY(-5deg) rotateX(1deg) scale(1.02);
-  box-shadow:
-    0 30px 100px rgba(0,0,0,0.9),
-    inset 0 0 35px rgba(255,215,0,0.2),
-    0 0 100px rgba(212,175,55,0.5);
+/* 🪞Reflexo dourado do chão */
+.cover::before {
+  content: "";
+  position: absolute;
+  bottom: -100px;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url('assets/cover_course.png') no-repeat center/contain;
+  opacity: 0.12;
+  transform: scaleY(-1) translateY(15%);
+  filter: blur(3px) brightness(0.8);
+  pointer-events: none;
+  mask-image: linear-gradient(to bottom, rgba(255,255,255,0.4) 40%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, rgba(255,255,255,0.4) 40%, transparent 100%);
 }
 
-/* ✨ Animação inicial */
+/* 🌟 Hover realista */
+.cover:hover {
+  transform: perspective(1000px) rotateY(-8deg) rotateX(1deg) scale(1.02);
+  filter: drop-shadow(0 30px 100px rgba(0, 0, 0, 0.9)) drop-shadow(0 0 50px rgba(212, 175, 55, 0.45));
+}
+
+/* 🎥 Entrada suave */
 @keyframes coverEnter {
   from {
     opacity: 0;
@@ -156,23 +171,27 @@
   }
 }
 
-/* 📱 Responsivo (mobile) */
+/* ✨ Animação do brilho lateral */
+@keyframes lightSweep {
+  0% { left: -100%; }
+  50% { left: 120%; }
+  100% { left: 120%; }
+}
+
+/* 📱 Mobile */
 @media(max-width:980px) {
   .cover {
     width: 90%;
     height: auto;
     aspect-ratio: 9/16;
     transform: perspective(800px) rotateY(0) rotateX(0) scale(1);
-    box-shadow:
-      0 15px 40px rgba(0, 0, 0, 0.8),
-      0 0 40px rgba(212, 175, 55, 0.3);
+    filter: drop-shadow(0 15px 40px rgba(0,0,0,0.9)) drop-shadow(0 0 30px rgba(212,175,55,0.3));
+  }
+  .cover::after {
+    animation: lightSweep 8s linear infinite;
+    opacity: 0.2;
   }
 }
-
-    @keyframes coverEnter {
-      0% { opacity: 0; transform: perspective(1000px) scale(0.92) translateY(40px); }
-      100% { opacity: 1; transform: perspective(1000px) scale(1) translateY(0); }
-    }
 
     /* 💰 Painel de compra */
     .panel {
