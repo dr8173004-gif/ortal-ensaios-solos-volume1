@@ -293,3 +293,25 @@ footer{padding:30px 18px;border-top:1px solid rgba(255,255,255,.08);text-align:c
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
+
+/* ===== BOTÃO ENTRAR (NAVBAR SUPERIOR) ===== */
+.btn-entrar {
+  display: inline-block;
+  padding: 10px 18px;
+  margin-left: 14px;
+  font-weight: 600;
+  font-family: Inter, sans-serif;
+  font-size: 0.95rem;
+  color: #fff;
+  background: rgba(255,255,255,.1);
+  border: 1px solid rgba(255,255,255,.15);
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(6px);
+}
+
+.btn-entrar:hover {
+  background: var(--blue);
+  box-shadow: 0 0 12px rgba(0,113,227,.4);
+  transform: translateY(-1px);
+}
