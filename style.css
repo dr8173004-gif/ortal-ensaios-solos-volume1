@@ -88,6 +88,23 @@ body{
 
 .btn-ghost{padding:12px 20px;border:1px solid rgba(255,255,255,.12);border-radius:14px;color:#e9f2ff;transition:border .25s ease,filter .25s ease}
 .btn-ghost:hover{border-color:var(--blue-2);filter:brightness(1.12)}
+/* ===== REMOVE UNDERLINES DOS LINKS E BOTÕES ===== */
+a,
+a:visited,
+a:active {
+  text-decoration: none !important;
+}
+
+.btn-primary,
+.btn-ghost {
+  text-decoration: none !important;
+  border: none; /* garante que não apareça linha de borda */
+}
+
+.btn-primary:hover,
+.btn-ghost:hover {
+  text-decoration: none !important;
+}
 
 #vitrine{padding:60px 18px}
 .vitrine-wrap{max-width:1000px;margin:auto;background:rgba(0,0,0,.5);
