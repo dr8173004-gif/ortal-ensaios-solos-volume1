@@ -31,12 +31,21 @@
     header {
       text-align: center;
       padding: 60px 20px 20px;
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeUp 1.6s ease forwards;
+      animation-delay: 0.4s;
     }
     header h1 {
       font-size: 2rem;
       background: linear-gradient(90deg, #fff, #888);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     /* ===== SCROLL CARDS ===== */
@@ -64,7 +73,7 @@
       text-align: center;
       padding: 40px 20px;
       transform: scale(0.95);
-      opacity: 0.6;
+      opacity: 0.5;
       transition: all 0.6s ease;
       filter: brightness(0.8);
     }
@@ -93,6 +102,10 @@
       padding: 80px 20px;
       background: radial-gradient(circle at center, rgba(255,255,255,0.05) 0%, rgba(0,0,0,1) 100%);
       text-align: center;
+      opacity: 0;
+      transform: translateY(40px);
+      animation: fadeUp 1.6s ease forwards;
+      animation-delay: 1.2s;
     }
 
     #portal-explicacao h2 {
@@ -124,6 +137,13 @@
       box-shadow: 0 0 20px rgba(255,255,255,0.05);
       transition: all 0.6s ease;
       overflow: hidden;
+      opacity: 0;
+      transform: translateY(40px);
+    }
+
+    .portal-card.visible {
+      opacity: 1;
+      transform: translateY(0);
     }
 
     .portal-card:hover {
@@ -229,7 +249,7 @@
   </section>
 
   <script>
-    // Scroll Reveal effect
+    // Scroll Reveal effect para cards de benefícios
     const cards = document.querySelectorAll('.scroll-card');
     const observer = new IntersectionObserver(entries => {
       entries.forEach(entry => {
@@ -240,8 +260,19 @@
         }
       });
     }, { threshold: 0.6 });
-
     cards.forEach(card => observer.observe(card));
+
+    // Fade-in para cards do portal
+    const portalCards = document.querySelectorAll('.portal-card');
+    const fadeObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          fadeObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.3 });
+    portalCards.forEach(card => fadeObserver.observe(card));
   </script>
 
 </body>
