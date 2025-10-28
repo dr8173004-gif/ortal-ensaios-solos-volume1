@@ -59,9 +59,10 @@
     .btn-ghost{background:transparent; color:#fff; border:1px solid #1e293b}
     .btn-ghost:hover{border-color:var(--cta-hover); box-shadow:0 10px 24px rgba(10,132,255,.18)}
 
-    .mock-col{position:relative; min-height:380px}
-    .mock{position:relative; width:100%; border-radius:var(--radius); overflow:hidden; box-shadow:var(--shadow); transform:translateZ(0)}
+    .mock-col{position:relative; min-height:380px; perspective:1000px}
+    .mock{position:relative; width:100%; border-radius:var(--radius); overflow:hidden; box-shadow:var(--shadow); transform:translateZ(0); will-change:transform; transition:transform .3s ease}
     .mock img{display:block; width:100%; height:auto}
+
     .mock::after{
       content:"";
       position:absolute;
@@ -70,13 +71,13 @@
       background:linear-gradient(120deg, rgba(255,255,255,0) 0%, rgba(255,255,255,.3) 50%, rgba(255,255,255,0) 100%);
       transform:skewX(-25deg);
       animation:shine 5s infinite;
+      pointer-events:none;
     }
     @keyframes shine{
       0%{left:-75%;}
       60%{left:125%;}
       100%{left:125%;}
     }
-    .mock:hover::after{animation:shine 2s ease-in-out;}
 
     .glow{position:absolute; inset:auto -7% -10% -7%; height:180px; background:radial-gradient(45% 60% at 50% 50%, rgba(10,132,255,.3), transparent 70%); filter:blur(30px); opacity:.75; pointer-events:none}
 
@@ -184,10 +185,13 @@
     const nav=document.getElementById('nav');
     const onScroll=()=>{if(window.scrollY>20){nav.classList.add('scrolled')}else{nav.classList.remove('scrolled')}};
     document.addEventListener('scroll',onScroll,{passive:true});onScroll();
-    const media=window.matchMedia('(prefers-reduced-motion: reduce)');
+
     const mock=document.getElementById('mock');
-    if(mock&&!media.matches){window.addEventListener('scroll',()=>{const y=window.scrollY*0.06;mock.style.transform=`translateY(${y}px)`},{passive:true});}
-    document.getElementById('year').textContent=new Date().getFullYear();
-  </script>
-</body>
-</html>
+    const shine=()=>mock.style.setProperty('--pause-shine','paused');
+
+    let timeout;
+    function resetMock(){mock.style.transform='rotateX(0deg) rotateY(0deg)';mock.style.removeProperty('animation-play-state');}
+
+    function handleMove(e){
+      const rect=mock.getBoundingClientRect();
+      const x=((e.clientX||e.touches[0].clientX)-rect.left)/rect.width-
