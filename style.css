@@ -396,3 +396,26 @@ footer{padding:30px 18px;border-top:1px solid rgba(255,255,255,.08);text-align:c
     text-align: center;
   }
 }
+/* ===== VINHETA DE ENTRADA (FADE-FROM-BLACK) ===== */
+#fade-overlay {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  z-index: 99999;
+  opacity: 1;
+  pointer-events: none;
+  animation: fadeOutCinematic 1.6s ease forwards;
+}
+
+@keyframes fadeOutCinematic {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
