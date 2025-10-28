@@ -1,526 +1,212 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+>
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Vitrine Premium — Portal Interativo • Ensaios de Solos (Vol. 1)</title>
-  <meta name="description" content="Curso interativo para iniciantes em ensaios de solos (ABNT). Visual premium, experiência Apple/Nike, certificação, simuladores e mentoria." />
+  <meta name="description" content="Vitrine premium do curso interativo de ensaios de solos. Experiência estilo Apple/Nike com foco em conversão e imersão." />
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
   <style>
     :root{
-      /* Identidade */
       --black:#000; --black-1:#0a0a0a; --black-2:#1a1a1a;
       --white:#fff; --text:#EDEDED; --muted:#B3B3B3;
       --blue:#0071E3; --blue-2:#0A84FF; --gold:#C9A45C; --gray:#B3B3B3;
-
-      /* UI */
-      --radius:22px;
-      --shadow-1: 0 10px 40px rgba(0,0,0,.35);
+      --radius:22px; --shadow-1: 0 10px 40px rgba(0,0,0,.35);
       --shadow-2: 0 24px 70px rgba(0,0,0,.55);
-      --glass: rgba(255,255,255,.06);
-      --glass-border: rgba(255,255,255,.08);
-
-      /* Timing */
-      --t-quick:.35s cubic-bezier(.22,.61,.36,1);
-      --t-slow:.9s cubic-bezier(.22,.61,.36,1);
     }
     *{box-sizing:border-box}
-    html,body{height:100%}
     body{
-      margin:0; font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial;
-      color:var(--text); background: radial-gradient(1200px 420px at 50% 100%, #0b121d 0%, transparent 60%), linear-gradient(180deg, var(--black) 0%, var(--black-1) 35%, var(--black-2) 70%, var(--black) 100%);
-      -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+      margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial;
+      color:var(--text);
+      background:linear-gradient(180deg,#000 0%,#0a0a0a 40%,#1a1a1a 100%);
+      -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
     }
-    h1,h2,h3,h4{font-family:Montserrat,Inter,system-ui; margin:0 0 .6rem}
-    a{color:inherit; text-decoration:none}
-
-    /* Vinheta (fade from black) */
-    .intro-vignette{
-      position:fixed; inset:0; background:#000; z-index:9999; display:grid; place-items:center;
-      animation: vignetteFade 1.6s ease forwards; pointer-events:none;
-    }
-    .intro-logo{
-      font-family:Montserrat; font-weight:700; letter-spacing:.3px;
-      color:#9cc9ff; opacity:.9; transform:translateY(8px);
-      filter: drop-shadow(0 6px 24px rgba(10,132,255,.35));
-    }
-    @keyframes vignetteFade { 0%{opacity:1} 60%{opacity:.9} 100%{opacity:0; visibility:hidden} }
+    h1,h2,h3{font-family:Montserrat,Inter,system-ui;margin:0 0 .6rem}
+    a{text-decoration:none;color:inherit}
+    img{max-width:100%;display:block}
 
     /* Navbar */
-    .nav{
-      position:sticky; top:0; z-index:50;
-      backdrop-filter: blur(8px);
-      background: color-mix(in oklab, #0a0a0a 70%, transparent);
-      border-bottom: 1px solid rgba(255,255,255,.06);
-      transition: background var(--t-quick), border-color var(--t-quick);
+    .nav{position:sticky;top:0;z-index:100;
+      backdrop-filter:blur(10px);
+      background:rgba(0,0,0,.6);
+      border-bottom:1px solid rgba(255,255,255,.08);
     }
-    .nav-inner{
-      max-width:1200px; margin-inline:auto; padding:14px 18px; display:flex; align-items:center; gap:14px; justify-content:space-between;
+    .nav-inner{max-width:1200px;margin:auto;padding:14px 18px;
+      display:flex;align-items:center;justify-content:space-between;
     }
-    .brand{ display:flex; align-items:center; gap:10px; font-family:Montserrat; font-weight:700}
-    .brand-dot{ width:8px; height:8px; border-radius:50%; background:var(--blue); box-shadow:0 0 18px rgba(0,113,227,.9); }
-    .nav a.btn{ padding:10px 16px; border-radius:14px; border:1px solid rgba(255,255,255,.08); background:rgba(255,255,255,.04); font-weight:600; }
-    .nav a.btn:hover{ filter:brightness(1.1) }
-
-    .nav.scrolled{
-      background: color-mix(in oklab, #0a0a0a 86%, transparent);
-      border-color: rgba(255,255,255,.10);
-    }
+    .brand{display:flex;align-items:center;gap:8px;font-weight:700;font-family:Montserrat}
+    .brand-dot{width:8px;height:8px;border-radius:50%;background:var(--blue);box-shadow:0 0 14px rgba(0,113,227,.9)}
+    .actions a{margin-left:14px;font-weight:600;color:var(--muted)}
+    .actions a:hover{color:var(--white)}
 
     /* Hero */
-    #hero{ padding: clamp(48px, 8vw, 96px) 18px 26px; }
-    .hero-inner{ max-width:1200px; margin:0 auto; display:grid; grid-template-columns: 1.2fr .9fr; gap:28px; align-items:center; }
-    @media (max-width: 900px){ .hero-inner{ grid-template-columns:1fr; } }
+    #hero{padding:80px 18px 30px}
+    .hero-inner{max-width:1200px;margin:auto;display:grid;grid-template-columns:1fr;gap:30px;text-align:center}
+    .title{font-size:clamp(32px,6vw,56px);line-height:1.1;}
+    .highlight{background:linear-gradient(90deg,var(--blue),var(--blue-2));
+      -webkit-background-clip:text;color:transparent}
+    .sub{color:#d2d2d2;max-width:70ch;margin:auto}
+    .cta-wrap{margin-top:20px;display:flex;flex-wrap:wrap;justify-content:center;gap:12px}
+    .btn-primary{background:linear-gradient(180deg,var(--blue),#065fb6);
+      padding:12px 22px;border-radius:14px;color:#fff;font-weight:700;box-shadow:0 10px 30px rgba(0,113,227,.35);
+    }
+    .btn-primary:hover{filter:brightness(1.1)}
+    .btn-ghost{padding:12px 20px;border:1px solid rgba(255,255,255,.12);
+      border-radius:14px;color:#e9f2ff}
+    .btn-ghost:hover{border-color:var(--blue-2)}
 
-    .kicker{ color:var(--muted); margin-bottom:.5rem }
-    .title{ font-size:clamp(28px, 5.2vw, 56px); line-height:1.05; letter-spacing:-.5px; }
-    .title .highlight{ background: linear-gradient(90deg, var(--blue), var(--blue-2)); -webkit-background-clip:text; background-clip:text; color:transparent; }
-    .sub{ color: #cfd6de; margin:.8rem 0 1.2rem; max-width:58ch }
-
-    .cta-wrap{ display:flex; flex-wrap:wrap; gap:12px }
-    .btn-primary{
-      background:linear-gradient(180deg, var(--blue), #065fb6);
-      color:#fff; border:none; padding:12px 18px; border-radius:14px; font-weight:700;
-      box-shadow: 0 8px 24px rgba(0,113,227,.35);
-      transition: transform var(--t-quick), filter var(--t-quick);
+    /* Vitrine Apple */
+    #vitrine{padding:60px 18px}
+    .vitrine-wrap{max-width:1000px;margin:auto;background:rgba(0,0,0,.6);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:26px;box-shadow:0 30px 90px rgba(0,0,0,.55);
+      backdrop-filter:blur(10px);display:grid;place-items:center;overflow:hidden;isolation:isolate;
     }
-    .btn-primary:hover{ transform: translateY(-2px); filter: brightness(1.05) }
-    .btn-ghost{
-      background:rgba(255,255,255,.04); color:#e9f2ff; border:1px solid rgba(255,255,255,.08); padding:12px 16px; border-radius:14px; font-weight:600;
+    .mockup-3d{perspective:1200px;width:90%;max-width:850px;padding:40px}
+    .mockup-3d .item{position:relative;transform-style:preserve-3d;transition:transform .9s cubic-bezier(.22,.61,.36,1);
+      will-change:transform,filter;
     }
-    .btn-ghost:hover{ filter:brightness(1.08) }
-
-    .mockup{ display:grid; place-items:center; }
-    .mockup img{
-      width: clamp(280px, 36vw, 520px);
-      aspect-ratio: 16 / 10; object-fit: cover;
-      border-radius: 24px; box-shadow: var(--shadow-2);
-      transform: translateZ(0);
-      will-change: transform;
+    .mockup-3d img{width:100%;height:auto;object-fit:contain;border-radius:20px;
+      box-shadow:0 24px 80px rgba(0,0,0,.6);
     }
-    @media (max-width: 768px){
-      .mockup img{ width:min(92vw, 560px); aspect-ratio:16/10; }
-    }
-
-    /* Seções padrão */
-    section{ padding: clamp(48px, 8vw, 84px) 18px; position:relative; }
-    .container{ max-width:1200px; margin:0 auto; }
-    .section-head{ text-align:center; margin-bottom:28px; }
-    .section-head p{ color:var(--muted); max-width:70ch; margin:8px auto 0 }
-
-    /* ===== NOVA VITRINE APPLE (área isolada) ===== */
-    #vitrine{
-      padding: clamp(40px, 7vw, 72px) 18px;
-    }
-    .vitrine-wrap{
-      max-width: 1100px; margin: 0 auto;
-      background: rgba(0,0,0,.6);
-      border: 1px solid rgba(255,255,255,.08);
-      border-radius: 26px;
-      box-shadow: 0 30px 90px rgba(0,0,0,.55);
-      overflow: hidden;
-      position: relative;
-      backdrop-filter: blur(8px);
-      display:grid; place-items:center;
-      isolation:isolate;
-    }
-    .vitrine-wrap::before{
-      /* vinheta/metálico */
-      content:""; position:absolute; inset:-20% -10% -30% -10%;
-      background:
-        radial-gradient(1000px 260px at 50% 0%, rgba(255,255,255,.08), transparent 70%),
-        radial-gradient(1200px 400px at 50% 120%, rgba(0,113,227,.14), transparent 62%);
-      pointer-events:none; z-index:-1;
+    .mockup-3d .item::after{content:"";position:absolute;inset:0;
+      background:radial-gradient(80% 120% at 100% 0%,rgba(255,255,255,.15),transparent 60%);
+      mix-blend-mode:screen;pointer-events:none;opacity:.45;
     }
 
-    .mockup-3d{
-      perspective: 1200px;
-      width: min(88vw, 900px);
-      padding: clamp(24px, 5vw, 40px);
+    /* Benefícios */
+    #beneficios{padding:80px 18px}
+    .benefit-grid{max-width:1200px;margin:auto;display:grid;gap:20px;
+      grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
     }
-    .mockup-3d .item{
-      position:relative;
-      border-radius: 24px;
-      overflow:hidden;
-      transform-style: preserve-3d;
-      will-change: transform, filter;
-      transition: transform .9s cubic-bezier(.22,.61,.36,1), filter .9s cubic-bezier(.22,.61,.36,1);
-      box-shadow: 0 24px 80px rgba(0,0,0,.6);
+    .benefit{background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.02));
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:20px;padding:24px;text-align:center;
+      transition:transform .3s ease,box-shadow .4s ease;
+      box-shadow:0 10px 30px rgba(0,0,0,.3);
     }
-    .mockup-3d .item img{
-      display:block; width:100%; height:auto; object-fit:cover; aspect-ratio: 16/10;
-    }
-    .mockup-3d .item::after{
-      /* reflexo metálico */
-      content:""; position:absolute; inset:0;
-      background:
-        radial-gradient(70% 120% at 120% -20%, rgba(255,255,255,.25), transparent 40%),
-        radial-gradient(90% 120% at -20% 0%, rgba(255,255,255,.12), transparent 45%);
-      mix-blend-mode: screen; pointer-events:none;
-      opacity:.45; transition: opacity .6s ease;
-    }
-    .mockup-3d .item:hover::after{ opacity:.6 }
-
-    /* Benefícios — cards premium */
-    #beneficios .grid{
-      display:grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap:20px;
-    }
-    @media (max-width: 1024px){ #beneficios .grid{ grid-template-columns: repeat(2, minmax(0,1fr)); } }
-    @media (max-width: 768px){
-      #beneficios .grid{
-        display:flex; overflow-x:auto; gap:14px; scroll-snap-type:x mandatory; padding-bottom:6px;
-      }
-    }
-    .benefit{
-      position:relative; background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
-      border:1px solid var(--glass-border); border-radius: var(--radius); overflow:hidden; backdrop-filter: blur(6px);
-      box-shadow: var(--shadow-1);
-      transition: transform .5s ease, filter .5s ease, box-shadow .5s ease;
-      scroll-snap-align:center;
-    }
-    .benefit .inner{ padding:22px 22px 26px; }
-    .benefit .icon{ width:32px; height:32px; margin-bottom:14px; opacity:.9 }
-    .benefit h3{ font-size:1.1rem; margin-bottom:.4rem }
-    .benefit p{ color:#d7d7d7 }
-
-    .benefit::before{
-      content:""; position:absolute; left:0; right:0; top:0; height:4px; background:var(--accent, var(--blue));
-      filter: drop-shadow(0 8px 16px color-mix(in oklab, var(--accent), transparent 60%));
-    }
-    .benefit::after{
-      content:""; position:absolute; inset:-20% -10% auto -10%; height:70%;
-      background: radial-gradient(1200px 420px at 50% 120%, color-mix(in oklab, var(--accent), transparent 80%), transparent 65%);
-      mix-blend-mode: screen; opacity:.6; pointer-events:none;
-    }
-    .benefit:hover{ transform: translateY(-4px) scale(1.02); filter: brightness(1.06); box-shadow: 0 18px 60px rgba(0,0,0,.45) }
-
-    .benefit.accent-1{ --accent: var(--blue) }     /* Certificação */
-    .benefit.accent-2{ --accent: var(--gold) }     /* Simuladores */
-    .benefit.accent-3{ --accent: var(--gray) }     /* Aprendizado */
-    .benefit.accent-4{ --accent: var(--blue-2) }   /* Mentoria */
-
-    @media (max-width: 768px){
-      #beneficios .benefit{ min-width: 86vw; min-height: 90vh; display:grid; place-items:center; text-align:center; padding:10vh 6vw }
-      .benefit .inner{ padding:0 }
-    }
+    .benefit:hover{transform:translateY(-5px);box-shadow:0 24px 60px rgba(0,0,0,.5)}
+    .benefit .icon{font-size:1.5rem;margin-bottom:10px}
+    .benefit h3{margin:10px 0 6px}
+    .benefit p{color:#d4d4d4;font-size:1rem;line-height:1.6}
 
     /* Conheça o Portal */
-    #portal-explicacao .grid{
-      display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap:28px;
+    #portal-explicacao{padding:80px 18px}
+    .portal-grid{max-width:1100px;margin:auto;display:grid;gap:24px;grid-template-columns:repeat(auto-fit,minmax(400px,1fr))}
+    .portal-card{background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.08);border-radius:20px;overflow:hidden;
+      box-shadow:0 12px 36px rgba(0,0,0,.35);transition:transform .5s ease,filter .5s ease;
     }
-    @media (max-width: 900px){ #portal-explicacao .grid{ grid-template-columns:1fr; gap:22px } }
+    .portal-card:hover{transform:translateY(-3px);filter:brightness(1.05)}
+    .portal-card img{width:100%;height:auto;object-fit:cover}
+    @media(max-width:768px){
+      .portal-card img{object-fit:contain;max-height:60vh}
+    }
+    .portal-card h4{padding:16px 20px 0}
+    .portal-card p{padding:0 20px 20px;color:#d0d0d0}
 
-    .card-portal{
-      max-width: 820px; margin-inline:auto;
-      background: rgba(255,255,255,.04);
-      border:1px solid rgba(255,255,255,.08);
-      border-radius:20px; overflow:hidden;
-      box-shadow: 0 12px 36px rgba(0,0,0,.35);
-      transition: transform .5s ease, filter .5s ease; will-change:transform, filter;
+    /* Depoimentos */
+    #social{padding:80px 18px}
+    .test-grid{max-width:1100px;margin:auto;display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(320px,1fr))}
+    .quote{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);
+      border-radius:18px;padding:22px;color:#e5e5e5;box-shadow:0 10px 30px rgba(0,0,0,.3)
     }
-    .card-portal:hover{ transform: translateY(-3px); filter: brightness(1.04) }
-    .card-portal img{
-      width:100%; aspect-ratio:16/9; object-fit:cover; display:block; transform:translateZ(0);
-    }
-    .card-portal h4, .card-portal p{ padding:16px 18px 0 }
-    .card-portal p{ padding-bottom:18px; color:#d7d7d7 }
+    .ava{width:36px;height:36px;border-radius:999px;background:linear-gradient(145deg,#1c1c1c,#111);border:1px solid #222;display:grid;place-items:center;font-weight:700;margin-right:10px}
+    .person{display:flex;align-items:center;margin-bottom:10px}
+    small{color:#c9c9c9}
 
-    #portal-explicacao{ isolation:isolate }
-    #portal-explicacao::before{
-      content:""; position:absolute; inset:0;
-      background:
-        radial-gradient(800px 200px at 50% -60px, rgba(255,255,255,.05), transparent 70%),
-        radial-gradient(1200px 420px at 50% 120%, rgba(0,113,227,.12), transparent 65%);
-      pointer-events:none; z-index:-1;
-    }
-    @media (max-width: 768px){
-      .card-portal img{ aspect-ratio:auto; min-height:68vh }
-    }
-
-    /* Depoimentos — estrutura simples (mantida) */
-    #social .grid{
-      display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap:18px;
-    }
-    @media (max-width: 1024px){ #social .grid{ grid-template-columns: repeat(2, minmax(0,1fr)); } }
-    @media (max-width: 700px){ #social .grid{ grid-template-columns: 1fr; } }
-    .quote{
-      background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08);
-      border-radius:18px; padding:18px; color:#e5e5e5
-    }
-    .quote small{ color:#c9c9c9 }
-
-    /* Footer */
-    footer{
-      padding:20px 18px; border-top:1px solid rgba(255,255,255,.08);
-      background: color-mix(in oklab, #0a0a0a 82%, transparent);
-      display:flex; align-items:center; justify-content:center;
-      color:#d4d8dd;
-    }
-
-    /* Reveal states */
-    .reveal{ opacity:0; transform: translateY(18px); transition: opacity var(--t-slow), transform var(--t-slow) }
-    .reveal.inview{ opacity:1; transform: none }
-    .revealUp{ opacity:0; transform: translateY(16px); transition: opacity .9s ease, transform 1s ease }
-    .revealUp.visible{ opacity:1; transform:none }
+    footer{padding:30px 18px;border-top:1px solid rgba(255,255,255,.08);text-align:center;color:#aaa}
   </style>
 </head>
 <body>
-  <!-- Vinheta -->
-  <div class="intro-vignette" aria-hidden="true">
-    <h1 class="intro-logo">Ensaios de Solos • Portal Interativo</h1>
-  </div>
 
-  <!-- Navbar -->
-  <nav class="nav" id="nav">
+  <nav class="nav">
     <div class="nav-inner">
-      <div class="brand">
-        <span class="brand-dot"></span>
-        <span>Ensaios de Solos</span>
-      </div>
+      <div class="brand"><span class="brand-dot"></span>Ensaios de Solos</div>
       <div class="actions">
         <a href="#beneficios">Benefícios</a>
-        <a href="#social" style="margin-left:14px">Depoimentos</a>
-        <a href="#cta" class="btn" style="margin-left:14px">Garantir meu acesso</a>
+        <a href="#social">Depoimentos</a>
+        <a href="https://mpago.la/1JsMZZy" class="btn-primary">Garantir meu acesso</a>
       </div>
     </div>
   </nav>
 
-  <!-- Hero -->
-  <header id="hero">
+  <section id="hero">
     <div class="hero-inner">
       <div>
-        <div class="kicker">Formação de Laboratoristas • Volume 1</div>
-        <h1 class="title reveal" data-io="reveal">Sua <span class="highlight">certificação</span> começa aqui.</h1>
-        <p class="sub reveal" data-io="reveal">
-          Aprenda os ensaios básicos de solos (ABNT) com um portal interativo: simuladores, passo a passo visual e registro profissional de resultados.
-        </p>
-        <div class="cta-wrap reveal" data-io="reveal" id="cta">
-          <a class="btn-primary" href="https://dr8173004-gif.github.io/ortal-ensaios-solos-volume1/" target="_blank" rel="noopener">Garantir meu acesso — R$97</a>
-          <a class="btn-ghost" href="#portal-explicacao">Ver detalhes do curso</a>
+        <h1 class="title">Sua <span class="highlight">certificação</span> começa aqui.</h1>
+        <p class="sub">Domine os ensaios de solos mais exigidos em obras e laboratórios. Aplique o conhecimento, obtenha o certificado e destaque-se no mercado.</p>
+        <div class="cta-wrap">
+          <a href="https://mpago.la/1JsMZZy" class="btn-primary">Garantir meu acesso — R$97</a>
+          <a href="#beneficios" class="btn-ghost">Ver detalhes do curso</a>
         </div>
       </div>
-      <div class="mockup">
-        <img id="hero-mockup" src="assets/cover_course.png" alt="Interface do Portal Interativo" loading="lazy" decoding="async"/>
-      </div>
     </div>
-  </header>
+  </section>
 
-  <!-- Vitrine Apple — Mockup 3D isolado -->
+  <!-- Mockup Apple único -->
   <section id="vitrine">
     <div class="vitrine-wrap">
       <div class="mockup-3d">
         <div class="item" id="mock3d">
-          <img src="assets/cover_course.png" alt="Capa do Curso Interativo — Ensaios de Solos (Vol. 1)" loading="lazy" decoding="async">
+          <img src="assets/cover_course.png" alt="Mockup do Portal Interativo">
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Benefícios (visual premium + texto clássico/original) -->
+  <!-- Benefícios -->
   <section id="beneficios">
-    <div class="container">
-      <div class="section-head">
-        <h2 class="reveal" data-io="reveal">Por que este portal é diferente</h2>
-        <p class="reveal" data-io="reveal">Uma experiência pensada para iniciantes: visual, prática e com suporte de verdade.</p>
-      </div>
-
-      <div class="grid">
-        <!-- 1 -->
-        <article class="benefit accent-1 reveal" data-io="reveal">
-          <div class="inner">
-            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M12 2l10 6-10 6L2 8l10-6zm0 8l7.5-4.5M12 13v7l-3-1.5L6 21v-6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            <h3>Certificação Digital</h3>
-            <p>Ao concluir, você recebe um certificado nominal em PDF para comprovar a formação no Volume 1.</p>
-          </div>
-        </article>
-
-        <!-- 2 -->
-        <article class="benefit accent-2 reveal" data-io="reveal">
-          <div class="inner">
-            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M4 4h16v6H4zM4 14h16v6H4zM8 7h2M8 17h2" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            <h3>Simuladores Interativos</h3>
-            <p>Calculadoras e checklists que aceleram a execução dos ensaios sem complicar as contas.</p>
-          </div>
-        </article>
-
-        <!-- 3 -->
-        <article class="benefit accent-3 reveal" data-io="reveal">
-          <div class="inner">
-            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M4 7l8-3 8 3-8 3-8-3zm0 5l8 3 8-3M4 12v5l8 3 8-3v-5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            <h3>Aprendizado Passo a Passo</h3>
-            <p>Conteúdo direto, linguagem simples e exemplos práticos para quem está começando do zero.</p>
-          </div>
-        </article>
-
-        <!-- 4 -->
-        <article class="benefit accent-4 reveal" data-io="reveal">
-          <div class="inner">
-            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4zm-7 9a7 7 0 0 1 14 0" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            <h3>Mentoria e Suporte</h3>
-            <p>Dúvidas respondidas com objetividade para você ganhar segurança na prática dos ensaios.</p>
-          </div>
-        </article>
-      </div>
+    <div class="benefit-grid">
+      <div class="benefit"><div class="icon">🎓</div><h3>Certificação Profissional</h3><p>Reconhecida com QR code autenticado para validação rápida.</p></div>
+      <div class="benefit"><div class="icon">🧮</div><h3>Simuladores Inteligentes</h3><p>Ferramentas práticas que agilizam o dia a dia no laboratório.</p></div>
+      <div class="benefit"><div class="icon">🧠</div><h3>Aprendizado Rápido</h3><p>Aulas diretas, aplicáveis e ilustradas para iniciantes.</p></div>
+      <div class="benefit"><div class="icon">🎥</div><h3>Mentoria ao Vivo</h3><p>Sessão bônus de 45 minutos para tirar dúvidas e orientar sua prática.</p></div>
     </div>
   </section>
 
-  <!-- Conheça o Portal Interativo -->
+  <!-- Conheça o Portal -->
   <section id="portal-explicacao">
-    <div class="container">
-      <div class="section-head">
-        <h2 class="revealUp" data-io2="revealUp">🎓 Conheça o Portal Interativo</h2>
-        <p class="revealUp" data-io2="revealUp">Veja como o curso funciona na prática — com módulos interativos, calculadoras e certificado automatizado.</p>
-      </div>
-
-      <div class="grid">
-        <article class="card-portal revealUp" data-io2="revealUp">
-          <img src="assets/1.png" alt="Login e Acesso Seguro" loading="lazy" decoding="async"/>
-          <h4>Login e Acesso Seguro</h4>
-          <p>Autenticação simples e protegida para começar seu estudo.</p>
-        </article>
-
-        <article class="card-portal revealUp" data-io2="revealUp">
-          <img src="assets/2.png" alt="Progresso em Tempo Real" loading="lazy" decoding="async"/>
-          <h4>Progresso em Tempo Real</h4>
-          <p>Seu avanço fica salvo — volte exatamente de onde parou.</p>
-        </article>
-
-        <article class="card-portal revealUp" data-io2="revealUp">
-          <img src="assets/3.png" alt="Calculadoras Inteligentes" loading="lazy" decoding="async"/>
-          <h4>Calculadoras Inteligentes</h4>
-          <p>Simuladores aplicados aos ensaios — sem dor de cabeça com fórmulas.</p>
-        </article>
-
-        <article class="card-portal revealUp" data-io2="revealUp">
-          <img src="assets/5.png" alt="Certificado Digital" loading="lazy" decoding="async"/>
-          <h4>Certificado Digital</h4>
-          <p>Conclua e gere seu certificado nominal — pronto para o currículo.</p>
-        </article>
-      </div>
+    <div class="portal-grid">
+      <div class="portal-card"><img src="assets/1.png" alt="Login e Acesso Seguro"><h4>Login e Acesso Seguro</h4><p>Autenticação simples e protegida para começar seu estudo.</p></div>
+      <div class="portal-card"><img src="assets/2.png" alt="Progresso em Tempo Real"><h4>Progresso em Tempo Real</h4><p>Seu avanço fica salvo — volte exatamente de onde parou.</p></div>
+      <div class="portal-card"><img src="assets/3.png" alt="Calculadoras Inteligentes"><h4>Calculadoras Inteligentes</h4><p>Simuladores aplicados aos ensaios — sem dor de cabeça com fórmulas.</p></div>
+      <div class="portal-card"><img src="assets/5.png" alt="Certificado Digital"><h4>Certificado Digital</h4><p>Conclua e gere seu certificado nominal — pronto para o currículo.</p></div>
     </div>
   </section>
 
-  <!-- Depoimentos (mantido simples; ajuste aqui se quiser os textos exatos da versão anterior) -->
+  <!-- Depoimentos -->
   <section id="social">
-    <div class="container">
-      <div class="section-head">
-        <h2 class="reveal" data-io="reveal">O que dizem nossos alunos</h2>
-        <p class="reveal" data-io="reveal">Resultados reais de quem começou do zero e já aplica no dia a dia.</p>
-      </div>
-      <div class="grid">
-        <div class="quote reveal" data-io="reveal">“A parte de granulometria ficou muito clara. Consegui executar no laboratório sem travar.”<br><small>— Victor S.</small></div>
-        <div class="quote reveal" data-io="reveal">“As calculadoras me ajudaram no início. O passo a passo é direto e objetivo.”<br><small>— Camila R.</small></div>
-        <div class="quote reveal" data-io="reveal">“Consegui meu primeiro trabalho no laboratório com o certificado. Valeu o investimento.”<br><small>— Paulo M.</small></div>
-      </div>
+    <div class="test-grid">
+      <div class="quote"><h4>Quem já está na obra confirma:</h4><p>“Entrar no laboratório sem experiência era meu medo. Com o portal, em 2 semanas eu já dominava umidade natural e granulometria. O certificado abriu portas.”</p></div>
+      <div class="quote"><div class="person"><div class="ava">VA</div><div><strong>Victor A.</strong><div style="color:#b3b3b3;font-size:.86rem">Técnico de obras</div></div></div><p>“As calculadoras e checklists salvaram meu dia. Tudo direto ao ponto.”</p></div>
+      <div class="quote"><div class="person"><div class="ava">GF</div><div><strong>Gabriel F.</strong><div style="color:#b3b3b3;font-size:.86rem">Eng. Geotécnico</div></div></div><p>“Excelente base para quem quer começar no laboratório com segurança.”</p></div>
+      <div class="quote"><div class="person"><div class="ava">AJ</div><div><strong>Antônio J.</strong><div style="color:#b3b3b3;font-size:.86rem">Consultor</div></div></div><p>“Design premium e conteúdo prático. Dá gosto indicar.”</p></div>
     </div>
   </section>
 
-  <footer>
-    <small>© <span id="year"></span> Portal Interativo — Ensaios de Solos. Todos os direitos reservados.</small>
-  </footer>
+  <footer>© <span id="year"></span> Ensaios de Solos — Todos os direitos reservados.</footer>
 
   <script>
-    // ===== Navbar: transparência dinâmica
-    const nav = document.getElementById('nav');
-    const onScrollNav = () => nav.classList.toggle('scrolled', window.scrollY > 10);
-    onScrollNav(); window.addEventListener('scroll', onScrollNav, {passive:true});
+    document.getElementById('year').textContent=new Date().getFullYear();
 
-    // ===== Ano automático
-    document.getElementById('year').textContent = new Date().getFullYear();
-
-    // ===== Parallax leve no mockup do HERO (respeita prefers-reduced-motion)
-    (()=>{
-      const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
-      if (mq.matches) return;
-      const img = document.getElementById('hero-mockup'); if(!img) return;
-      let currentY = 0, targetY = 0, raf;
-      const onScroll = ()=>{
-        targetY = (window.scrollY || 0) * 0.06;
-        if(!raf){
-          raf = requestAnimationFrame(()=>{
-            currentY += (targetY - currentY) * 0.12;
-            img.style.transform = `translateY(${currentY}px)`;
-            raf = null;
-          });
-        }
-      };
-      window.addEventListener('scroll', onScroll, {passive:true});
-    })();
-
-    // ===== Vitrine Apple — Mockup 3D (desktop: mouse; mobile: auto tilt)
-    (()=>{
-      const mqReduce = window.matchMedia('(prefers-reduced-motion: reduce)');
-      const item = document.getElementById('mock3d');
-      if (!item) return;
-
-      let rx = 0, ry = 0, tx = 0, ty = 0, raf;
-
-      const setTargetFromPointer = (xRatio, yRatio) => {
-        const max = 8; // graus
-        tx = (xRatio - 0.5) * (max*2); // -max..max
-        ty = (0.5 - yRatio) * (max*1.2);
-      };
-
-      const animate = ()=>{
-        rx += (ty - rx) * 0.08;
-        ry += (tx - ry) * 0.08;
-        item.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg)`;
-        raf = requestAnimationFrame(animate);
-      };
-      raf = requestAnimationFrame(animate);
-
-      const desktop = window.matchMedia('(pointer:fine)').matches;
-
-      if(!mqReduce.matches && desktop){
-        // Desktop: segue o mouse
-        item.addEventListener('mousemove', (e)=>{
-          const r = item.getBoundingClientRect();
-          const xr = (e.clientX - r.left) / r.width;
-          const yr = (e.clientY - r.top) / r.height;
-          setTargetFromPointer(xr, yr);
+    // Mockup 3D Apple-like
+    (()=>{const item=document.getElementById('mock3d');if(!item)return;
+      let rx=0,ry=0,tx=0,ty=0;
+      const animate=()=>{rx+=(ty-rx)*0.08;ry+=(tx-ry)*0.08;
+        item.style.transform=`rotateX(${rx}deg) rotateY(${ry}deg)`;requestAnimationFrame(animate)};
+      animate();
+      const desktop=window.matchMedia('(pointer:fine)').matches;
+      if(desktop){
+        item.addEventListener('mousemove',e=>{
+          const r=item.getBoundingClientRect();tx=((e.clientX-r.left)/r.width-0.5)*10;
+          ty=(0.5-(e.clientY-r.top)/r.height)*8;
         });
-        item.addEventListener('mouseleave', ()=>{ tx = 0; ty = 0; });
-      } else {
-        // Mobile/Touch ou Reduce: auto-oscila sutilmente
-        let t = 0;
-        const autoTilt = ()=>{
-          t += 0.015;
-          tx = Math.sin(t) * 5;   // -5..5
-          ty = Math.cos(t*1.2) * 3;
-          requestAnimationFrame(autoTilt);
-        };
-        autoTilt();
+        item.addEventListener('mouseleave',()=>{tx=0;ty=0;});
+      }else{
+        let t=0;const auto=()=>{t+=0.015;tx=Math.sin(t)*4;ty=Math.cos(t*1.3)*3;requestAnimationFrame(auto)};auto();
       }
-    })();
-
-    // ===== IntersectionObserver 1 (benefícios, hero texts)
-    (()=> {
-      const els = document.querySelectorAll('[data-io="reveal"]');
-      const io = new IntersectionObserver((entries)=>{
-        for (const e of entries){
-          if (e.isIntersecting){ e.target.classList.add('inview'); io.unobserve(e.target); }
-        }
-      }, { threshold: 0.15 });
-      els.forEach(el=> io.observe(el));
-    })();
-
-    // ===== IntersectionObserver 2 (cards "Conheça o Portal")
-    (()=> {
-      const els = document.querySelectorAll('[data-io2="revealUp"]');
-      const io = new IntersectionObserver((entries)=>{
-        for (const e of entries){
-          if (e.isIntersecting){ e.target.classList.add('visible'); io.unobserve(e.target); }
-        }
-      }, { threshold: 0.18 });
-      els.forEach(el=> io.observe(el));
     })();
   </script>
 </body>
