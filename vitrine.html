@@ -1,417 +1,214 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Curso Interativo – Ensaios de Solos (Vol. 1)</title>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<!-- Topo minimalista -->
+<header class="brandbar">
+  <div class="wrap">
+    <div class="brand">Portal Interativo — Ensaios de Solos <small>Vol. 1</small></div>
+    <div style="margin-left:auto">
+      <a class="btn btn-ghost" href="index.html">Já comprei</a>
+    </div>
+  </div>
+</header>
+
+<!-- Seção principal: texto + capa + preço -->
+<main class="hero">
+  <section class="hero-copy">
+    <h1>Formação prática em Ensaios de Solos</h1>
+    <p class="lead">
+      Aprenda <strong>Umidade Natural</strong> e <strong>Granulometria</strong> com simuladores,
+      checklists e certificado. Didático, direto ao ponto e pronto para usar no laboratório.
+    </p>
+
+    <div class="price-card">
+      <div class="price">
+        <span class="value">R$97</span>
+        <span class="split">ou 10x de R$10,70</span>
+      </div>
+
+      <div class="benefits">
+        <div class="benefit">
+          <div class="benefit-icon">🔓</div>
+          <div><h4>Acesso completo</h4><p>Portal interativo + atualizações</p></div>
+        </div>
+        <div class="benefit">
+          <div class="benefit-icon">🧮</div>
+          <div><h4>Simuladores</h4><p>Calculadoras e tabelas prontas</p></div>
+        </div>
+        <div class="benefit">
+          <div class="benefit-icon">📜</div>
+          <div><h4>Certificado</h4><p>PDF com verificação por QR</p></div>
+        </div>
+        <div class="benefit">
+          <div class="benefit-icon">🎥</div>
+          <div><h4>Mentoria bônus</h4><p>45 min ao vivo com o instrutor</p></div>
+        </div>
+      </div>
+
+      <div class="cta-row">
+        <!-- seu link do Mercado Pago -->
+        <a class="btn btn-primary" href="https://mpago.la/1JsMZZy" target="_blank" rel="noopener">Garantir Meu Acesso</a>
+        <a class="btn btn-ghost" href="index.html">Já comprei</a>
+      </div>
+    </div>
+  </section>
+
+  <aside>
+    <!-- Capa 3D — exige PNG transparente em assets/cover_course.png -->
+    <div class="cover" aria-label="Capa do curso"></div>
+  </aside>
+</main>
+
+<footer class="footer">
+  © Ensaios de Solos — Volume 1. Visual “Black Engineering Premium”.
+</footer>
 
   <style>
-    :root {
-      --gold: #d4af37;
-      --black: #0a0a0a;
-      --glass: rgba(15,15,15,0.75);
-      --green: #25d366;
-    }
+   /* ====== Black Engineering Premium ====== */
 
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+/* Fundo cinematográfico com a sua imagem e escurecimento suave */
+body {
+  margin: 0;
+  font-family: "Open Sans", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  color: #eaeaea;
+  background:
+    linear-gradient(180deg, rgba(0,0,0,.72), rgba(0,0,0,.84)),
+    url('assets/bg_vitrine.jpg.png') center/cover no-repeat fixed;
+}
 
-    body {
-      font-family: 'Open Sans', sans-serif;
-      color: #fff;
-      background: url('assets/bg_vitrine.jpg.png') no-repeat center center fixed;
-      background-size: cover;
-      overflow-x: hidden;
-    }
+/* Barra superior minimalista, sem bloco preto pesado */
+.brandbar {
+  position: sticky;
+  top: 0; z-index: 50;
+  backdrop-filter: saturate(140%) blur(8px);
+  background: linear-gradient(180deg, rgba(0,0,0,.75), rgba(0,0,0,.35));
+  border-bottom: 1px solid rgba(255,255,255,.06);
+}
+.brandbar .wrap {
+  max-width: 1100px; margin: 0 auto; padding: 10px 16px;
+  display: flex; align-items: center; gap: 12px;
+}
+.brand {
+  font-family: Montserrat, sans-serif; font-weight: 700; letter-spacing: .3px;
+  color: #f6f6f6;
+}
+.brand small { opacity: .65; font-weight: 600; margin-left: 8px; }
 
-    /* 🔆 Fundo cinematográfico */
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      background:
-        radial-gradient(circle at 50% 20%, rgba(255,255,255,0.12) 0%, transparent 60%),
-        radial-gradient(circle at 80% 70%, rgba(212,175,55,0.15) 0%, transparent 70%),
-        linear-gradient(180deg, rgba(0,0,0,0.7), rgba(0,0,0,0.9));
-      z-index: -1;
-    }
+/* Hero “Apple-like”: duas colunas, muito respiro */
+.hero {
+  max-width: 1100px; margin: 34px auto; padding: 0 16px;
+  display: grid; gap: 28px; grid-template-columns: 1.1fr .9fr;
+}
+@media (max-width: 980px){
+  .hero { grid-template-columns: 1fr; margin: 22px auto; }
+}
 
-    header {
-      text-align: center;
-      background: rgba(0,0,0,0.6);
-      backdrop-filter: blur(8px);
-      padding: 22px 10px;
-      box-shadow: inset 0 -1px 0 rgba(255,255,255,0.1);
-      animation: fadeDown 2s ease-in-out;
-    }
+/* Bloco de texto com hierarquia limpa */
+.hero-copy h1 {
+  font-family: Montserrat, sans-serif;
+  font-size: clamp(26px, 3.2vw, 40px);
+  line-height: 1.15;
+  margin: 0 0 10px;
+  color: #fff;
+}
+.hero-copy p.lead {
+  margin: 8px 0 18px;
+  color: #cfcfcf;
+  font-size: clamp(15px, 1.7vw, 18px);
+}
 
-    header h1 {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 1.8rem;
-      color: var(--gold);
-    }
-
-    header p {
-      margin-top: 6px;
-      color: #ddd;
-      font-size: 1rem;
-    }
-
-    @keyframes fadeDown {
-      from { opacity: 0; transform: translateY(-40px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    main {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 80px 20px;
-      animation: fadeInBody 2.5s ease;
-    }
-
-    @keyframes fadeInBody {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-
-    .content {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      align-items: center;
-      gap: 60px;
-      max-width: 1200px;
-      position: relative;
-    }
-
-    /* ✨ Reflexo dourado emanando da capa */
-    .content::before {
-      content: "";
-      position: absolute;
-      top: 50%;
-      left: 20%;
-      width: 400px;
-      height: 400px;
-      background: radial-gradient(circle, rgba(212,175,55,0.25) 0%, transparent 70%);
-      filter: blur(60px);
-      z-index: 0;
-      transform: translate(-50%, -50%);
-      animation: glowPulse 6s ease-in-out infinite;
-    }
-
-    @keyframes glowPulse {
-      0%,100% { opacity: 0.6; }
-      50% { opacity: 1; }
-    }
-
-/* 🖼️ Capa 3D com brilho cinematográfico animado */
+/* Capa 3D sóbria — espera um PNG transparente em assets/cover_course.png */
 .cover {
-  width: 360px;
-  height: 560px;
-  background: url('assets/cover_course.png') no-repeat center/contain;
-  border-radius: 20px;
-  transform: perspective(1000px) rotateY(-15deg) rotateX(3deg) scale(0.95);
-  filter: drop-shadow(0 25px 80px rgba(0, 0, 0, 0.9)) drop-shadow(0 0 40px rgba(212, 175, 55, 0.3));
-  position: relative;
-  z-index: 2;
-  overflow: hidden;
-  transition: all 0.6s ease;
-  opacity: 0;
-  animation: coverEnter 2s ease forwards;
+  width: min(440px, 90%);
+  aspect-ratio: 9 / 16;
+  background: url('assets/cover_course.png') center/contain no-repeat;
+  margin: 0 auto;
+  transform: perspective(1200px) rotateY(-10deg) translateZ(0);
+  filter: drop-shadow(0 22px 60px rgba(0,0,0,.85));
+  transition: transform .6s ease, filter .6s ease;
 }
-
-/* ✨ Reflexo dourado animado */
-.cover::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 60%;
-  height: 100%;
-  background: linear-gradient(120deg, rgba(255, 215, 0, 0.0) 0%, rgba(255, 215, 0, 0.25) 50%, rgba(255, 215, 0, 0.0) 100%);
-  transform: skewX(-20deg);
-  animation: lightSweep 6s linear infinite;
-  pointer-events: none;
-}
-
-/* 🪞Reflexo dourado do chão */
-.cover::before {
-  content: "";
-  position: absolute;
-  bottom: -100px;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: url('assets/cover_course.png') no-repeat center/contain;
-  opacity: 0.12;
-  transform: scaleY(-1) translateY(15%);
-  filter: blur(3px) brightness(0.8);
-  pointer-events: none;
-  mask-image: linear-gradient(to bottom, rgba(255,255,255,0.4) 40%, transparent 100%);
-  -webkit-mask-image: linear-gradient(to bottom, rgba(255,255,255,0.4) 40%, transparent 100%);
-}
-
-/* 🌟 Hover realista */
 .cover:hover {
-  transform: perspective(1000px) rotateY(-8deg) rotateX(1deg) scale(1.02);
-  filter: drop-shadow(0 30px 100px rgba(0, 0, 0, 0.9)) drop-shadow(0 0 50px rgba(212, 175, 55, 0.45));
+  transform: perspective(1200px) rotateY(-6deg);
+  filter: drop-shadow(0 30px 80px rgba(0,0,0,.9));
 }
 
-/* 🎥 Entrada suave */
-@keyframes coverEnter {
-  from {
-    opacity: 0;
-    transform: perspective(1000px) rotateY(-20deg) scale(0.9);
-  }
-  to {
-    opacity: 1;
-    transform: perspective(1000px) rotateY(-15deg) scale(0.95);
-  }
+/* Cart de preço em vidro preto translúcido */
+.price-card {
+  background: linear-gradient(180deg, rgba(0,0,0,.55), rgba(0,0,0,.35));
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 16px;
+  padding: 18px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.25);
+  backdrop-filter: blur(8px);
+}
+.price {
+  display: flex; align-items: baseline; gap: 10px; color: #fff;
+}
+.price .value {
+  font-family: Montserrat, sans-serif; font-weight: 800;
+  font-size: clamp(28px, 4.2vw, 40px);
+}
+.price .split {
+  color: #d9b45a; /* dourado fosco */
+  font-weight: 800; font-size: clamp(13px, 1.7vw, 16px);
 }
 
-/* ✨ Animação do brilho lateral */
-@keyframes lightSweep {
-  0% { left: -100%; }
-  50% { left: 120%; }
-  100% { left: 120%; }
+/* Benefícios premium: cards minimalistas */
+.benefits {
+  display: grid; gap: 12px; grid-template-columns: 1fr 1fr;
+  margin-top: 12px;
+}
+@media (max-width: 640px){ .benefits { grid-template-columns: 1fr; } }
+.benefit {
+  display: flex; gap: 10px; align-items: flex-start;
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 14px; padding: 12px;
+}
+.benefit-icon {
+  width: 28px; height: 28px; flex: none;
+  border-radius: 8px;
+  background: radial-gradient(circle at 30% 30%, rgba(217,180,90,.35), transparent 70%);
+  display: grid; place-items: center;
+}
+.benefit h4 { margin: 0; color: #f3f3f3; font-weight: 700; font-family: Montserrat, sans-serif; }
+.benefit p { margin: 2px 0 0; color: #cfcfcf; font-size: 14px; }
+
+/* CTA principal com foco em conversão */
+.cta-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
+.btn {
+  appearance: none; border: none; cursor: pointer;
+  padding: 12px 18px; border-radius: 12px; font-weight: 800;
+  font-family: Montserrat, sans-serif; letter-spacing: .3px;
+}
+.btn-primary {
+  background: linear-gradient(180deg, #d9b45a, #c49d4b);
+  color: #241a05;
+  box-shadow: 0 8px 22px rgba(217,180,90,.25);
+}
+.btn-primary:hover { filter: brightness(1.06); }
+.btn-ghost {
+  background: transparent; color: #eaeaea;
+  border: 1px solid rgba(255,255,255,.18);
+}
+.btn-ghost:hover { background: rgba(255,255,255,.06); }
+
+/* Rodapé esssencial */
+.footer {
+  max-width: 1100px; margin: 28px auto 40px; padding: 0 16px; color: #bdbdbd;
+  font-size: 13px;
+  border-top: 1px solid rgba(255,255,255,.08);
+  padding-top: 16px;
 }
 
-/* 📱 Mobile */
-@media(max-width:980px) {
-  .cover {
-    width: 90%;
-    height: auto;
-    aspect-ratio: 9/16;
-    transform: perspective(800px) rotateY(0) rotateX(0) scale(1);
-    filter: drop-shadow(0 15px 40px rgba(0,0,0,0.9)) drop-shadow(0 0 30px rgba(212,175,55,0.3));
-  }
-  .cover::after {
-    animation: lightSweep 8s linear infinite;
-    opacity: 0.2;
-  }
+/* Animações suaves (respeita acessibilidade) */
+@media (prefers-reduced-motion: no-preference) {
+  .hero-copy, .price-card, .cover { animation: fadeUp .8s ease both; }
+  .cover { animation-delay: .15s; }
+  .price-card { animation-delay: .25s; }
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-    /* 💰 Painel de compra */
-    .panel {
-      background: var(--glass);
-      border: 1px solid rgba(255,255,255,0.08);
-      backdrop-filter: blur(10px);
-      padding: 40px;
-      border-radius: 20px;
-      max-width: 440px;
-      text-align: center;
-      position: relative;
-      z-index: 1;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.6);
-      opacity: 0;
-      animation: panelEnter 2.5s ease forwards;
-      animation-delay: 0.5s;
-    }
-
-    @keyframes panelEnter {
-      0% { opacity: 0; transform: translateY(40px); }
-      100% { opacity: 1; transform: translateY(0); }
-    }
-
-    .panel h2 {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 1.6rem;
-      color: var(--gold);
-      margin-bottom: 10px;
-    }
-
-    .old-price {
-      color: #aaa;
-      text-decoration: line-through;
-      margin-bottom: 8px;
-    }
-
-    .price {
-      font-size: 2rem;
-      font-weight: 700;
-      background: linear-gradient(90deg, #f7e17b, #d4af37);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      margin: 10px 0;
-    }
-
-    .btn {
-      display: inline-block;
-      background: linear-gradient(135deg, #d4af37, #f7e17b);
-      color: #000;
-      padding: 14px 40px;
-      border-radius: 50px;
-      font-weight: 700;
-      font-family: 'Montserrat', sans-serif;
-      text-decoration: none;
-      box-shadow: 0 0 20px rgba(212,175,55,0.5);
-      transition: all .3s ease;
-    }
-
-    .btn:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 40px rgba(212,175,55,0.8);
-    }
-
-    /* 🟡 Benefícios premium */
-    .benefits {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 20px;
-      margin-top: 60px;
-      max-width: 1000px;
-    }
-
-    .benefit-card {
-      background: rgba(0, 0, 0, 0.55);
-      border: 1px solid rgba(255,255,255,0.15);
-      border-radius: 15px;
-      padding: 20px;
-      text-align: center;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-      opacity: 0;
-      transform: translateY(40px);
-      animation: benefitEnter 1.2s ease forwards;
-    }
-
-    @keyframes benefitEnter {
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .benefit-card:nth-child(1) { animation-delay: 1.5s; }
-    .benefit-card:nth-child(2) { animation-delay: 1.7s; }
-    .benefit-card:nth-child(3) { animation-delay: 1.9s; }
-    .benefit-card:nth-child(4) { animation-delay: 2.1s; }
-
-    .benefit-card i {
-      color: var(--gold);
-      font-size: 1.6rem;
-      margin-bottom: 10px;
-    }
-
-    .benefit-card h4 {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 1.1rem;
-      color: var(--gold);
-      margin-bottom: 6px;
-    }
-
-    .benefit-card p { font-size: 0.9rem; color: #ccc; }
-
-    /* 📱 MOBILE (9x16) */
-    @media(max-width:980px) {
-      header { padding: 18px; }
-      header h1 { font-size: 1.3rem; }
-      main { padding: 40px 10px; }
-      .content { flex-direction: column; gap: 25px; }
-      .cover {
-        width: 90%;
-        height: auto;
-        aspect-ratio: 9/16;
-        box-shadow: 0 20px 40px rgba(0,0,0,0.8);
-      }
-      .panel {
-        max-width: 95%;
-        padding: 25px 18px;
-      }
-      .benefits {
-        grid-template-columns: 1fr;
-        gap: 15px;
-        padding: 0 15px;
-      }
-    }
-
-    /* 💬 WhatsApp */
-    .whatsapp {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background: var(--green);
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 0 15px rgba(37,211,102,0.6);
-      z-index: 1000;
-      transition: transform .3s ease, box-shadow .3s ease;
-    }
-
-    .whatsapp:hover {
-      transform: scale(1.08);
-      box-shadow: 0 0 25px rgba(37,211,102,0.9);
-    }
-
-    .whatsapp i {
-      color: white;
-      font-size: 1.8rem;
-    }
-
-    footer {
-      text-align: center;
-      margin: 80px 0 40px;
-      color: #aaa;
-      font-size: 0.9rem;
-      animation: fadeIn 2s ease 2.5s forwards;
-      opacity: 0;
-    }
-
-    @keyframes fadeIn {
-      to { opacity: 1; }
-    }
-  </style>
-</head>
-
-<body>
-  <header>
-    <h1>Do Laboratório à Obra: Domine os Ensaios de Solos com Excelência Profissional</h1>
-    <p>Simule, calcule e conquiste sua certificação com metodologia prática e moderna.</p>
-  </header>
-
-  <main>
-    <div class="content">
-      <div class="cover"></div>
-
-      <div class="panel">
-        <h2>Transforme-se em um Laboratorista Completo</h2>
-        <p class="old-price">De R$197,00</p>
-        <p class="price">Por apenas R$97,00</p>
-        <p>ou 10x de R$10,70 no cartão</p>
-        <a href="https://mpago.la/1JsMZZy" target="_blank" class="btn">⚡ Comprar Agora por R$97</a>
-      </div>
-    </div>
-
-    <div class="benefits">
-      <div class="benefit-card">
-        <i class="fas fa-laptop-code"></i>
-        <h4>Portal Interativo</h4>
-        <p>Acesso vitalício ao ambiente cinematográfico do curso.</p>
-      </div>
-      <div class="benefit-card">
-        <i class="fas fa-calculator"></i>
-        <h4>Simuladores e Calculadoras</h4>
-        <p>Ferramentas práticas para uso imediato em laboratório.</p>
-      </div>
-      <div class="benefit-card">
-        <i class="fas fa-award"></i>
-        <h4>Certificado Digital</h4>
-        <p>Reconhecimento profissional incluso no pacote.</p>
-      </div>
-      <div class="benefit-card">
-        <i class="fas fa-video"></i>
-        <h4>Mentoria Bônus</h4>
-        <p>Sessão exclusiva de 45min ao vivo com o instrutor.</p>
-      </div>
-    </div>
-
-    <footer>© 2025 Curso Interativo – Ensaios de Solos (Vol. 1). Todos os direitos reservados.</footer>
-  </main>
-
-  <a href="https://wa.me/5531987670863?text=Ol%C3%A1!%20Gostaria%20de%20mais%20informa%C3%A7%C3%B5es%20sobre%20o%20Curso%20Interativo%20–%20Ensaios%20de%20Solos%20(Vol.%201)" target="_blank" class="whatsapp">
-    <i class="fab fa-whatsapp"></i>
-  </a>
 </body>
 </html>
