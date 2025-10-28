@@ -147,3 +147,57 @@ footer{padding:30px 18px;border-top:1px solid rgba(255,255,255,.08);text-align:c
 .reveal.inview{opacity:1;transform:none;filter:none}
 .revealUp{opacity:0;transform:translateY(14px);transition:opacity .8s ease,transform .9s ease;will-change:opacity,transform}
 .revealUp.visible{opacity:1;transform:none}
+/* ===== SEÇÃO DE OFERTA / CONVERSÃO ===== */
+#oferta {
+  text-align: center;
+  padding: 80px 18px;
+  background: radial-gradient(circle at 50% 100%, rgba(0,113,227,.15), transparent 70%);
+}
+
+.oferta-inner {
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.08);
+  box-shadow: 0 20px 60px rgba(0,0,0,.4);
+  border-radius: 24px;
+  max-width: 700px;
+  margin: auto;
+  padding: 50px 24px;
+  backdrop-filter: blur(10px);
+  animation: fadeIn 1.2s ease forwards;
+}
+
+.oferta-text {
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 0.95rem;
+  margin-bottom: 10px;
+}
+
+.oferta-preco {
+  color: var(--white);
+  font-family: Montserrat;
+  font-size: clamp(1.8rem, 3vw, 2.6rem);
+  margin-bottom: 28px;
+}
+
+.oferta-preco .preco-principal {
+  color: var(--gold);
+  font-weight: 700;
+  display: block;
+}
+
+.oferta-preco .parcelado {
+  color: var(--blue-2);
+  font-size: 1.1rem;
+}
+
+@keyframes fadeIn {
+  from {opacity: 0; transform: translateY(30px);}
+  to {opacity: 1; transform: translateY(0);}
+}
+
+@media(max-width:768px){
+  #oferta{padding:60px 16px}
+  .oferta-inner{padding:40px 20px}
+}
