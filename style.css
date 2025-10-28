@@ -267,3 +267,29 @@ footer{padding:30px 18px;border-top:1px solid rgba(255,255,255,.08);text-align:c
 .learn-card:nth-child(3) { transition-delay: .3s; }
 .learn-card:nth-child(4) { transition-delay: .4s; }
 .learn-card:nth-child(5) { transition-delay: .5s; }
+
+/* ===== TÍTULO ANIMADO DE GRADIENTE CINEMATOGRÁFICO ===== */
+.titulo-animado {
+  font-family: Montserrat;
+  font-size: clamp(1.8rem, 2.5vw, 2.6rem);
+  font-weight: 700;
+  background: linear-gradient(
+    90deg,
+    var(--blue),
+    #0A84FF,
+    #C9A45C,
+    var(--blue)
+  );
+  background-size: 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: brilhoGradiente 8s ease-in-out infinite;
+  letter-spacing: 0.5px;
+}
+
+/* Animação sutil de deslocamento no gradiente */
+@keyframes brilhoGradiente {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
