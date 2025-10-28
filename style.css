@@ -261,3 +261,9 @@ footer{padding:30px 18px;border-top:1px solid rgba(255,255,255,.08);text-align:c
   color: var(--muted);
   font-size: 0.95rem;
 }
+/* EFEITO SEQUENCIAL NOS CARDS DE APRENDIZADO */
+.learn-card:nth-child(1) { transition-delay: .1s; }
+.learn-card:nth-child(2) { transition-delay: .2s; }
+.learn-card:nth-child(3) { transition-delay: .3s; }
+.learn-card:nth-child(4) { transition-delay: .4s; }
+.learn-card:nth-child(5) { transition-delay: .5s; }
