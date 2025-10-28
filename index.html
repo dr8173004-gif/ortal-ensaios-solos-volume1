@@ -1,208 +1,182 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Login | Portal Ensaios de Solos</title>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&family=Open+Sans&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portal Interativo – Login</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet" />
   <style>
-    * { box-sizing: border-box; }
     body {
-      margin: 0;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: linear-gradient(160deg, #013C5A 0%, #025d85 100%);
-      font-family: 'Open Sans', sans-serif;
+      background: #000;
       color: #fff;
+      font-family: 'Open Sans', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
     }
-    .login-container {
-      background: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(10px);
-      padding: 40px 30px;
+    .card {
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.1);
       border-radius: 20px;
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+      padding: 30px 40px;
+      box-shadow: 0 10px 40px rgba(0,0,0,.4);
+      max-width: 400px;
+      width: 90%;
       text-align: center;
-      width: 330px;
-      animation: fadeIn 0.8s ease-in-out;
+      backdrop-filter: blur(8px);
     }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    h2 {
+    h1 {
       font-family: 'Montserrat', sans-serif;
       margin-bottom: 20px;
-      color: #fff;
+      font-size: 1.4rem;
     }
     input {
       width: 100%;
       padding: 12px;
       margin: 10px 0;
       border: none;
-      border-radius: 8px;
-      outline: none;
-      font-size: 14px;
+      border-radius: 10px;
+      background: rgba(255,255,255,.1);
+      color: #fff;
+      font-size: 1rem;
     }
     button {
-      width: 48%;
-      padding: 10px;
-      margin-top: 12px;
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
       border: none;
-      border-radius: 8px;
+      border-radius: 10px;
+      background: #0071E3;
+      color: #fff;
+      font-size: 1rem;
       cursor: pointer;
-      font-weight: 600;
-      font-family: 'Montserrat', sans-serif;
       transition: all 0.3s ease;
     }
-    #loginBtn {
-      background: #28a745;
-      color: white;
+    button:hover {
+      background: #0A84FF;
+      transform: scale(1.03);
     }
-    #loginBtn:hover {
-      background: #2ecc71;
-      box-shadow: 0 0 10px #28a745;
+    .alt {
+      margin-top: 12px;
     }
-    #registerBtn {
-      background: #666;
-      color: white;
-    }
-    #registerBtn:hover {
-      background: #888;
-    }
-    .footer {
-      margin-top: 20px;
-      font-size: 13px;
-      color: rgba(255,255,255,0.8);
+    .alt a {
+      color: #9ecbff;
+      text-decoration: none;
+      font-size: 0.9rem;
     }
   </style>
 </head>
 <body>
-  <div class="login-container">
-    <h2>🔒 Acesso ao Portal</h2>
-    <input id="email" type="email" placeholder="E-mail" />
-    <input id="password" type="password" placeholder="Senha" />
-    <div>
-      <button id="loginBtn">Entrar</button>
-      <button id="registerBtn">Cadastrar</button>
+  <div class="card">
+    <h1>Entrar no Portal</h1>
+    <input type="email" id="email" placeholder="E-mail" />
+    <input type="password" id="password" placeholder="Senha" />
+    <button id="loginBtn">Entrar</button>
+    <button id="registerBtn">Cadastrar</button>
+    <div class="alt">
+      <a href="vitrine.html">← Voltar à vitrine</a>
     </div>
-    <div class="footer">Seu acesso é pessoal e intransferível.</div>
   </div>
 
   <script type="module">
-  import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
-  import { 
-    getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged 
-  } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
-  import { 
-    getFirestore, doc, getDoc, setDoc, serverTimestamp 
-  } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+    // === Importações Firebase ===
+    import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+    import {
+      getAuth,
+      signInWithEmailAndPassword,
+      createUserWithEmailAndPassword,
+      onAuthStateChanged
+    } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+    import {
+      getFirestore,
+      doc,
+      getDoc,
+      setDoc,
+      serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
 
-  // Configuração Firebase
-  const firebaseConfig = {
-    apiKey: "AIzaSyDY5IFakVFbbLn8UQHUCgea7KOx_zZjvlY",
-    authDomain: "portal-ensaios-solos-vol1.firebaseapp.com",
-    projectId: "portal-ensaios-solos-vol1",
-    storageBucket: "portal-ensaios-solos-vol1.firebasestorage.app",
-    messagingSenderId: "217730071254",
-    appId: "1:217730071254:web:a79fa9cbf49f742ff62777"
-  };
+    // === Configuração do Firebase ===
+    const firebaseConfig = {
+      apiKey: "AIzaSyDY5IFakVFbbLn8UQHUCgea7KOx_zZjvlY",
+      authDomain: "portal-ensaios-solos-vol1.firebaseapp.com",
+      projectId: "portal-ensaios-solos-vol1",
+      storageBucket: "portal-ensaios-solos-vol1.firebasestorage.app",
+      messagingSenderId: "217730071254",
+      appId: "1:217730071254:web:a79fa9cbf49f742ff62777"
+    };
 
-  // Inicializa o app sem duplicar
-  const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-    import { getFirestore, doc, getDoc, setDoc, serverTimestamp } 
-  from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
-const db = getFirestore(app);
+    // === Inicialização segura ===
+    const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
 
-
-  // Função para garantir criação do documento do usuário
-  async function ensureUserDoc(user) {
-    const ref = doc(db, "users", user.uid);
-    const snap = await getDoc(ref);
-
-    if (!snap.exists()) {
-      await setDoc(ref, {
-        email: user.email || "",
-        nome: user.displayName || "",
-        acesso: false, // bloqueado até pagamento
-        Datacadastro: serverTimestamp(),
-        Progresso: {
-          mod0: false,
-          mod1: false,
-          mod2: false,
-          mod3: false,
-          mod4: false
-        }
-      });
-      console.log("📄 Documento criado para:", user.email);
+    // === Cria documento do usuário ===
+    async function ensureUserDoc(user) {
+      if (!user) return;
+      const ref = doc(db, "users", user.uid);
+      const snap = await getDoc(ref);
+      if (!snap.exists()) {
+        await setDoc(ref, {
+          email: user.email || "",
+          nome: user.displayName || "",
+          acesso: false,
+          dataCadastro: serverTimestamp(),
+          progresso: { mod0: false, mod1: false, mod2: false, mod3: false, mod4: false }
+        });
+        console.log("📄 Documento criado para:", user.email);
+      } else {
+        console.log("✅ Documento já existia para:", user.email);
+      }
     }
-  }
 
-  // Redireciona se já estiver logado
-  onAuthStateChanged(auth, (user) => {
-    if (user && !window.location.href.includes("portal.html")) {
-      window.location.href = "./portal.html";
-    }
-  });
-
-  // Botão de login
-  document.getElementById("loginBtn").addEventListener("click", async () => {
-    const email = document.getElementById("email").value.trim();
-    const password = document.getElementById("password").value.trim();
-    if (!email || !password) { alert("Preencha e-mail e senha."); return; }
-
-    try {
-      const cred = await signInWithEmailAndPassword(auth, email, password);
-      await ensureUserDoc(auth.currentUser);
-      await ensureUserDoc(cred.user);
-      alert("✔️ Login realizado com sucesso!");
-      window.location.href = "./portal.html";
-    } catch (error) {
-      console.error(error);
-      alert("❌ Erro ao fazer login: " + (error.message || ""));
-    }
-  });
-
-  // Botão de cadastro
-  document.getElementById("registerBtn").addEventListener("click", async () => {
-    const email = document.getElementById("email").value.trim();
-    const password = document.getElementById("password").value.trim();
-    if (!email || !password) { alert("Preencha e-mail e senha."); return; }
-
-    try {
-      const cred = await createUserWithEmailAndPassword(auth, email, password);
-      await ensureUserDoc(auth.currentUser);
-      await ensureUserDoc(cred.user);
-      alert("✅ Conta criada com sucesso! Agora entre no portal.");
-    } catch (error) {
-      console.error(error);
-      alert("❌ Erro ao criar conta: " + (error.message || ""));
-    }
-  });
-  // === Cria o documento do usuário no Firestore ===
-import { getFirestore, doc, getDoc, setDoc, serverTimestamp } 
-  from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
-const db = getFirestore(app);
-
-async function ensureUserDoc(user) {
-  const ref = doc(db, "users", user.uid);
-  const snap = await getDoc(ref);
-  if (!snap.exists()) {
-    await setDoc(ref, {
-      email: user.email || "",
-      nome: user.displayName || "",
-      acesso: false,
-      Datacadastro: serverTimestamp(),
-      Progresso: { mod0: false, mod1: false, mod2: false, mod3: false, mod4: false }
+    // === Redirecionamento automático se logado ===
+    onAuthStateChanged(auth, (user) => {
+      if (user && !window.location.href.includes("portal.html")) {
+        window.location.href = "./portal.html";
+      }
     });
-    console.log("📄 Documento criado para:", user.email);
-  }
-}
-  
-</script>
 
+    // === LOGIN ===
+    document.getElementById("loginBtn").addEventListener("click", async () => {
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
+      if (!email || !password) return alert("Preencha e-mail e senha.");
 
+      try {
+        const cred = await signInWithEmailAndPassword(auth, email, password);
+        console.log("🔑 Login de:", cred.user.email);
+        await ensureUserDoc(cred.user);
+        alert("✔️ Login realizado com sucesso!");
+        window.location.href = "./portal.html";
+      } catch (error) {
+        console.error(error);
+        alert("❌ Erro ao fazer login: " + error.message);
+      }
+    });
+
+    // === CADASTRO ===
+    document.getElementById("registerBtn").addEventListener("click", async () => {
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
+      if (!email || !password) return alert("Preencha e-mail e senha.");
+
+      try {
+        const cred = await createUserWithEmailAndPassword(auth, email, password);
+        console.log("✅ Usuário criado:", cred.user.uid);
+
+        // Aguarda autenticação completa antes de salvar no Firestore
+        await new Promise(resolve => setTimeout(resolve, 500));
+        await ensureUserDoc(cred.user);
+
+        alert("✅ Conta criada com sucesso! Agora entre no portal.");
+      } catch (error) {
+        console.error("❌ Erro no cadastro:", error);
+        alert("❌ Erro ao criar conta: " + error.message);
+      }
+    });
+  </script>
 </body>
 </html>
