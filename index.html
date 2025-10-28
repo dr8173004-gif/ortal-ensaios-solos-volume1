@@ -112,7 +112,10 @@
   // Inicializa o app sem duplicar
   const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
   const auth = getAuth(app);
-  const db = getFirestore(app);
+    import { getFirestore, doc, getDoc, setDoc, serverTimestamp } 
+  from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+const db = getFirestore(app);
+
 
   // Função para garantir criação do documento do usuário
   async function ensureUserDoc(user) {
@@ -152,6 +155,7 @@
 
     try {
       const cred = await signInWithEmailAndPassword(auth, email, password);
+      await ensureUserDoc(auth.currentUser);
       await ensureUserDoc(cred.user);
       alert("✔️ Login realizado com sucesso!");
       window.location.href = "./portal.html";
@@ -169,6 +173,7 @@
 
     try {
       const cred = await createUserWithEmailAndPassword(auth, email, password);
+      await ensureUserDoc(auth.currentUser);
       await ensureUserDoc(cred.user);
       alert("✅ Conta criada com sucesso! Agora entre no portal.");
     } catch (error) {
@@ -176,6 +181,26 @@
       alert("❌ Erro ao criar conta: " + (error.message || ""));
     }
   });
+  // === Cria o documento do usuário no Firestore ===
+import { getFirestore, doc, getDoc, setDoc, serverTimestamp } 
+  from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+const db = getFirestore(app);
+
+async function ensureUserDoc(user) {
+  const ref = doc(db, "users", user.uid);
+  const snap = await getDoc(ref);
+  if (!snap.exists()) {
+    await setDoc(ref, {
+      email: user.email || "",
+      nome: user.displayName || "",
+      acesso: false,
+      Datacadastro: serverTimestamp(),
+      Progresso: { mod0: false, mod1: false, mod2: false, mod3: false, mod4: false }
+    });
+    console.log("📄 Documento criado para:", user.email);
+  }
+}
+  
 </script>
 
 
