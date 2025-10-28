@@ -201,3 +201,63 @@ footer{padding:30px 18px;border-top:1px solid rgba(255,255,255,.08);text-align:c
   #oferta{padding:60px 16px}
   .oferta-inner{padding:40px 20px}
 }
+/* ===== SEÇÃO O QUE VOCÊ VAI APRENDER ===== */
+#aprendizado {
+  padding: 80px 18px;
+  text-align: center;
+  background: linear-gradient(180deg, rgba(0,0,0,.95) 0%, rgba(10,10,10,1) 100%);
+}
+#aprendizado .section-head {
+  max-width: 700px;
+  margin: auto;
+  margin-bottom: 50px;
+}
+#aprendizado h2 {
+  font-family: Montserrat;
+  font-size: clamp(1.8rem, 2.5vw, 2.6rem);
+  color: var(--white);
+}
+#aprendizado p {
+  color: var(--muted);
+  font-size: 1rem;
+  margin-top: 10px;
+}
+.learn-grid {
+  max-width: 1100px;
+  margin: auto;
+  display: grid;
+  gap: 24px;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+.learn-card {
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 20px;
+  padding: 30px 20px;
+  color: #e5e5e5;
+  box-shadow: 0 10px 30px rgba(0,0,0,.3);
+  transition: transform .4s ease, box-shadow .4s ease, filter .4s ease;
+  backdrop-filter: blur(8px);
+}
+.learn-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 50px rgba(0,0,0,.45);
+  filter: brightness(1.05);
+}
+.learn-card img {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+  margin-bottom: 14px;
+  opacity: .95;
+}
+.learn-card h3 {
+  font-family: Montserrat;
+  font-size: 1.1rem;
+  color: var(--white);
+  margin-bottom: 10px;
+}
+.learn-card p {
+  color: var(--muted);
+  font-size: 0.95rem;
+}
