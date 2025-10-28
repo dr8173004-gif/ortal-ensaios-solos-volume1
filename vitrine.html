@@ -108,6 +108,59 @@
     .section-head{ text-align:center; margin-bottom:28px; }
     .section-head p{ color:var(--muted); max-width:70ch; margin:8px auto 0 }
 
+    /* ===== NOVA VITRINE APPLE (área isolada) ===== */
+    #vitrine{
+      padding: clamp(40px, 7vw, 72px) 18px;
+    }
+    .vitrine-wrap{
+      max-width: 1100px; margin: 0 auto;
+      background: rgba(0,0,0,.6);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 26px;
+      box-shadow: 0 30px 90px rgba(0,0,0,.55);
+      overflow: hidden;
+      position: relative;
+      backdrop-filter: blur(8px);
+      display:grid; place-items:center;
+      isolation:isolate;
+    }
+    .vitrine-wrap::before{
+      /* vinheta/metálico */
+      content:""; position:absolute; inset:-20% -10% -30% -10%;
+      background:
+        radial-gradient(1000px 260px at 50% 0%, rgba(255,255,255,.08), transparent 70%),
+        radial-gradient(1200px 400px at 50% 120%, rgba(0,113,227,.14), transparent 62%);
+      pointer-events:none; z-index:-1;
+    }
+
+    .mockup-3d{
+      perspective: 1200px;
+      width: min(88vw, 900px);
+      padding: clamp(24px, 5vw, 40px);
+    }
+    .mockup-3d .item{
+      position:relative;
+      border-radius: 24px;
+      overflow:hidden;
+      transform-style: preserve-3d;
+      will-change: transform, filter;
+      transition: transform .9s cubic-bezier(.22,.61,.36,1), filter .9s cubic-bezier(.22,.61,.36,1);
+      box-shadow: 0 24px 80px rgba(0,0,0,.6);
+    }
+    .mockup-3d .item img{
+      display:block; width:100%; height:auto; object-fit:cover; aspect-ratio: 16/10;
+    }
+    .mockup-3d .item::after{
+      /* reflexo metálico */
+      content:""; position:absolute; inset:0;
+      background:
+        radial-gradient(70% 120% at 120% -20%, rgba(255,255,255,.25), transparent 40%),
+        radial-gradient(90% 120% at -20% 0%, rgba(255,255,255,.12), transparent 45%);
+      mix-blend-mode: screen; pointer-events:none;
+      opacity:.45; transition: opacity .6s ease;
+    }
+    .mockup-3d .item:hover::after{ opacity:.6 }
+
     /* Benefícios — cards premium */
     #beneficios .grid{
       display:grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap:20px;
@@ -252,7 +305,18 @@
     </div>
   </header>
 
-  <!-- Benefícios -->
+  <!-- Vitrine Apple — Mockup 3D isolado -->
+  <section id="vitrine">
+    <div class="vitrine-wrap">
+      <div class="mockup-3d">
+        <div class="item" id="mock3d">
+          <img src="assets/cover_course.png" alt="Capa do Curso Interativo — Ensaios de Solos (Vol. 1)" loading="lazy" decoding="async">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Benefícios (visual premium + texto clássico/original) -->
   <section id="beneficios">
     <div class="container">
       <div class="section-head">
@@ -264,48 +328,44 @@
         <!-- 1 -->
         <article class="benefit accent-1 reveal" data-io="reveal">
           <div class="inner">
-            <!-- Ícone Certificação -->
             <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
               <path d="M12 2l10 6-10 6L2 8l10-6zm0 8l7.5-4.5M12 13v7l-3-1.5L6 21v-6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
-            <h3>Certificação que conta</h3>
-            <p>Conclua o Volume 1 e receba seu certificado digital nominal — pronto para anexar ao currículo e ao LinkedIn.</p>
+            <h3>Certificação Digital</h3>
+            <p>Ao concluir, você recebe um certificado nominal em PDF para comprovar a formação no Volume 1.</p>
           </div>
         </article>
 
         <!-- 2 -->
         <article class="benefit accent-2 reveal" data-io="reveal">
           <div class="inner">
-            <!-- Ícone Simuladores -->
             <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
               <path d="M4 4h16v6H4zM4 14h16v6H4zM8 7h2M8 17h2" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
-            <h3>Simuladores que aceleram</h3>
-            <p>Pratique com calculadoras e checklists interativos — execute como no laboratório, sem travar nos cálculos.</p>
+            <h3>Simuladores Interativos</h3>
+            <p>Calculadoras e checklists que aceleram a execução dos ensaios sem complicar as contas.</p>
           </div>
         </article>
 
         <!-- 3 -->
         <article class="benefit accent-3 reveal" data-io="reveal">
           <div class="inner">
-            <!-- Ícone Aprendizado -->
             <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
               <path d="M4 7l8-3 8 3-8 3-8-3zm0 5l8 3 8-3M4 12v5l8 3 8-3v-5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
-            <h3>Aprenda do zero com segurança</h3>
-            <p>Passo a passo visual, linguagem simples e exemplos práticos — para você executar com confiança desde o início.</p>
+            <h3>Aprendizado Passo a Passo</h3>
+            <p>Conteúdo direto, linguagem simples e exemplos práticos para quem está começando do zero.</p>
           </div>
         </article>
 
         <!-- 4 -->
         <article class="benefit accent-4 reveal" data-io="reveal">
           <div class="inner">
-            <!-- Ícone Mentoria -->
             <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
               <path d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4zm-7 9a7 7 0 0 1 14 0" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
-            <h3>Mentoria quando precisar</h3>
-            <p>Tire dúvidas direto com quem vive a prática — orientação objetiva para destravar seus primeiros ensaios.</p>
+            <h3>Mentoria e Suporte</h3>
+            <p>Dúvidas respondidas com objetividade para você ganhar segurança na prática dos ensaios.</p>
           </div>
         </article>
       </div>
@@ -348,7 +408,7 @@
     </div>
   </section>
 
-  <!-- Depoimentos (mantido simples para compatibilidade) -->
+  <!-- Depoimentos (mantido simples; ajuste aqui se quiser os textos exatos da versão anterior) -->
   <section id="social">
     <div class="container">
       <div class="section-head">
@@ -357,7 +417,7 @@
       </div>
       <div class="grid">
         <div class="quote reveal" data-io="reveal">“A parte de granulometria ficou muito clara. Consegui executar no laboratório sem travar.”<br><small>— Victor S.</small></div>
-        <div class="quote reveal" data-io="reveal">“As calculadoras me salvaram no início. O passo a passo é direto e objetivo.”<br><small>— Camila R.</small></div>
+        <div class="quote reveal" data-io="reveal">“As calculadoras me ajudaram no início. O passo a passo é direto e objetivo.”<br><small>— Camila R.</small></div>
         <div class="quote reveal" data-io="reveal">“Consegui meu primeiro trabalho no laboratório com o certificado. Valeu o investimento.”<br><small>— Paulo M.</small></div>
       </div>
     </div>
@@ -376,14 +436,14 @@
     // ===== Ano automático
     document.getElementById('year').textContent = new Date().getFullYear();
 
-    // ===== Parallax leve no mockup (respeita prefers-reduced-motion)
+    // ===== Parallax leve no mockup do HERO (respeita prefers-reduced-motion)
     (()=>{
       const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
       if (mq.matches) return;
       const img = document.getElementById('hero-mockup'); if(!img) return;
       let currentY = 0, targetY = 0, raf;
       const onScroll = ()=>{
-        targetY = (window.scrollY || 0) * 0.06; // leve
+        targetY = (window.scrollY || 0) * 0.06;
         if(!raf){
           raf = requestAnimationFrame(()=>{
             currentY += (targetY - currentY) * 0.12;
@@ -393,6 +453,52 @@
         }
       };
       window.addEventListener('scroll', onScroll, {passive:true});
+    })();
+
+    // ===== Vitrine Apple — Mockup 3D (desktop: mouse; mobile: auto tilt)
+    (()=>{
+      const mqReduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+      const item = document.getElementById('mock3d');
+      if (!item) return;
+
+      let rx = 0, ry = 0, tx = 0, ty = 0, raf;
+
+      const setTargetFromPointer = (xRatio, yRatio) => {
+        const max = 8; // graus
+        tx = (xRatio - 0.5) * (max*2); // -max..max
+        ty = (0.5 - yRatio) * (max*1.2);
+      };
+
+      const animate = ()=>{
+        rx += (ty - rx) * 0.08;
+        ry += (tx - ry) * 0.08;
+        item.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg)`;
+        raf = requestAnimationFrame(animate);
+      };
+      raf = requestAnimationFrame(animate);
+
+      const desktop = window.matchMedia('(pointer:fine)').matches;
+
+      if(!mqReduce.matches && desktop){
+        // Desktop: segue o mouse
+        item.addEventListener('mousemove', (e)=>{
+          const r = item.getBoundingClientRect();
+          const xr = (e.clientX - r.left) / r.width;
+          const yr = (e.clientY - r.top) / r.height;
+          setTargetFromPointer(xr, yr);
+        });
+        item.addEventListener('mouseleave', ()=>{ tx = 0; ty = 0; });
+      } else {
+        // Mobile/Touch ou Reduce: auto-oscila sutilmente
+        let t = 0;
+        const autoTilt = ()=>{
+          t += 0.015;
+          tx = Math.sin(t) * 5;   // -5..5
+          ty = Math.cos(t*1.2) * 3;
+          requestAnimationFrame(autoTilt);
+        };
+        autoTilt();
+      }
     })();
 
     // ===== IntersectionObserver 1 (benefícios, hero texts)
