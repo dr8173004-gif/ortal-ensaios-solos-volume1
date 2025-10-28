@@ -1,126 +1,16 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
->
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Vitrine Premium — Portal Interativo • Ensaios de Solos (Vol. 1)</title>
-  <meta name="description" content="Vitrine premium do curso interativo de ensaios de solos. Experiência estilo Apple/Nike com foco em conversão e imersão." />
+  <title>Portal Interativo – Ensaios de Solos (Volume 1)</title>
+  <meta name="description" content="Curso interativo premium de ensaios de solos. Experiência Apple/Nike com certificação, simuladores e mentoria." />
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
-  <style>
-    :root{
-      --black:#000; --black-1:#0a0a0a; --black-2:#1a1a1a;
-      --white:#fff; --text:#EDEDED; --muted:#B3B3B3;
-      --blue:#0071E3; --blue-2:#0A84FF; --gold:#C9A45C; --gray:#B3B3B3;
-      --radius:22px; --shadow-1: 0 10px 40px rgba(0,0,0,.35);
-      --shadow-2: 0 24px 70px rgba(0,0,0,.55);
-    }
-    *{box-sizing:border-box}
-    body{
-      margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial;
-      color:var(--text);
-      background:linear-gradient(180deg,#000 0%,#0a0a0a 40%,#1a1a1a 100%);
-      -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
-    }
-    h1,h2,h3{font-family:Montserrat,Inter,system-ui;margin:0 0 .6rem}
-    a{text-decoration:none;color:inherit}
-    img{max-width:100%;display:block}
-
-    /* Navbar */
-    .nav{position:sticky;top:0;z-index:100;
-      backdrop-filter:blur(10px);
-      background:rgba(0,0,0,.6);
-      border-bottom:1px solid rgba(255,255,255,.08);
-    }
-    .nav-inner{max-width:1200px;margin:auto;padding:14px 18px;
-      display:flex;align-items:center;justify-content:space-between;
-    }
-    .brand{display:flex;align-items:center;gap:8px;font-weight:700;font-family:Montserrat}
-    .brand-dot{width:8px;height:8px;border-radius:50%;background:var(--blue);box-shadow:0 0 14px rgba(0,113,227,.9)}
-    .actions a{margin-left:14px;font-weight:600;color:var(--muted)}
-    .actions a:hover{color:var(--white)}
-
-    /* Hero */
-    #hero{padding:80px 18px 30px}
-    .hero-inner{max-width:1200px;margin:auto;display:grid;grid-template-columns:1fr;gap:30px;text-align:center}
-    .title{font-size:clamp(32px,6vw,56px);line-height:1.1;}
-    .highlight{background:linear-gradient(90deg,var(--blue),var(--blue-2));
-      -webkit-background-clip:text;color:transparent}
-    .sub{color:#d2d2d2;max-width:70ch;margin:auto}
-    .cta-wrap{margin-top:20px;display:flex;flex-wrap:wrap;justify-content:center;gap:12px}
-    .btn-primary{background:linear-gradient(180deg,var(--blue),#065fb6);
-      padding:12px 22px;border-radius:14px;color:#fff;font-weight:700;box-shadow:0 10px 30px rgba(0,113,227,.35);
-    }
-    .btn-primary:hover{filter:brightness(1.1)}
-    .btn-ghost{padding:12px 20px;border:1px solid rgba(255,255,255,.12);
-      border-radius:14px;color:#e9f2ff}
-    .btn-ghost:hover{border-color:var(--blue-2)}
-
-    /* Vitrine Apple */
-    #vitrine{padding:60px 18px}
-    .vitrine-wrap{max-width:1000px;margin:auto;background:rgba(0,0,0,.6);
-      border:1px solid rgba(255,255,255,.08);
-      border-radius:26px;box-shadow:0 30px 90px rgba(0,0,0,.55);
-      backdrop-filter:blur(10px);display:grid;place-items:center;overflow:hidden;isolation:isolate;
-    }
-    .mockup-3d{perspective:1200px;width:90%;max-width:850px;padding:40px}
-    .mockup-3d .item{position:relative;transform-style:preserve-3d;transition:transform .9s cubic-bezier(.22,.61,.36,1);
-      will-change:transform,filter;
-    }
-    .mockup-3d img{width:100%;height:auto;object-fit:contain;border-radius:20px;
-      box-shadow:0 24px 80px rgba(0,0,0,.6);
-    }
-    .mockup-3d .item::after{content:"";position:absolute;inset:0;
-      background:radial-gradient(80% 120% at 100% 0%,rgba(255,255,255,.15),transparent 60%);
-      mix-blend-mode:screen;pointer-events:none;opacity:.45;
-    }
-
-    /* Benefícios */
-    #beneficios{padding:80px 18px}
-    .benefit-grid{max-width:1200px;margin:auto;display:grid;gap:20px;
-      grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-    }
-    .benefit{background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.02));
-      border:1px solid rgba(255,255,255,.08);
-      border-radius:20px;padding:24px;text-align:center;
-      transition:transform .3s ease,box-shadow .4s ease;
-      box-shadow:0 10px 30px rgba(0,0,0,.3);
-    }
-    .benefit:hover{transform:translateY(-5px);box-shadow:0 24px 60px rgba(0,0,0,.5)}
-    .benefit .icon{font-size:1.5rem;margin-bottom:10px}
-    .benefit h3{margin:10px 0 6px}
-    .benefit p{color:#d4d4d4;font-size:1rem;line-height:1.6}
-
-    /* Conheça o Portal */
-    #portal-explicacao{padding:80px 18px}
-    .portal-grid{max-width:1100px;margin:auto;display:grid;gap:24px;grid-template-columns:repeat(auto-fit,minmax(400px,1fr))}
-    .portal-card{background:rgba(255,255,255,.04);
-      border:1px solid rgba(255,255,255,.08);border-radius:20px;overflow:hidden;
-      box-shadow:0 12px 36px rgba(0,0,0,.35);transition:transform .5s ease,filter .5s ease;
-    }
-    .portal-card:hover{transform:translateY(-3px);filter:brightness(1.05)}
-    .portal-card img{width:100%;height:auto;object-fit:cover}
-    @media(max-width:768px){
-      .portal-card img{object-fit:contain;max-height:60vh}
-    }
-    .portal-card h4{padding:16px 20px 0}
-    .portal-card p{padding:0 20px 20px;color:#d0d0d0}
-
-    /* Depoimentos */
-    #social{padding:80px 18px}
-    .test-grid{max-width:1100px;margin:auto;display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(320px,1fr))}
-    .quote{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);
-      border-radius:18px;padding:22px;color:#e5e5e5;box-shadow:0 10px 30px rgba(0,0,0,.3)
-    }
-    .ava{width:36px;height:36px;border-radius:999px;background:linear-gradient(145deg,#1c1c1c,#111);border:1px solid #222;display:grid;place-items:center;font-weight:700;margin-right:10px}
-    .person{display:flex;align-items:center;margin-bottom:10px}
-    small{color:#c9c9c9}
-
-    footer{padding:30px 18px;border-top:1px solid rgba(255,255,255,.08);text-align:center;color:#aaa}
-  </style>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
+  <!-- NAVBAR -->
   <nav class="nav">
     <div class="nav-inner">
       <div class="brand"><span class="brand-dot"></span>Ensaios de Solos</div>
@@ -132,20 +22,19 @@
     </div>
   </nav>
 
+  <!-- HERO -->
   <section id="hero">
     <div class="hero-inner">
-      <div>
-        <h1 class="title">Sua <span class="highlight">certificação</span> começa aqui.</h1>
-        <p class="sub">Domine os ensaios de solos mais exigidos em obras e laboratórios. Aplique o conhecimento, obtenha o certificado e destaque-se no mercado.</p>
-        <div class="cta-wrap">
-          <a href="https://mpago.la/1JsMZZy" class="btn-primary">Garantir meu acesso — R$97</a>
-          <a href="#beneficios" class="btn-ghost">Ver detalhes do curso</a>
-        </div>
+      <h1 class="title">Sua <span class="highlight">certificação</span> começa aqui.</h1>
+      <p class="sub">Domine os ensaios de solos mais exigidos em obras e laboratórios. Aplique o conhecimento, obtenha o certificado e destaque-se no mercado.</p>
+      <div class="cta-wrap">
+        <a href="https://mpago.la/1JsMZZy" class="btn-primary">Garantir meu acesso — R$97</a>
+        <a href="#beneficios" class="btn-ghost">Ver detalhes do curso</a>
       </div>
     </div>
   </section>
 
-  <!-- Mockup Apple único -->
+  <!-- MOCKUP PREMIUM -->
   <section id="vitrine">
     <div class="vitrine-wrap">
       <div class="mockup-3d">
@@ -156,18 +45,26 @@
     </div>
   </section>
 
-  <!-- Benefícios -->
+  <!-- BENEFÍCIOS -->
   <section id="beneficios">
+    <div class="section-head">
+      <h2>Benefícios que aceleram sua evolução</h2>
+      <p>O curso foi projetado para unir técnica, prática e suporte real – tudo em um ambiente visual e interativo.</p>
+    </div>
     <div class="benefit-grid">
-      <div class="benefit"><div class="icon">🎓</div><h3>Certificação Profissional</h3><p>Reconhecida com QR code autenticado para validação rápida.</p></div>
-      <div class="benefit"><div class="icon">🧮</div><h3>Simuladores Inteligentes</h3><p>Ferramentas práticas que agilizam o dia a dia no laboratório.</p></div>
-      <div class="benefit"><div class="icon">🧠</div><h3>Aprendizado Rápido</h3><p>Aulas diretas, aplicáveis e ilustradas para iniciantes.</p></div>
-      <div class="benefit"><div class="icon">🎥</div><h3>Mentoria ao Vivo</h3><p>Sessão bônus de 45 minutos para tirar dúvidas e orientar sua prática.</p></div>
+      <div class="benefit accent-1"><div class="icon">🎓</div><h3>Certificação Profissional</h3><p>Reconhecida com QR code autenticado para validação rápida.</p></div>
+      <div class="benefit accent-2"><div class="icon">🧮</div><h3>Simuladores Inteligentes</h3><p>Ferramentas práticas que agilizam o dia a dia no laboratório.</p></div>
+      <div class="benefit accent-3"><div class="icon">🧠</div><h3>Aprendizado Rápido</h3><p>Aulas diretas, aplicáveis e ilustradas para iniciantes.</p></div>
+      <div class="benefit accent-4"><div class="icon">🎥</div><h3>Mentoria ao Vivo</h3><p>Sessão bônus de 45 minutos para tirar dúvidas e orientar sua prática.</p></div>
     </div>
   </section>
 
-  <!-- Conheça o Portal -->
+  <!-- CONHEÇA O PORTAL -->
   <section id="portal-explicacao">
+    <div class="section-head">
+      <h2>🎓 Conheça o Portal Interativo</h2>
+      <p>Veja como o curso funciona na prática — com módulos interativos, calculadoras e certificado automatizado.</p>
+    </div>
     <div class="portal-grid">
       <div class="portal-card"><img src="assets/1.png" alt="Login e Acesso Seguro"><h4>Login e Acesso Seguro</h4><p>Autenticação simples e protegida para começar seu estudo.</p></div>
       <div class="portal-card"><img src="assets/2.png" alt="Progresso em Tempo Real"><h4>Progresso em Tempo Real</h4><p>Seu avanço fica salvo — volte exatamente de onde parou.</p></div>
@@ -176,13 +73,16 @@
     </div>
   </section>
 
-  <!-- Depoimentos -->
+  <!-- DEPOIMENTOS -->
   <section id="social">
+    <div class="section-head">
+      <h2>Quem já está na obra confirma</h2>
+    </div>
     <div class="test-grid">
-      <div class="quote"><h4>Quem já está na obra confirma:</h4><p>“Entrar no laboratório sem experiência era meu medo. Com o portal, em 2 semanas eu já dominava umidade natural e granulometria. O certificado abriu portas.”</p></div>
-      <div class="quote"><div class="person"><div class="ava">VA</div><div><strong>Victor A.</strong><div style="color:#b3b3b3;font-size:.86rem">Técnico de obras</div></div></div><p>“As calculadoras e checklists salvaram meu dia. Tudo direto ao ponto.”</p></div>
-      <div class="quote"><div class="person"><div class="ava">GF</div><div><strong>Gabriel F.</strong><div style="color:#b3b3b3;font-size:.86rem">Eng. Geotécnico</div></div></div><p>“Excelente base para quem quer começar no laboratório com segurança.”</p></div>
-      <div class="quote"><div class="person"><div class="ava">AJ</div><div><strong>Antônio J.</strong><div style="color:#b3b3b3;font-size:.86rem">Consultor</div></div></div><p>“Design premium e conteúdo prático. Dá gosto indicar.”</p></div>
+      <div class="quote main"><p>“Entrar no laboratório sem experiência era meu medo. Com o portal, em 2 semanas eu já dominava umidade natural e granulometria. O certificado abriu portas.”</p></div>
+      <div class="quote"><div class="person"><div class="ava">VA</div><div><strong>Victor A.</strong><div class="role">Técnico de obras</div></div></div><p>“As calculadoras e checklists salvaram meu dia. Tudo direto ao ponto.”</p></div>
+      <div class="quote"><div class="person"><div class="ava">GF</div><div><strong>Gabriel F.</strong><div class="role">Eng. Geotécnico</div></div></div><p>“Excelente base para quem quer começar no laboratório com segurança.”</p></div>
+      <div class="quote"><div class="person"><div class="ava">AJ</div><div><strong>Antônio J.</strong><div class="role">Consultor</div></div></div><p>“Design premium e conteúdo prático. Dá gosto indicar.”</p></div>
     </div>
   </section>
 
@@ -209,5 +109,6 @@
       }
     })();
   </script>
+
 </body>
 </html>
