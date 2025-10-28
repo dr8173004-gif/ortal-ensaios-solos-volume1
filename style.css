@@ -315,3 +315,77 @@ footer{padding:30px 18px;border-top:1px solid rgba(255,255,255,.08);text-align:c
   box-shadow: 0 0 12px rgba(0,113,227,.4);
   transform: translateY(-1px);
 }
+/* ===== AJUSTE DE ALINHAMENTO DA NAVBAR ===== */
+.nav-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1200px;
+  margin: auto;
+  padding: 12px 20px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  font-weight: 700;
+  font-family: Montserrat;
+  color: var(--white);
+  font-size: 1rem;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.actions a {
+  color: var(--muted);
+  font-weight: 500;
+  text-decoration: none;
+  transition: color .3s ease, transform .3s ease;
+}
+
+.actions a:hover {
+  color: var(--white);
+  transform: translateY(-1px);
+}
+
+/* Ajuste específico para botões principais */
+.actions .btn-primary {
+  margin-left: 10px;
+}
+
+.actions .btn-entrar {
+  margin-left: 6px;
+}
+
+/* ===== MOBILE RESPONSIVO ===== */
+@media (max-width: 768px) {
+  .nav-inner {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 12px;
+  }
+
+  .actions {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .actions a {
+    display: inline-block;
+  }
+
+  .btn-primary,
+  .btn-entrar {
+    width: 90%;
+    max-width: 280px;
+    text-align: center;
+  }
+}
