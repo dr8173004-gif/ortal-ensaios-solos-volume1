@@ -13,17 +13,24 @@ body{
   -webkit-font-smoothing:antialiased;
 }
 /* ===== NAVBAR CORRIGIDA ===== */
+/* ===== NAVBAR FLUTUANTE CINEMATOGRÁFICA ===== */
 .nav {
   position: sticky;
   top: 0;
-  z-index: 100;
-  background: rgba(0,0,0,.55);
-  backdrop-filter: blur(8px);
-  border-bottom: 1px solid rgba(255,255,255,.08);
-  transition: background .3s ease, backdrop-filter .3s ease;
-  display: flex;
-  justify-content: center;
+  z-index: 1000;
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(6px);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  transition: all 0.4s ease;
 }
+
+/* Estado após rolagem (escurece e ganha sombra difusa) */
+.nav.scrolled {
+  background: rgba(0, 0, 0, 0.75);
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(12px);
+}
+
 .nav-inner {
   max-width: 1200px;
   margin: auto;
