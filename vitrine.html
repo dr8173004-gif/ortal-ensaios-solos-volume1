@@ -10,16 +10,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     :root{
-      --bg:#000000;
-      --white:#ffffff;
-      --muted:#b3b3b3;
-      --cta:#0071E3;
-      --cta-hover:#0A84FF;
-      --vip:#C9A45C;
-      --card:#0b0b0b;
-      --border:#1c1c1c;
-      --radius:20px;
-      --shadow:0 20px 40px rgba(0,0,0,.45);
+      --bg:#000000; --white:#ffffff; --muted:#b3b3b3;
+      --cta:#0071E3; --cta-hover:#0A84FF; --vip:#C9A45C;
+      --card:#0b0b0b; --border:#1c1c1c;
+      --radius:20px; --shadow:0 20px 40px rgba(0,0,0,.45);
       --shadow-soft:0 10px 24px rgba(0,0,0,.35);
       --container:1200px;
     }
@@ -27,13 +21,16 @@
     html,body{height:100%}
     html{scroll-behavior:smooth}
     body{
-      margin:0;
+      margin:0; color:var(--white);
       font-family:Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans, Apple Color Emoji, Segoe UI Emoji;
-      color:var(--white);
-      background:radial-gradient(1200px 600px at 80% -10%, rgba(255,255,255,.06), transparent 60%),radial-gradient(800px 400px at -20% 0%, rgba(10,132,255,.10), transparent 60%),linear-gradient(180deg, #0a0a0a 0%, #000 30%, #000 100%);
+      background:
+        radial-gradient(1200px 600px at 80% -10%, rgba(255,255,255,.06), transparent 60%),
+        radial-gradient(800px 400px at -20% 0%, rgba(10,132,255,.10), transparent 60%),
+        linear-gradient(180deg, #0a0a0a 0%, #000 30%, #000 100%);
       background-color:var(--bg);
     }
 
+    /* NAV */
     .nav-wrap{position:fixed; inset:0 auto auto 0; width:100%; z-index:50; transition:background .35s ease, box-shadow .35s ease, backdrop-filter .35s ease}
     .nav{max-width:var(--container); margin:auto; padding:14px 20px; display:flex; align-items:center; justify-content:space-between}
     .brand{display:flex; align-items:center; gap:10px; font-weight:700; letter-spacing:.5px; font-family:Montserrat, Inter, sans-serif}
@@ -45,13 +42,20 @@
     .buy-mini:hover{transform:translateY(-1px); background:var(--cta-hover); box-shadow:0 10px 22px rgba(10,132,255,.45)}
     .nav-wrap.scrolled{background:rgba(0,0,0,.55); backdrop-filter:saturate(140%) blur(10px); box-shadow:0 6px 20px rgba(0,0,0,.35)}
 
+    /* LAYOUT */
     .section{padding:110px 20px 72px}
     .container{max-width:var(--container); margin:auto}
-    .hero{display:grid; grid-template-columns:1.1fr .9fr; gap:34px; align-items:center}
+    .hero{position:relative; display:grid; grid-template-columns:1.1fr .9fr; gap:34px; align-items:center}
+    /* Glow azulado sutil atrás do texto */
+    .hero::before{content:""; position:absolute; left:-10%; top:5%; width:60%; height:70%; pointer-events:none;
+      background:radial-gradient(40% 55% at 20% 35%, rgba(10,132,255,.18), rgba(255,255,255,.06) 40%, transparent 70%);
+      filter:blur(20px); opacity:.75}
+
     .eyebrow{display:inline-flex; align-items:center; gap:10px; font-size:.85rem; color:var(--muted); letter-spacing:.12em; text-transform:uppercase}
     .eyebrow .bar{width:36px; height:1px; background:linear-gradient(90deg, var(--vip), transparent)}
     h1{font-family:Montserrat, Inter, sans-serif; font-size:clamp(2rem, 4vw + .6rem, 3.6rem); line-height:1.05; margin:.35rem 0 1rem}
     .sub{color:var(--muted); font-size:clamp(1rem, 1.2vw + .6rem, 1.18rem); max-width:58ch}
+
     .cta-row{display:flex; gap:16px; margin-top:26px; flex-wrap:wrap}
     .btn{appearance:none; border:0; border-radius:999px; padding:16px 22px; font-weight:700; letter-spacing:.2px; cursor:pointer; transition:transform .15s ease, box-shadow .2s ease, background .2s ease, border-color .2s ease; text-decoration:none; display:inline-flex; align-items:center; gap:10px}
     .btn-primary{background:var(--cta); color:#fff; box-shadow:0 15px 35px rgba(0,113,227,.35)}
@@ -59,58 +63,62 @@
     .btn-ghost{background:transparent; color:#fff; border:1px solid #1e293b}
     .btn-ghost:hover{border-color:var(--cta-hover); box-shadow:0 10px 24px rgba(10,132,255,.18)}
 
+    /* MOCKUP 3D + Reflexo */
     .mock-col{position:relative; min-height:380px; perspective:1000px}
-    .mock{position:relative; width:100%; border-radius:var(--radius); overflow:hidden; box-shadow:var(--shadow); transform:translateZ(0); will-change:transform; transition:transform .3s ease}
+    .mock{position:relative; width:100%; border-radius:var(--radius); overflow:hidden; box-shadow:var(--shadow); transform:translateZ(0); will-change:transform; transition:transform .35s cubic-bezier(.2,.8,.2,1)}
     .mock img{display:block; width:100%; height:auto}
+    /* Reflexo (pausável) */
+    .mock::after{content:""; position:absolute; top:0; left:-75%; width:50%; height:100%; pointer-events:none;
+      background:linear-gradient(120deg, rgba(255,255,255,0) 0%, rgba(255,255,255,.30) 50%, rgba(255,255,255,0) 100%);
+      transform:skewX(-25deg); animation:shine 5s infinite}
+    .mock.paused::after{animation-play-state:paused}
+    @keyframes shine{ 0%{left:-75%} 60%{left:125%} 100%{left:125%} }
 
-    .mock::after{
-      content:"";
-      position:absolute;
-      top:0; left:-75%;
-      width:50%; height:100%;
-      background:linear-gradient(120deg, rgba(255,255,255,0) 0%, rgba(255,255,255,.3) 50%, rgba(255,255,255,0) 100%);
-      transform:skewX(-25deg);
-      animation:shine 5s infinite;
-      pointer-events:none;
-    }
-    @keyframes shine{
-      0%{left:-75%;}
-      60%{left:125%;}
-      100%{left:125%;}
-    }
+    /* Sombra dinâmica difusa */
+    .shadow{position:absolute; left:50%; bottom:-12px; width:68%; height:32px; transform:translateX(-50%);
+      background:radial-gradient(60% 100% at 50% 50%, rgba(0,0,0,.45), rgba(0,0,0,.12) 60%, transparent 80%);
+      filter:blur(28px); opacity:.35; pointer-events:none; will-change:transform, opacity; transition:transform .35s cubic-bezier(.2,.8,.2,1), opacity .3s ease}
 
-    .glow{position:absolute; inset:auto -7% -10% -7%; height:180px; background:radial-gradient(45% 60% at 50% 50%, rgba(10,132,255,.3), transparent 70%); filter:blur(30px); opacity:.75; pointer-events:none}
-
+    /* BENEFÍCIOS com microanimação */
     .benefits{padding:40px 20px 90px}
     .grid{display:grid; grid-template-columns:repeat(4,1fr); gap:18px}
-    .card{background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02)); border:1px solid var(--border); border-radius:var(--radius); padding:22px; box-shadow:var(--shadow-soft); transition:transform .2s ease, box-shadow .25s ease, border-color .2s ease}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02)); border:1px solid var(--border); border-radius:var(--radius); padding:22px; box-shadow:var(--shadow-soft);
+      opacity:0; transform:translateY(24px);
+      transition:opacity .7s ease, transform .7s ease, box-shadow .25s ease, border-color .25s ease}
     .card:hover{transform:translateY(-5px); box-shadow:0 24px 50px rgba(0,0,0,.5), 0 0 0 1px rgba(10,132,255,.2) inset; border-color:rgba(10,132,255,.35)}
+    .card.revealed{opacity:1; transform:none}
     .icon{font-size:1.4rem; opacity:.95}
     .card h3{margin:12px 0 6px; font-family:Montserrat, Inter, sans-serif; font-size:1.05rem}
     .card p{margin:0; color:var(--muted); line-height:1.6}
 
+    /* SOCIAL PROOF */
     .social{padding:20px 20px 90px}
     .social .wrap{display:grid; grid-template-columns:1.2fr .8fr; gap:22px; align-items:start}
-    .quote{background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02)); border:1px solid var(--border); border-radius:var(--radius); padding:28px}
+    .quote{background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02)); border:1px solid var(--border); border-radius:var(--radius); padding:28px; box-shadow:inset 0 0 60px rgba(255,255,255,.02)}
     .quote h4{font-family:Montserrat, Inter, sans-serif; margin:0 0 12px}
     .quote p{margin:0; color:var(--muted)}
     .testis{display:grid; grid-template-columns:repeat(3,1fr); gap:16px}
-    .t{background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02)); border:1px solid var(--border); border-radius:var(--radius); padding:18px}
+    .t{background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02)); border:1px solid var(--border); border-radius:var(--radius); padding:18px; box-shadow:inset 0 0 50px rgba(255,255,255,.015)}
     .person{display:flex; align-items:center; gap:12px; margin-bottom:10px}
     .ava{width:36px; height:36px; border-radius:999px; display:grid; place-items:center; font-weight:700; background:linear-gradient(145deg, #1c1c1c, #111); border:1px solid #222}
     .t p{margin:0; color:var(--muted); font-size:.96rem}
 
+    /* FOOTER */
     footer{border-top:1px solid var(--border); padding:30px 20px; color:var(--muted)}
     .foot{max-width:var(--container); margin:auto; display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap}
     .foot a{color:var(--muted); text-decoration:none}
     .foot a:hover{color:#fff}
 
+    /* Responsive */
     @media(max-width:1024px){.hero{grid-template-columns:1fr; gap:26px}.mock-col{order:-1}.grid{grid-template-columns:repeat(2,1fr)}.social .wrap{grid-template-columns:1fr}}
     @media(max-width:520px){.grid{grid-template-columns:1fr}.cta-row{flex-direction:column}.btn{justify-content:center; width:100%}.nav-links{display:none}}
+
+    /* VIP underline */
     .vip{background:linear-gradient(90deg, var(--vip), transparent); height:2px; width:84px; border-radius:999px}
   </style>
 </head>
 <body>
+  <!-- NAVBAR -->
   <div class="nav-wrap" id="nav">
     <nav class="nav">
       <div class="brand"><span class="dot"></span> Ensaios de Solos</div>
@@ -122,6 +130,7 @@
     </nav>
   </div>
 
+  <!-- HERO -->
   <header class="section" style="padding-top:120px">
     <div class="container hero">
       <div>
@@ -129,8 +138,8 @@
         <h1>Sua certificação começa aqui.</h1>
         <p class="sub">Domine os ensaios de solos mais exigidos em obras e laboratórios. Aplique o conhecimento, obtenha o certificado e destaque-se no mercado.</p>
         <div class="cta-row">
-          <a class="btn btn-primary" href="https://mpago.la/1JsMZZy">Garantir Meu Acesso — R$97</a>
-          <a class="btn btn-ghost" href="#beneficios">Ver Detalhes do Curso</a>
+          <a class="btn btn-primary" href="https://mpago.la/1JsMZZy" aria-label="Comprar agora por R$97">Garantir Meu Acesso — R$97</a>
+          <a class="btn btn-ghost" href="#beneficios" aria-label="Ver detalhes do curso">Ver Detalhes do Curso</a>
         </div>
         <div class="vip" style="margin-top:26px"></div>
       </div>
@@ -138,11 +147,13 @@
         <div class="mock" id="mock">
           <img src="assets/cover_course.png" alt="Capa do Curso Interativo – Ensaios de Solos" loading="eager" />
         </div>
+        <div class="shadow" id="shadow" aria-hidden="true"></div>
         <div class="glow" aria-hidden="true"></div>
       </div>
     </div>
   </header>
 
+  <!-- BENEFÍCIOS -->
   <section id="beneficios" class="benefits">
     <div class="container">
       <div class="eyebrow"><span class="bar"></span><span>O que você vai levar</span></div>
@@ -156,6 +167,7 @@
     </div>
   </section>
 
+  <!-- SOCIAL PROOF / DEPOIMENTOS -->
   <section id="social" class="social">
     <div class="container wrap">
       <div class="quote">
@@ -170,6 +182,7 @@
     </div>
   </section>
 
+  <!-- FOOTER -->
   <footer>
     <div class="foot">
       <div>© <span id="year"></span> Ensaios de Solos — Todos os direitos reservados.</div>
@@ -182,16 +195,98 @@
   </footer>
 
   <script>
+    // Header translucente ao rolar
     const nav=document.getElementById('nav');
-    const onScroll=()=>{if(window.scrollY>20){nav.classList.add('scrolled')}else{nav.classList.remove('scrolled')}};
-    document.addEventListener('scroll',onScroll,{passive:true});onScroll();
+    const onScroll=()=>{ if(window.scrollY>20){ nav.classList.add('scrolled'); } else { nav.classList.remove('scrolled'); } };
+    document.addEventListener('scroll',onScroll,{passive:true}); onScroll();
 
-    const mock=document.getElementById('mock');
-    const shine=()=>mock.style.setProperty('--pause-shine','paused');
+    // Prefers-reduced-motion
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    let timeout;
-    function resetMock(){mock.style.transform='rotateX(0deg) rotateY(0deg)';mock.style.removeProperty('animation-play-state');}
+    // Mockup 3D dinâmico com sombra reativa e reflexo pausável
+    const mock = document.getElementById('mock');
+    const shadow = document.getElementById('shadow');
+    const col = mock.parentElement;
 
-    function handleMove(e){
-      const rect=mock.getBoundingClientRect();
-      const x=((e.clientX||e.touches[0].clientX)-rect.left)/rect.width-
+    let raf = null, pauseTimer = null;
+
+    function setTilt(nx, ny){
+      // nx, ny no range [-.5, .5]
+      const rotY = nx * 14;         // inclinação lateral
+      const rotX = -ny * 10;        // inclinação vertical
+      mock.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
+
+      // sombra difusa reativa
+      const sx = nx * 12; // deslocamento horizontal em %
+      const sy = Math.abs(ny) * 3; // leve afundamento
+      const scale = 1 + Math.min(Math.abs(nx)*.18 + Math.abs(ny)*.12, .35);
+      shadow.style.transform = `translate(calc(-50% + ${sx}%), ${sy}%) scale(${scale})`;
+      shadow.style.opacity = (0.35 + (Math.abs(nx)+Math.abs(ny))*0.08).toFixed(2);
+    }
+
+    function schedule(nx, ny){
+      if(reduce) return; // sem efeitos pesados
+      if(raf) cancelAnimationFrame(raf);
+      mock.classList.add('paused'); // pausa reflexo
+      raf = requestAnimationFrame(()=> setTilt(nx, ny));
+      if(pauseTimer) clearTimeout(pauseTimer);
+      pauseTimer = setTimeout(()=>{ mock.classList.remove('paused'); }, 600);
+    }
+
+    function handlePointer(x, y){
+      const r = mock.getBoundingClientRect();
+      let nx = (x - r.left)/r.width - .5; // -0.5..0.5
+      let ny = (y - r.top) /r.height - .5;
+      nx = Math.max(-.55, Math.min(.55, nx));
+      ny = Math.max(-.55, Math.min(.55, ny));
+      schedule(nx, ny);
+    }
+
+    // Desktop
+    col.addEventListener('mousemove', (e)=> handlePointer(e.clientX, e.clientY), {passive:true});
+    col.addEventListener('mouseleave', ()=>{
+      if(reduce) return;
+      mock.style.transform = 'rotateX(0deg) rotateY(0deg)';
+      shadow.style.transform = 'translate(-50%, 0) scale(1)';
+      shadow.style.opacity = 0.35;
+    }, {passive:true});
+
+    // Mobile (touch)
+    col.addEventListener('touchstart', (e)=>{
+      if(!e.touches || !e.touches[0]) return; handlePointer(e.touches[0].clientX, e.touches[0].clientY);
+    }, {passive:true});
+    col.addEventListener('touchmove', (e)=>{
+      if(!e.touches || !e.touches[0]) return; handlePointer(e.touches[0].clientX, e.touches[0].clientY);
+    }, {passive:true});
+    col.addEventListener('touchend', ()=>{
+      if(reduce) return;
+      mock.style.transform = 'rotateX(0deg) rotateY(0deg)';
+      shadow.style.transform = 'translate(-50%, 0) scale(1)';
+      shadow.style.opacity = 0.35;
+    }, {passive:true});
+
+    // Microanimações de entrada (fade-up elegante)
+    const cards = Array.from(document.querySelectorAll('.card'));
+    if('IntersectionObserver' in window){
+      const io = new IntersectionObserver((entries)=>{
+        entries.forEach((en)=>{
+          if(en.isIntersecting){
+            // Stagger cinematográfico
+            const idx = cards.indexOf(en.target);
+            en.target.style.transitionDelay = `${Math.min(idx*120, 480)}ms`;
+            en.target.classList.add('revealed');
+            io.unobserve(en.target);
+          }
+        });
+      }, {threshold: .2});
+      cards.forEach(c=> io.observe(c));
+    } else {
+      // fallback
+      cards.forEach(c=> c.classList.add('revealed'));
+    }
+
+    // Ano do rodapé
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
