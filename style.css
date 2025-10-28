@@ -12,16 +12,68 @@ body{
   overflow-x:hidden;
   -webkit-font-smoothing:antialiased;
 }
-.nav{position:sticky;top:0;z-index:100;background:rgba(0,0,0,.55);
-  backdrop-filter:blur(8px);
-  border-bottom:1px solid rgba(255,255,255,.08);
-  transition:background .3s ease,backdrop-filter .3s ease;}
-.nav.scrolled{background:rgba(0,0,0,.8)}
-.nav-inner{max-width:1200px;margin:auto;padding:14px 18px;display:flex;align-items:center;justify-content:space-between}
-.brand{display:flex;align-items:center;gap:8px;font-weight:700;font-family:Montserrat}
-.brand-dot{width:8px;height:8px;border-radius:50%;background:var(--blue);box-shadow:0 0 14px rgba(0,113,227,.9)}
-.actions a{margin-left:14px;font-weight:600;color:var(--muted);transition:color .25s ease}
-.actions a:hover{color:var(--white)}
+/* ===== NAVBAR CORRIGIDA ===== */
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(0,0,0,.55);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(255,255,255,.08);
+  transition: background .3s ease, backdrop-filter .3s ease;
+  display: flex;
+  justify-content: center;
+}
+.nav-inner {
+  max-width: 1200px;
+  margin: auto;
+  padding: 10px 16px;
+  display: flex;
+  flex-wrap: wrap; /* evita sobreposição no mobile */
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+.actions a {
+  font-weight: 600;
+  color: var(--muted);
+  transition: color .25s ease;
+}
+.actions a:hover {
+  color: var(--white);
+}
+
+/* ===== BOTÕES SEM RISCO BRANCO ===== */
+.btn-primary,
+.btn-ghost {
+  outline: none;
+  border: none;
+  cursor: pointer;
+}
+.btn-primary:focus,
+.btn-ghost:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+/* ===== AJUSTE MOBILE NAVBAR ===== */
+@media (max-width: 700px) {
+  .nav-inner {
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+  .actions {
+    justify-content: center;
+  }
+}
+
 
 #hero{text-align:center;padding:80px 18px 30px}
 .title{font-family:Montserrat;font-size:clamp(32px,6vw,56px);line-height:1.1;margin:0}
