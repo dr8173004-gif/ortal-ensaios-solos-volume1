@@ -192,6 +192,18 @@
   }
 </script>
 
- 
+<script>
+  // Detecta rolagem e aplica a classe "scrolled" na navbar
+  window.addEventListener('scroll', () => {
+    const nav = document.querySelector('.nav');
+    if (window.scrollY > 30) {
+      nav.classList.add('scrolled');
+    } else {
+      nav.classList.remove('scrolled');
+    }
+  });
+</script>
+
+  
 </body>
 </html>
