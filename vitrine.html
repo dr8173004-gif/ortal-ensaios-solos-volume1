@@ -1,214 +1,244 @@
 <!DOCTYPE html>
-<!-- Topo minimalista -->
-<header class="brandbar">
-  <div class="wrap">
-    <div class="brand">Portal Interativo — Ensaios de Solos <small>Vol. 1</small></div>
-    <div style="margin-left:auto">
-      <a class="btn btn-ghost" href="index.html">Já comprei</a>
-    </div>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Portal de Ensaios de Solos – Vitrine Premium</title>
+  <meta name="description" content="Vitrine premium do curso interativo de ensaios de solos. Experiência estilo Apple/Nike com foco em conversão." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#000000;              /* Preto absoluto */
+      --white:#ffffff;           /* Texto primário */
+      --muted:#b3b3b3;           /* Texto secundário */
+      --cta:#0071E3;             /* Azul Apple */
+      --cta-hover:#0A84FF;       /* Hover brilhante */
+      --vip:#C9A45C;             /* Dourado fosco (detalhes sutis) */
+      --card:#0b0b0b;            /* Painéis */
+      --border:#1c1c1c;          /* Borda suave */
+      --radius:20px;             /* Raio padrão */
+      --shadow: 0 20px 40px rgba(0,0,0,.45);
+      --shadow-soft: 0 10px 24px rgba(0,0,0,.35);
+      --container: 1200px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji","Segoe UI Emoji";
+      color:var(--white);
+      background:
+        radial-gradient(1200px 600px at 80% -10%, rgba(255,255,255,.06), transparent 60%),
+        radial-gradient(800px 400px at -20% 0%, rgba(10,132,255,.10), transparent 60%),
+        linear-gradient(180deg, #0a0a0a 0%, #000 30%, #000 100%);
+      background-color: var(--bg);
+    }
+
+    /* Header */
+    .nav-wrap{position:fixed; inset:0 auto auto 0; width:100%; z-index:50; transition: background .35s ease, box-shadow .35s ease, backdrop-filter .35s ease}
+    .nav{max-width:var(--container); margin:auto; padding:14px 20px; display:flex; align-items:center; justify-content:space-between}
+    .brand{display:flex; align-items:center; gap:10px; font-weight:700; letter-spacing:.5px; font-family:Montserrat, Inter, sans-serif}
+    .dot{width:10px; height:10px; border-radius:999px; background:linear-gradient(145deg, var(--cta), var(--cta-hover)); box-shadow:0 0 16px rgba(10,132,255,.6)}
+    .nav-links{display:flex; gap:22px; align-items:center}
+    .nav-links a{color:var(--muted); text-decoration:none; font-size:.95rem; transition:color .2s ease}
+    .nav-links a:hover{color:var(--white)}
+    .buy-mini{padding:8px 14px; background:var(--cta); color:#fff; border-radius:999px; text-decoration:none; font-weight:600; box-shadow:0 8px 18px rgba(0,113,227,.35); transition: transform .15s ease, box-shadow .2s ease, background .2s ease}
+    .buy-mini:hover{transform:translateY(-1px); background:var(--cta-hover); box-shadow:0 10px 22px rgba(10,132,255,.45)}
+    .nav-wrap.scrolled{background:rgba(0,0,0,.55); backdrop-filter:saturate(140%) blur(10px); box-shadow:0 6px 20px rgba(0,0,0,.35)}
+
+    /* Hero */
+    .section{padding: 110px 20px 72px}
+    .container{max-width:var(--container); margin:auto}
+    .hero{display:grid; grid-template-columns: 1.1fr .9fr; gap:34px; align-items:center}
+    .eyebrow{display:inline-flex; align-items:center; gap:10px; font-size:.85rem; color:var(--muted); letter-spacing:.12em; text-transform:uppercase}
+    .eyebrow .bar{width:36px; height:1px; background:linear-gradient(90deg, var(--vip), transparent)}
+    h1{font-family:Montserrat, Inter, sans-serif; font-size: clamp(2rem, 4vw + .6rem, 3.6rem); line-height:1.05; margin:.35rem 0 1rem}
+    .sub{color:var(--muted); font-size: clamp(1rem, 1.2vw + .6rem, 1.18rem); max-width: 58ch}
+
+    .cta-row{display:flex; gap:16px; margin-top:26px; flex-wrap:wrap}
+    .btn{appearance:none; border:0; border-radius: 999px; padding:16px 22px; font-weight:700; letter-spacing:.2px; cursor:pointer; transition: transform .15s ease, box-shadow .2s ease, background .2s ease, border-color .2s ease; text-decoration:none; display:inline-flex; align-items:center; gap:10px}
+    .btn-primary{background:var(--cta); color:#fff; box-shadow:0 15px 35px rgba(0,113,227,.35)}
+    .btn-primary:hover{transform: translateY(-2px); background:var(--cta-hover); box-shadow:0 16px 40px rgba(10,132,255,.45)}
+    .btn-ghost{background:transparent; color:#fff; border:1px solid #1e293b}
+    .btn-ghost:hover{border-color: var(--cta-hover); box-shadow: 0 10px 24px rgba(10,132,255,.18)}
+
+    .mock-col{position:relative; min-height: 380px}
+    .mock{position:relative; width:100%; border-radius: var(--radius); overflow:hidden; box-shadow: var(--shadow); transform:translateZ(0)}
+    .mock img{display:block; width:100%; height:auto}
+    .glow{position:absolute; inset:auto -7% -10% -7%; height: 180px; background: radial-gradient(45% 60% at 50% 50%, rgba(10,132,255,.3), transparent 70%); filter: blur(30px); opacity:.75; pointer-events:none}
+
+    /* Benefícios */
+    .benefits{padding: 40px 20px 90px}
+    .grid{display:grid; grid-template-columns: repeat(4, 1fr); gap:18px}
+    .card{background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02)); border:1px solid var(--border); border-radius: var(--radius); padding:22px; box-shadow: var(--shadow-soft); transition: transform .2s ease, box-shadow .25s ease, border-color .2s ease}
+    .card:hover{transform: translateY(-5px); box-shadow: 0 24px 50px rgba(0,0,0,.5), 0 0 0 1px rgba(10,132,255,.2) inset; border-color: rgba(10,132,255,.35)}
+    .icon{font-size: 1.4rem; opacity:.95}
+    .card h3{margin:12px 0 6px; font-family:Montserrat, Inter, sans-serif; font-size:1.05rem}
+    .card p{margin:0; color:var(--muted); line-height:1.6}
+
+    /* Social Proof */
+    .social{padding: 20px 20px 90px}
+    .social .wrap{display:grid; grid-template-columns: 1.2fr .8fr; gap:22px; align-items:start}
+    .quote{background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02)); border:1px solid var(--border); border-radius: var(--radius); padding:28px}
+    .quote h4{font-family:Montserrat, Inter, sans-serif; margin:0 0 12px}
+    .quote p{margin:0; color:var(--muted)}
+    .testis{display:grid; grid-template-columns: repeat(3,1fr); gap:16px}
+    .t{background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02)); border:1px solid var(--border); border-radius: var(--radius); padding:18px}
+    .person{display:flex; align-items:center; gap:12px; margin-bottom:10px}
+    .ava{width:36px; height:36px; border-radius:999px; display:grid; place-items:center; font-weight:700; background:linear-gradient(145deg, #1c1c1c, #111); border:1px solid #222}
+    .t p{margin:0; color:var(--muted); font-size:.96rem}
+
+    /* Footer */
+    footer{border-top: 1px solid var(--border); padding: 30px 20px; color:var(--muted)}
+    .foot{max-width:var(--container); margin:auto; display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap}
+    .foot a{color:var(--muted); text-decoration:none}
+    .foot a:hover{color:#fff}
+
+    /* Responsive */
+    @media (max-width: 1024px){
+      .hero{grid-template-columns: 1fr; gap:26px}
+      .mock-col{order:-1}
+      .grid{grid-template-columns: repeat(2, 1fr)}
+      .social .wrap{grid-template-columns: 1fr}
+    }
+    @media (max-width: 520px){
+      .grid{grid-template-columns: 1fr}
+      .cta-row{flex-direction:column}
+      .btn{justify-content:center; width:100%}
+      .nav-links{display:none}
+    }
+
+    /* Subtle VIP underline */
+    .vip{background: linear-gradient(90deg, var(--vip), transparent); height:2px; width:84px; border-radius:999px}
+  </style>
+</head>
+<body>
+  <!-- NAVBAR -->
+  <div class="nav-wrap" id="nav">
+    <nav class="nav">
+      <div class="brand"><span class="dot"></span> Ensaios de Solos</div>
+      <div class="nav-links">
+        <a href="#beneficios">Benefícios</a>
+        <a href="#social">Depoimentos</a>
+        <a class="buy-mini" href="https://mpago.la/1JsMZZy">Garantir meu acesso</a>
+      </div>
+    </nav>
   </div>
-</header>
 
-<!-- Seção principal: texto + capa + preço -->
-<main class="hero">
-  <section class="hero-copy">
-    <h1>Formação prática em Ensaios de Solos</h1>
-    <p class="lead">
-      Aprenda <strong>Umidade Natural</strong> e <strong>Granulometria</strong> com simuladores,
-      checklists e certificado. Didático, direto ao ponto e pronto para usar no laboratório.
-    </p>
-
-    <div class="price-card">
-      <div class="price">
-        <span class="value">R$97</span>
-        <span class="split">ou 10x de R$10,70</span>
+  <!-- HERO -->
+  <header class="section" style="padding-top:120px">
+    <div class="container hero">
+      <div>
+        <div class="eyebrow"><span class="bar"></span><span>Do Laboratório à Obra</span></div>
+        <h1>Sua certificação começa aqui.</h1>
+        <p class="sub">Domine os ensaios de solos mais exigidos em obras e laboratórios. Aplique o conhecimento, obtenha o certificado e destaque-se no mercado.</p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="https://mpago.la/1JsMZZy" aria-label="Comprar agora por R$97">Garantir Meu Acesso — R$97</a>
+          <a class="btn btn-ghost" href="#beneficios" aria-label="Ver detalhes do curso">Ver Detalhes do Curso</a>
+        </div>
+        <div class="vip" style="margin-top:26px"></div>
       </div>
-
-      <div class="benefits">
-        <div class="benefit">
-          <div class="benefit-icon">🔓</div>
-          <div><h4>Acesso completo</h4><p>Portal interativo + atualizações</p></div>
+      <div class="mock-col">
+        <div class="mock" id="mock">
+          <!-- Se quiser usar um fundo sólido com gradiente metálico, deixe a imagem abaixo comentada e o gradiente do body já compõe -->
+          <!-- <img src="assets/bg_vitrine.jpg.png" alt="Mockup do curso" loading="eager" /> -->
+          <img src="assets/mockup-portal.png" alt="Interface do Portal Interativo" loading="lazy" />
         </div>
-        <div class="benefit">
-          <div class="benefit-icon">🧮</div>
-          <div><h4>Simuladores</h4><p>Calculadoras e tabelas prontas</p></div>
-        </div>
-        <div class="benefit">
-          <div class="benefit-icon">📜</div>
-          <div><h4>Certificado</h4><p>PDF com verificação por QR</p></div>
-        </div>
-        <div class="benefit">
-          <div class="benefit-icon">🎥</div>
-          <div><h4>Mentoria bônus</h4><p>45 min ao vivo com o instrutor</p></div>
-        </div>
+        <div class="glow" aria-hidden="true"></div>
       </div>
+    </div>
+  </header>
 
-      <div class="cta-row">
-        <!-- seu link do Mercado Pago -->
-        <a class="btn btn-primary" href="https://mpago.la/1JsMZZy" target="_blank" rel="noopener">Garantir Meu Acesso</a>
-        <a class="btn btn-ghost" href="index.html">Já comprei</a>
+  <!-- BENEFÍCIOS -->
+  <section id="beneficios" class="benefits">
+    <div class="container">
+      <div class="eyebrow"><span class="bar"></span><span>O que você vai levar</span></div>
+      <h2 style="font-family:Montserrat, Inter, sans-serif; margin:10px 0 18px; font-size: clamp(1.6rem, 2.4vw + .6rem, 2.4rem)">Benefícios que aceleram sua evolução</h2>
+      <div class="grid">
+        <article class="card">
+          <div class="icon">🎓</div>
+          <h3>Certificação Profissional</h3>
+          <p>Reconhecida com QR code autenticado para validação rápida.</p>
+        </article>
+        <article class="card">
+          <div class="icon">🧮</div>
+          <h3>Simuladores Inteligentes</h3>
+          <p>Ferramentas práticas que agilizam o dia a dia no laboratório.</p>
+        </article>
+        <article class="card">
+          <div class="icon">🧠</div>
+          <h3>Aprendizado Rápido</h3>
+          <p>Aulas diretas, aplicáveis e ilustradas para iniciantes.</p>
+        </article>
+        <article class="card">
+          <div class="icon">🎥</div>
+          <h3>Mentoria ao Vivo</h3>
+          <p>Sessão bônus de 45 minutos para tirar dúvidas e orientar sua prática.</p>
+        </article>
       </div>
     </div>
   </section>
 
-  <aside>
-    <!-- Capa 3D — exige PNG transparente em assets/cover_course.png -->
-    <div class="cover" aria-label="Capa do curso"></div>
-  </aside>
-</main>
+  <!-- SOCIAL PROOF / DEPOIMENTOS -->
+  <section id="social" class="social">
+    <div class="container wrap">
+      <div class="quote">
+        <h4>Quem já está na obra confirma:</h4>
+        <p>“Entrar no laboratório sem experiência era meu medo. Com o portal, em 2 semanas eu já dominava umidade natural e granulometria. O certificado abriu portas.”</p>
+      </div>
+      <div class="testis">
+        <div class="t">
+          <div class="person"><div class="ava">VA</div><div><strong>Victor A.</strong><div style="color:var(--muted); font-size:.86rem">Técnico de obras</div></div></div>
+          <p>“As calculadoras e checklists salvaram meu dia. Tudo direto ao ponto.”</p>
+        </div>
+        <div class="t">
+          <div class="person"><div class="ava">GF</div><div><strong>Gabriel F.</strong><div style="color:var(--muted); font-size:.86rem">Eng. Geotécnico</div></div></div>
+          <p>“Excelente base para quem quer começar no laboratório com segurança.”</p>
+        </div>
+        <div class="t">
+          <div class="person"><div class="ava">AJ</div><div><strong>Antônio J.</strong><div style="color:var(--muted); font-size:.86rem">Consultor</div></div></div>
+          <p>“Design premium e conteúdo prático. Dá gosto indicar.”</p>
+        </div>
+      </div>
+    </div>
+  </section>
 
-<footer class="footer">
-  © Ensaios de Solos — Volume 1. Visual “Black Engineering Premium”.
-</footer>
+  <!-- FOOTER -->
+  <footer>
+    <div class="foot">
+      <div>© <span id="year"></span> Ensaios de Solos — Todos os direitos reservados.</div>
+      <div style="display:flex; gap:18px">
+        <a href="#beneficios">Detalhes</a>
+        <a href="#social">Depoimentos</a>
+        <a href="mailto:suporte@ensaiosdesolos.com">Suporte</a>
+      </div>
+    </div>
+  </footer>
 
-  <style>
-   /* ====== Black Engineering Premium ====== */
+  <script>
+    // Header translucente ao rolar
+    const nav = document.getElementById('nav');
+    const onScroll = () => {
+      if(window.scrollY > 20){ nav.classList.add('scrolled'); } else { nav.classList.remove('scrolled'); }
+    };
+    document.addEventListener('scroll', onScroll, {passive:true});
+    onScroll();
 
-/* Fundo cinematográfico com a sua imagem e escurecimento suave */
-body {
-  margin: 0;
-  font-family: "Open Sans", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  color: #eaeaea;
-  background:
-    linear-gradient(180deg, rgba(0,0,0,.72), rgba(0,0,0,.84)),
-    url('assets/bg_vitrine.jpg.png') center/cover no-repeat fixed;
-}
+    // Parallax leve no mockup (respeita prefers-reduced-motion)
+    const media = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const mock = document.getElementById('mock');
+    if(mock && !media.matches){
+      window.addEventListener('scroll', () => {
+        const y = window.scrollY * 0.06;
+        mock.style.transform = `translateY(${y}px)`;
+      }, {passive:true});
+    }
 
-/* Barra superior minimalista, sem bloco preto pesado */
-.brandbar {
-  position: sticky;
-  top: 0; z-index: 50;
-  backdrop-filter: saturate(140%) blur(8px);
-  background: linear-gradient(180deg, rgba(0,0,0,.75), rgba(0,0,0,.35));
-  border-bottom: 1px solid rgba(255,255,255,.06);
-}
-.brandbar .wrap {
-  max-width: 1100px; margin: 0 auto; padding: 10px 16px;
-  display: flex; align-items: center; gap: 12px;
-}
-.brand {
-  font-family: Montserrat, sans-serif; font-weight: 700; letter-spacing: .3px;
-  color: #f6f6f6;
-}
-.brand small { opacity: .65; font-weight: 600; margin-left: 8px; }
-
-/* Hero “Apple-like”: duas colunas, muito respiro */
-.hero {
-  max-width: 1100px; margin: 34px auto; padding: 0 16px;
-  display: grid; gap: 28px; grid-template-columns: 1.1fr .9fr;
-}
-@media (max-width: 980px){
-  .hero { grid-template-columns: 1fr; margin: 22px auto; }
-}
-
-/* Bloco de texto com hierarquia limpa */
-.hero-copy h1 {
-  font-family: Montserrat, sans-serif;
-  font-size: clamp(26px, 3.2vw, 40px);
-  line-height: 1.15;
-  margin: 0 0 10px;
-  color: #fff;
-}
-.hero-copy p.lead {
-  margin: 8px 0 18px;
-  color: #cfcfcf;
-  font-size: clamp(15px, 1.7vw, 18px);
-}
-
-/* Capa 3D sóbria — espera um PNG transparente em assets/cover_course.png */
-.cover {
-  width: min(440px, 90%);
-  aspect-ratio: 9 / 16;
-  background: url('assets/cover_course.png') center/contain no-repeat;
-  margin: 0 auto;
-  transform: perspective(1200px) rotateY(-10deg) translateZ(0);
-  filter: drop-shadow(0 22px 60px rgba(0,0,0,.85));
-  transition: transform .6s ease, filter .6s ease;
-}
-.cover:hover {
-  transform: perspective(1200px) rotateY(-6deg);
-  filter: drop-shadow(0 30px 80px rgba(0,0,0,.9));
-}
-
-/* Cart de preço em vidro preto translúcido */
-.price-card {
-  background: linear-gradient(180deg, rgba(0,0,0,.55), rgba(0,0,0,.35));
-  border: 1px solid rgba(255,255,255,.08);
-  border-radius: 16px;
-  padding: 18px;
-  box-shadow: 0 10px 30px rgba(0,0,0,.25);
-  backdrop-filter: blur(8px);
-}
-.price {
-  display: flex; align-items: baseline; gap: 10px; color: #fff;
-}
-.price .value {
-  font-family: Montserrat, sans-serif; font-weight: 800;
-  font-size: clamp(28px, 4.2vw, 40px);
-}
-.price .split {
-  color: #d9b45a; /* dourado fosco */
-  font-weight: 800; font-size: clamp(13px, 1.7vw, 16px);
-}
-
-/* Benefícios premium: cards minimalistas */
-.benefits {
-  display: grid; gap: 12px; grid-template-columns: 1fr 1fr;
-  margin-top: 12px;
-}
-@media (max-width: 640px){ .benefits { grid-template-columns: 1fr; } }
-.benefit {
-  display: flex; gap: 10px; align-items: flex-start;
-  background: rgba(255,255,255,.06);
-  border: 1px solid rgba(255,255,255,.08);
-  border-radius: 14px; padding: 12px;
-}
-.benefit-icon {
-  width: 28px; height: 28px; flex: none;
-  border-radius: 8px;
-  background: radial-gradient(circle at 30% 30%, rgba(217,180,90,.35), transparent 70%);
-  display: grid; place-items: center;
-}
-.benefit h4 { margin: 0; color: #f3f3f3; font-weight: 700; font-family: Montserrat, sans-serif; }
-.benefit p { margin: 2px 0 0; color: #cfcfcf; font-size: 14px; }
-
-/* CTA principal com foco em conversão */
-.cta-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
-.btn {
-  appearance: none; border: none; cursor: pointer;
-  padding: 12px 18px; border-radius: 12px; font-weight: 800;
-  font-family: Montserrat, sans-serif; letter-spacing: .3px;
-}
-.btn-primary {
-  background: linear-gradient(180deg, #d9b45a, #c49d4b);
-  color: #241a05;
-  box-shadow: 0 8px 22px rgba(217,180,90,.25);
-}
-.btn-primary:hover { filter: brightness(1.06); }
-.btn-ghost {
-  background: transparent; color: #eaeaea;
-  border: 1px solid rgba(255,255,255,.18);
-}
-.btn-ghost:hover { background: rgba(255,255,255,.06); }
-
-/* Rodapé esssencial */
-.footer {
-  max-width: 1100px; margin: 28px auto 40px; padding: 0 16px; color: #bdbdbd;
-  font-size: 13px;
-  border-top: 1px solid rgba(255,255,255,.08);
-  padding-top: 16px;
-}
-
-/* Animações suaves (respeita acessibilidade) */
-@media (prefers-reduced-motion: no-preference) {
-  .hero-copy, .price-card, .cover { animation: fadeUp .8s ease both; }
-  .cover { animation-delay: .15s; }
-  .price-card { animation-delay: .25s; }
-}
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
+    // Ano do rodapé
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
 </body>
 </html>
