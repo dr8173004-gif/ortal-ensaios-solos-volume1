@@ -92,9 +92,14 @@
 
   <script type="module">
   import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
-  import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged } 
-    from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+  import { 
+    getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged 
+  } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+  import { 
+    getFirestore, doc, getDoc, setDoc, serverTimestamp 
+  } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
 
+  // Configuração Firebase
   const firebaseConfig = {
     apiKey: "AIzaSyDY5IFakVFbbLn8UQHUCgea7KOx_zZjvlY",
     authDomain: "portal-ensaios-solos-vol1.firebaseapp.com",
@@ -104,11 +109,35 @@
     appId: "1:217730071254:web:a79fa9cbf49f742ff62777"
   };
 
-  // Evita re-inicialização duplicada
+  // Inicializa o app sem duplicar
   const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
   const auth = getAuth(app);
+  const db = getFirestore(app);
 
-  // Redireciona apenas se o usuário estiver logado e ainda NÃO estiver no portal
+  // Função para garantir criação do documento do usuário
+  async function ensureUserDoc(user) {
+    const ref = doc(db, "users", user.uid);
+    const snap = await getDoc(ref);
+
+    if (!snap.exists()) {
+      await setDoc(ref, {
+        email: user.email || "",
+        nome: user.displayName || "",
+        acesso: false, // bloqueado até pagamento
+        Datacadastro: serverTimestamp(),
+        Progresso: {
+          mod0: false,
+          mod1: false,
+          mod2: false,
+          mod3: false,
+          mod4: false
+        }
+      });
+      console.log("📄 Documento criado para:", user.email);
+    }
+  }
+
+  // Redireciona se já estiver logado
   onAuthStateChanged(auth, (user) => {
     if (user && !window.location.href.includes("portal.html")) {
       window.location.href = "./portal.html";
@@ -122,7 +151,8 @@
     if (!email || !password) { alert("Preencha e-mail e senha."); return; }
 
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      const cred = await signInWithEmailAndPassword(auth, email, password);
+      await ensureUserDoc(cred.user);
       alert("✔️ Login realizado com sucesso!");
       window.location.href = "./portal.html";
     } catch (error) {
@@ -138,14 +168,16 @@
     if (!email || !password) { alert("Preencha e-mail e senha."); return; }
 
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
-      alert("✅ Conta criada com sucesso!");
+      const cred = await createUserWithEmailAndPassword(auth, email, password);
+      await ensureUserDoc(cred.user);
+      alert("✅ Conta criada com sucesso! Agora entre no portal.");
     } catch (error) {
       console.error(error);
       alert("❌ Erro ao criar conta: " + (error.message || ""));
     }
   });
 </script>
+
 
 </body>
 </html>
