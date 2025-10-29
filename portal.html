@@ -1722,6 +1722,31 @@ document.head.appendChild(estiloPulso);
 window.addEventListener('DOMContentLoaded', atualizarProgressoGeral);
 setInterval(atualizarProgressoGeral, 2000);
 </script>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portal Interativo – Volume 1</title>
+</head>
+<body>
+  <!-- seu conteúdo original aqui -->
+  <script type="module">
+    import { auth } from "./firebase-init.js";
+    import { onAuthStateChanged, signOut } 
+      from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
 
+    // Verificação automática de login
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        alert("⚠️ Você precisa estar logado para acessar o portal.");
+        location.href = "./index.html";
+      } else {
+        console.log("Usuário autenticado:", user.email);
+      }
+    });
+
+    // O resto do seu script original do portal continua abaixo, inalterado.
+  </script>
 </body>
 </html>
