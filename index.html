@@ -188,9 +188,9 @@ try {
   console.log("🔥 Usuário salvo no Firestore:", cred.user.email);
 } catch (err) {
   console.error("❌ Erro ao salvar no Firestore:", err);
-}
 
 await ensureUserDoc(cred.user);
+}
 
         await ensureUserDoc(cred.user);
         mark("register-end");
