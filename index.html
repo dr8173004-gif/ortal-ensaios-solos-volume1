@@ -219,15 +219,15 @@ alert("✅ Conta criada e salva no Firestore!");
       }
     });
 
-    // === OBSERVADOR DE SESSÃO ===
-    onAuthStateChanged(auth, (user) => {
-      if (user && !location.href.includes("portal.html")) {
-        log("FLOW", `🔁 Sessão detectada → redirecionando (${user.email})`, "gold");
-        location.href = "./portal.html";
-      } else if (!user) {
-        log("FLOW", "👤 Nenhum usuário logado atualmente.", "gray");
-      }
-    });
+  // === OBSERVADOR DE SESSÃO (somente login manual) ===
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    log("FLOW", `👤 Usuário autenticado: ${user.email}`, "gold");
+  } else {
+    log("FLOW", "👤 Nenhum usuário logado atualmente.", "gray");
+  }
+});
+
   </script>
 </body>
 </html>
