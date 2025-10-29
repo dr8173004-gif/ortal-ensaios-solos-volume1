@@ -81,7 +81,6 @@
     </div>
   </div>
 
-  <!-- Firebase -->
   <script type="module">
     import { app, auth, db } from "./firebase-init.js";
     import { createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } 
@@ -89,18 +88,19 @@
     import { doc, getDoc, setDoc, serverTimestamp } 
       from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
 
-    // === Logs coloridos ===
-    const log = (msg, color="cyan") => console.log(`%c${msg}`, `color:${color};font-weight:600`);
+    // === LOGGER PRO ===
+    const log = (tag, msg, color="cyan") => console.log(`%c[${tag}] %c${msg}`, "color:gray;font-weight:600", `color:${color};font-weight:600`);
+    const mark = (label) => performance.mark(label);
 
-    log("🔥 Firebase inicializado via firebase-init.js", "lime");
+    log("SYSTEM", "🔥 Firebase inicializado via firebase-init.js", "lime");
 
-    // === Elementos ===
+    // === ELEMENTOS ===
     const emailEl = document.getElementById("email");
     const passEl  = document.getElementById("password");
     const loginBtn = document.getElementById("loginBtn");
     const regBtn   = document.getElementById("registerBtn");
 
-    // === Validação simples ===
+    // === FUNÇÕES ===
     function val() {
       const email = (emailEl.value || "").trim();
       const pass  = (passEl.value  || "").trim();
@@ -108,9 +108,9 @@
       return { email, pass };
     }
 
-    // === Garante salvamento do usuário no Firestore ===
     async function ensureUserDoc(user) {
       if (!user) return;
+      mark("ensure-start");
       const ref = doc(db, "users", user.uid);
       const snap = await getDoc(ref);
       if (!snap.exists()) {
@@ -121,9 +121,11 @@
           dataCadastro: serverTimestamp(),
           progresso: { mod0:false, mod1:false, mod2:false, mod3:false, mod4:false }
         });
-        log(`✅ Usuário salvo no Firestore: ${user.email}`, "lime");
+        mark("ensure-end");
+        log("DB", `✅ Novo usuário salvo no Firestore: ${user.email}`, "lime");
+        console.log("⏱️ Tempo para salvar usuário:", performance.measure("ensure", "ensure-start", "ensure-end").duration.toFixed(2), "ms");
       } else {
-        log(`ℹ️ Usuário já existia no Firestore: ${user.email}`, "gold");
+        log("DB", `ℹ️ Usuário já existia no Firestore: ${user.email}`, "gold");
       }
     }
 
@@ -131,15 +133,19 @@
     loginBtn.addEventListener("click", async (e) => {
       e.preventDefault();
       const v = val(); if (!v) return;
+      mark("login-start");
       try {
-        log("Tentando login...", "deepskyblue");
+        log("AUTH", "Tentando login...", "deepskyblue");
         const cred = await signInWithEmailAndPassword(auth, v.email, v.pass);
         await ensureUserDoc(cred.user);
-        log(`✔️ Login bem-sucedido: ${cred.user.email}`, "lime");
+        mark("login-end");
+        log("AUTH", `✔️ Login bem-sucedido: ${cred.user.email}`, "lime");
+        console.log("⏱️ Tempo total login:", performance.measure("login", "login-start", "login-end").duration.toFixed(2), "ms");
         alert("✔️ Login realizado com sucesso!");
         location.href = "./portal.html";
       } catch (er) {
-        console.error("Erro ao fazer login:", er);
+        log("AUTH", `❌ Falha no login: ${er.message}`, "red");
+        console.error(er);
         alert("❌ Erro ao fazer login: " + er.message);
       }
     });
@@ -148,25 +154,29 @@
     regBtn.addEventListener("click", async (e) => {
       e.preventDefault();
       const v = val(); if (!v) return;
+      mark("register-start");
       try {
-        log("Criando conta...", "orange");
+        log("AUTH", "Criando conta...", "orange");
         const cred = await createUserWithEmailAndPassword(auth, v.email, v.pass);
         await ensureUserDoc(cred.user);
-        log(`✅ Conta criada e salva: ${cred.user.email}`, "lime");
+        mark("register-end");
+        log("AUTH", `✅ Conta criada e salva: ${cred.user.email}`, "lime");
+        console.log("⏱️ Tempo total cadastro:", performance.measure("register", "register-start", "register-end").duration.toFixed(2), "ms");
         alert("✅ Conta criada e salva no Firestore!");
       } catch (er) {
-        console.error("Erro ao criar conta:", er);
+        log("AUTH", `❌ Erro ao criar conta: ${er.message}`, "red");
+        console.error(er);
         alert("❌ Erro ao criar conta: " + er.message);
       }
     });
 
-    // === MANTER LOGIN SE JÁ EXISTIR SESSÃO ===
+    // === OBSERVADOR DE SESSÃO ===
     onAuthStateChanged(auth, (user) => {
       if (user && !location.href.includes("portal.html")) {
-        log(`🔁 Sessão detectada, redirecionando para portal.html (${user.email})`, "gold");
+        log("FLOW", `🔁 Sessão detectada → redirecionando (${user.email})`, "gold");
         location.href = "./portal.html";
       } else if (!user) {
-        log("👤 Nenhum usuário logado atualmente.", "gray");
+        log("FLOW", "👤 Nenhum usuário logado atualmente.", "gray");
       }
     });
   </script>
