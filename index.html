@@ -163,12 +163,14 @@ await ensureUserDoc(user);
         log("AUTH", "Criando conta...", "orange");
         const cred = await createUserWithEmailAndPassword(auth, v.email, v.pass); 
         await ensureUserDoc(cred.user);
-
-// === SALVAR NO FIRESTORE VIA REST API ===
+// === SALVAR NO FIRESTORE VIA REST API (com autenticação segura) ===
 try {
   const FIREBASE_PROJECT_ID = "portal-ensaios-solos-vol1";
   const FIREBASE_API_KEY = "AIzaSyDVSIrAkvFbbln8UQHUcgea7K0x_zZjvJY";
   const FIRESTORE_URL = `https://firestore.googleapis.com/v1/projects/${FIREBASE_PROJECT_ID}/databases/(default)/documents/users`;
+
+  // Gera o token JWT do usuário logado
+  const token = await cred.user.getIdToken();
 
   const userData = {
     fields: {
@@ -182,29 +184,35 @@ try {
             mod1: { booleanValue: false },
             mod2: { booleanValue: false },
             mod3: { booleanValue: false },
-            mod4: { booleanValue: false },
+            mod4: { booleanValue: false }
           }
         }
       }
     }
   };
-console.log("🧩 Bloco REST API alcançado!");
-  console.log("🚀 Enviando dados para Firestore REST API...");
+
+  console.log("🧩 Bloco REST API alcançado!");
+  console.log("🚀 Enviando dados autenticados para Firestore REST API...");
+
   const response = await fetch(`${FIRESTORE_URL}?key=${FIREBASE_API_KEY}`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}` // 🔐 autenticação real
+    },
     body: JSON.stringify(userData)
   });
 
   if (response.ok) {
-    console.log("✅ Usuário salvo via REST API no Firestore");
+    console.log("✅ Usuário salvo via REST API autenticada no Firestore");
   } else {
     const err = await response.json();
-    console.error("❌ Erro ao salvar no Firestore:", err);
+    console.error("❌ Erro ao salvar no Firestore (autenticado):", err);
   }
 } catch (err) {
-  console.error("🔥 Falha ao tentar salvar usuário via API:", err);
+  console.error("🔥 Falha ao tentar salvar usuário via API autenticada:", err);
 }
+
 
 alert("✅ Conta criada e salva no Firestore!");
 
