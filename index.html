@@ -3,150 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Portal Interativo – Login</title>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet" />
-  <style>
-    body {
-      background: #000;
-      color: #fff;
-      font-family: 'Open Sans', sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      margin: 0;
-    }
-    .card {
-      background: rgba(255,255,255,.05);
-      border: 1px solid rgba(255,255,255,.1);
-      border-radius: 20px;
-      padding: 30px 40px;
-      box-shadow: 0 10px 40px rgba(0,0,0,.4);
-      max-width: 400px;
-      width: 90%;
-      text-align: center;
-      backdrop-filter: blur(8px);
-    }
-    h1 {
-      font-family: 'Montserrat', sans-serif;
-      margin-bottom: 20px;
-      font-size: 1.4rem;
-    }
-    input {
-      width: 100%;
-      padding: 12px;
-      margin: 10px 0;
-      border: none;
-      border-radius: 10px;
-      background: rgba(255,255,255,.1);
-      color: #fff;
-      font-size: 1rem;
-    }
-    button {
-      width: 100%;
-      padding: 12px;
-      margin-top: 10px;
-      border: none;
-      border-radius: 10px;
-      background: #0071E3;
-      color: #fff;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-    button:hover {
-      background: #0A84FF;
-      transform: scale(1.03);
-    }
-    .alt {
-      margin-top: 12px;
-    }
-    .alt a {
-      color: #9ecbff;
-      text-decoration: none;
-      font-size: 0.9rem;
-    }
-  </style>
+  <title>Portal Interativo – Volume 1</title>
 </head>
 <body>
-  <div class="card">
-    <h1>Entrar no Portal</h1>
-    <input type="email" id="email" placeholder="E-mail" />
-    <input type="password" id="password" placeholder="Senha" />
-    <button id="loginBtn" type="button">Entrar</button>
-    <button id="registerBtn" type="button">Cadastrar</button>
-    <div class="alt">
-      <a href="vitrine.html">← Voltar à vitrine</a>
-    </div>
-  </div>
-
-  <!-- Firebase -->
+  <!-- conteúdo original do portal -->
   <script type="module">
-    import { app, auth, db } from "./firebase-init.js";
-    import { createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } 
+    import { auth } from "./firebase-init.js";
+    import { onAuthStateChanged, signOut } 
       from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
-    import { doc, getDoc, setDoc, serverTimestamp } 
-      from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
 
-    const emailEl = document.getElementById("email");
-    const passEl  = document.getElementById("password");
-    const loginBtn = document.getElementById("loginBtn");
-    const regBtn   = document.getElementById("registerBtn");
+    const log = (msg, color="cyan") => console.log(`%c${msg}`, `color:${color};font-weight:600`);
 
-    function val() {
-      const email = (emailEl.value || "").trim();
-      const pass  = (passEl.value  || "").trim();
-      if (!email || !pass) { alert("Preencha e-mail e senha."); return null; }
-      return { email, pass };
-    }
-
-    async function ensureUserDoc(user) {
-      if (!user) return;
-      const ref = doc(db, "users", user.uid);
-      const snap = await getDoc(ref);
-      if (!snap.exists()) {
-        await setDoc(ref, {
-          email: user.email || "",
-          nome: "",
-          acesso: false,
-          dataCadastro: serverTimestamp(),
-          progresso: { mod0:false, mod1:false, mod2:false, mod3:false, mod4:false }
-        });
-        console.log("✅ Usuário salvo no Firestore:", user.email);
-      }
-    }
-
-    loginBtn.addEventListener("click", async (e) => {
-      e.preventDefault();
-      const v = val(); if (!v) return;
-      try {
-        const cred = await signInWithEmailAndPassword(auth, v.email, v.pass);
-        await ensureUserDoc(cred.user);
-        alert("✔️ Login realizado com sucesso!");
-        location.href = "./portal.html";
-      } catch (er) {
-        console.error("Erro ao fazer login:", er.message);
-        alert("❌ Erro ao fazer login: " + er.message);
-      }
-    });
-
-    regBtn.addEventListener("click", async (e) => {
-      e.preventDefault();
-      const v = val(); if (!v) return;
-      try {
-        const cred = await createUserWithEmailAndPassword(auth, v.email, v.pass);
-        await ensureUserDoc(cred.user);
-        alert("✅ Conta criada e salva no Firestore!");
-      } catch (er) {
-        console.error("Erro ao criar conta:", er.message);
-        alert("❌ Erro ao criar conta: " + er.message);
-      }
-    });
+    log("🧭 Verificando sessão de usuário...", "orange");
 
     onAuthStateChanged(auth, (user) => {
-      if (user && !location.href.includes("portal.html")) {
-        location.href = "./portal.html";
+      if (!user) {
+        log("🚫 Nenhum usuário autenticado. Redirecionando para login.", "red");
+        alert("⚠️ Você precisa estar logado para acessar o portal.");
+        location.href = "./index.html";
+      } else {
+        log(`✅ Acesso autorizado para: ${user.email}`, "lime");
       }
     });
   </script>
