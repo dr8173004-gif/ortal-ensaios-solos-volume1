@@ -1,247 +1,223 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Admin – Portal Interativo</title>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet" />
-  <style>
-    :root{
-      --bg:#0b0b0c; --panel:rgba(255,255,255,.06); --glass-b:1px solid rgba(255,255,255,.12);
-      --txt:#f2f5f7; --muted:#a9b4c0; --accent:#013C5A; --accent2:#0A84FF;
-      --ok:#22c55e; --warn:#ffb020; --err:#ef4444;
-      --radius:16px; --shadow:0 10px 40px rgba(0,0,0,.35);
-    }
-    *{box-sizing:border-box}
-    body{
-      margin:0; color:var(--txt); background: radial-gradient(1200px 600px at 10% -10%, #121417 0%, #0b0b0c 55%);
-      font-family:'Open Sans',sans-serif; min-height:100dvh; display:flex; flex-direction:column;
-    }
+/* === VISUAL BASE === */
+:root{
+  --bg:#0b0b0c;
+  --panel:rgba(255,255,255,.06);
+  --glass-b:1px solid rgba(255,255,255,.12);
+  --txt:#f2f5f7;
+  --muted:#a9b4c0;
+  --accent:#0A84FF;
+  --ok:#22c55e;
+  --err:#ef4444;
+  --radius:16px;
+  --shadow:0 10px 40px rgba(0,0,0,.35);
+}
+body{
+  margin:0;
+  color:var(--txt);
+  background:radial-gradient(1200px 600px at 10% -10%, #121417 0%, #0b0b0c 55%);
+  font-family:'Open Sans',sans-serif;
+  min-height:100dvh;
+  display:flex;
+  flex-direction:column;
+}
 
-    /* --- CABEÇALHO NOVO --- */
-    header{
-      position:sticky; top:0; z-index:9;
-      backdrop-filter:saturate(1.1) blur(8px);
-      background:linear-gradient(90deg, var(--accent) 0%, #014D73 100%);
-      border-bottom:var(--glass-b);
-    }
-    .wrap{
-      max-width:1100px; margin:0 auto; padding:18px 16px;
-      display:flex; align-items:center; gap:14px;
-    }
-    h1{
-      font-family:'Montserrat',sans-serif;
-      font-size:1.25rem; letter-spacing:.3px; margin:0;
-      color:#fff;
-    }
-    h1 span{ color:#9ecbff; }
+/* === CABEÇALHO === */
+header{
+  position:sticky;top:0;z-index:9;
+  backdrop-filter:saturate(1.1) blur(8px);
+  background:rgba(0,0,0,.45);
+  border-bottom:var(--glass-b);
+}
+.wrap{
+  max-width:1100px;
+  margin:0 auto;
+  padding:18px 16px;
+  display:flex;
+  align-items:center;
+  gap:14px;
+}
+h1{
+  font-family:'Montserrat',sans-serif;
+  font-size:1.25rem;
+  letter-spacing:.3px;
+  margin:0;
+  color:#fff;
+}
+h1 span{color:var(--accent);font-weight:700;}
 
-    .chip{ padding:6px 10px; border-radius:999px; background:var(--panel); border:var(--glass-b); color:var(--muted); font-size:.85rem }
-    .grow{ flex:1 }
-    .btn{
-      appearance:none; border:0; border-radius:12px; padding:10px 14px; cursor:pointer;
-      background:var(--accent2); color:#fff; font-weight:600; transition:.2s; box-shadow:var(--shadow)
-    }
-    .btn:hover{ background:#4ba9ff; transform:translateY(-1px) }
-    .btn.secondary{ background:transparent; border:var(--glass-b); color:var(--txt); box-shadow:none }
+.chip{
+  padding:6px 10px;
+  border-radius:999px;
+  background:var(--panel);
+  border:var(--glass-b);
+  color:var(--muted);
+  font-size:.85rem;
+}
+.btn{
+  border:0;
+  border-radius:12px;
+  padding:10px 14px;
+  cursor:pointer;
+  font-weight:600;
+  transition:.2s;
+}
+.btn.secondary{
+  background:transparent;
+  border:var(--glass-b);
+  color:var(--txt);
+}
+.btn.secondary:hover{
+  border-color:var(--accent);
+  color:var(--accent);
+  transform:translateY(-1px);
+}
 
-    main{ max-width:1100px; margin:22px auto 40px; padding:0 16px; width:100% }
+/* === CONTEÚDO PRINCIPAL === */
+main{
+  max-width:1100px;
+  margin:22px auto 60px;
+  padding:0 16px;
+  width:100%;
+}
+.panel{
+  background:var(--panel);
+  border:var(--glass-b);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  padding:16px;
+}
+.toolbar{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  align-items:center;
+  margin-bottom:10px;
+}
+input[type="text"]{
+  flex:1;
+  min-width:240px;
+  padding:12px 14px;
+  border-radius:12px;
+  border:var(--glass-b);
+  background:rgba(255,255,255,.04);
+  color:var(--txt);
+  outline:none;
+}
 
-    .panel{
-      background:var(--panel); border:var(--glass-b); border-radius:var(--radius); box-shadow:var(--shadow);
-      padding:16px
-    }
-    .toolbar{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:10px }
-    input[type="text"]{
-      flex:1; min-width:240px; padding:12px 14px; border-radius:12px; border:var(--glass-b);
-      background:rgba(255,255,255,.04); color:var(--txt); outline:none
-    }
+/* === TABELA === */
+.table{
+  width:100%;
+  overflow-x:auto;
+  border-radius:12px;
+  border:var(--glass-b);
+  -webkit-overflow-scrolling:touch;
+}
+table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:.9rem;
+  min-width:620px;
+}
+thead th{
+  text-align:left;
+  font-weight:700;
+  font-family:'Montserrat',sans-serif;
+  color:#dfe6ee;
+  background:rgba(255,255,255,.04);
+}
+th,td{
+  padding:10px 12px;
+  border-bottom:1px solid rgba(255,255,255,.08);
+  white-space:nowrap;
+}
+tbody tr:hover{
+  background:rgba(255,255,255,.03);
+}
+.empty{padding:28px;text-align:center;color:var(--muted);}
 
-    /* --- TABELA RESPONSIVA --- */
-    .table{ width:100%; overflow-x:auto; border-radius:12px; border:var(--glass-b); -webkit-overflow-scrolling:touch; }
-    table{ width:100%; border-collapse:collapse; font-size:.9rem; min-width:720px; }
-    thead th{ text-align:left; font-weight:700; font-family:'Montserrat',sans-serif; color:#dfe6ee; background:rgba(255,255,255,.04) }
-    th, td{ padding:10px 12px; border-bottom:1px solid rgba(255,255,255,.08); white-space:nowrap }
-    tbody tr:hover{ background:rgba(255,255,255,.03) }
+/* === TAGS E SWITCH === */
+.tag{
+  font-size:.78rem;
+  padding:4px 8px;
+  border-radius:999px;
+  border:var(--glass-b);
+  color:var(--muted);
+}
+.tag.ok{
+  color:#c0f2d1;
+  border-color:rgba(34,197,94,.4);
+  background:rgba(34,197,94,.12);
+}
+.tag.no{
+  color:#ffd2d2;
+  border-color:rgba(239,68,68,.35);
+  background:rgba(239,68,68,.12);
+}
+.switch{position:relative;width:46px;height:24px;display:inline-block;}
+.switch input{display:none;}
+.slider{
+  position:absolute;inset:0;
+  background:#3a3f45;
+  border-radius:999px;
+  transition:.2s;
+  border:var(--glass-b);
+}
+.slider:before{
+  content:"";
+  position:absolute;
+  height:18px;width:18px;
+  left:3px;top:3px;
+  background:white;
+  border-radius:50%;
+  transition:.2s;
+}
+input:checked + .slider{background:#1e844a;}
+input:checked + .slider:before{transform:translateX(22px);}
 
-    .tag{ font-size:.78rem; padding:4px 8px; border-radius:999px; border:var(--glass-b); color:var(--muted)}
-    .tag.ok{ color:#c0f2d1; border-color:rgba(34,197,94,.4); background:rgba(34,197,94,.12) }
-    .tag.no{ color:#ffd2d2; border-color:rgba(239,68,68,.35); background:rgba(239,68,68,.12) }
+/* === RODAPÉ / STATUS === */
+.footbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-top:12px;
+  color:var(--muted);
+  font-size:.9rem;
+}
+.status{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  color:var(--accent);
+  font-size:.9rem;
+}
+.dot{
+  width:8px;height:8px;
+  border-radius:50%;
+  background:#6b7280;
+}
+.dot.live{
+  background:#22c55e;
+  box-shadow:0 0 10px rgba(34,197,94,.7);
+}
 
-    .switch{ position:relative; width:46px; height:24px; display:inline-block }
-    .switch input{ display:none }
-    .slider{
-      position:absolute; inset:0; background:#3a3f45; border-radius:999px; transition:.2s; border:var(--glass-b)
-    }
-    .slider:before{
-      content:""; position:absolute; height:18px; width:18px; left:3px; top:3px;
-      background:white; border-radius:50%; transition:.2s
-    }
-    input:checked + .slider{ background:#1e844a }
-    input:checked + .slider:before{ transform:translateX(22px) }
+/* === RESPONSIVIDADE === */
+@media (max-width:768px){
+  th.hide,td.hide{display:none;}
+  table{font-size:0.85rem;min-width:100%;}
+  th:nth-child(1),td:nth-child(1){min-width:140px;}
+  th:nth-child(3),td:nth-child(3){min-width:100px;}
+  th:nth-child(4),td:nth-child(4){min-width:120px;}
+}
+@media (max-width:480px){
+  .toolbar input{min-width:100%;}
+  .btn.secondary{padding:8px 10px;font-size:.85rem;}
+  th:nth-child(1){width:45%;}
+  th:nth-child(3){width:30%;}
+  th:nth-child(4){width:25%;}
+}
 
-    .footbar{ display:flex; justify-content:space-between; align-items:center; margin-top:12px; color:var(--muted); font-size:.9rem }
-    .empty{ padding:28px; text-align:center; color:var(--muted) }
-
-    .status{ display:flex; align-items:center; gap:8px; color:#9ecbff; font-size:.9rem }
-    .dot{ width:8px; height:8px; border-radius:50%; background:#6b7280 }
-    .dot.live{ background:#22c55e; box-shadow:0 0 10px rgba(34,197,94,.7) }
-
-    @media (max-width:640px){
-      th.hide, td.hide{ display:none }
-      .toolbar input{ min-width:100% }
-      table{ font-size:0.8rem }
-    }
-  </style>
-</head>
-<body>
-  <header>
-    <div class="wrap">
-      <h1><span>Admin</span> • Portal Interativo</h1>
-      <span id="liveDot" class="dot"></span><span id="liveTxt" class="status">Conectando…</span>
-      <span class="grow"></span>
-      <span id="who" class="chip">—</span>
-      <button id="logoutBtn" class="btn secondary">Sair</button>
-    </div>
-  </header>
-
-  <main>
-    <div class="panel">
-      <div class="toolbar">
-        <input id="q" type="text" placeholder="Buscar por e-mail ou nome…" />
-        <button id="refreshBtn" class="btn secondary">Atualizar</button>
-      </div>
-
-      <div class="table">
-        <table>
-          <thead>
-            <tr>
-              <th style="width:30%">Usuário (e-mail)</th>
-              <th class="hide" style="width:18%">Nome</th>
-              <th style="width:12%">Acesso</th>
-              <th style="width:18%">Cadastrado em</th>
-              <th style="width:12%">Ações</th>
-            </tr>
-          </thead>
-          <tbody id="rows">
-            <tr><td colspan="5" class="empty">Carregando…</td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div class="footbar">
-        <div id="count">—</div>
-        <div>
-          <button id="prevBtn" class="btn secondary">◀ Anterior</button>
-          <button id="nextBtn" class="btn secondary">Próxima ▶</button>
-        </div>
-      </div>
-    </div>
-    <p style="margin:14px 6px;color:#92a1ae">Dica: clique no interruptor para liberar/bloquear acesso. A tabela atualiza em tempo real.</p>
-  </main>
-
-  <script type="module">
-    import { app, auth, db } from "./firebase-init.js";
-    import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
-    import { collection, query, orderBy, limit, onSnapshot, doc, updateDoc } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
-
-    const ADMIN_EMAILS = ["diegorodrigues1931@outlook.com"];
-    const who = document.getElementById("who");
-    const qInput = document.getElementById("q");
-    const rowsEl = document.getElementById("rows");
-    const countEl = document.getElementById("count");
-    const refreshBtn = document.getElementById("refreshBtn");
-    const logoutBtn = document.getElementById("logoutBtn");
-    const liveTxt = document.getElementById("liveTxt");
-    const liveDot = document.getElementById("liveDot");
-    let unsub = null;
-
-    function setLive(on){ liveTxt.textContent = on ? "Ao vivo" : "Conectando…"; liveDot.classList.toggle("live", !!on); }
-
-    function gate(email){
-      if (!ADMIN_EMAILS.includes(email)){
-        alert("🚫 Este e-mail não tem permissão para acessar o painel admin.");
-        location.href = "./portal.html"; return false;
-      }
-      return true;
-    }
-
-    function render(list){
-      if (!list || list.length === 0){
-        rowsEl.innerHTML = `<tr><td colspan="5" class="empty">Nenhum registro encontrado.</td></tr>`;
-        countEl.textContent = "0 usuários"; return;
-      }
-      const fmt = ts => {
-        if (!ts || !ts.toDate) return "—";
-        const d = ts.toDate(); return d.toLocaleDateString("pt-BR");
-      };
-      rowsEl.innerHTML = list.map(({ id, data }) => {
-        const acesso = data.acesso === true;
-        const nome = data.nome ?? "—";
-        const email = data.email ?? "—";
-        const cadastrado = data.dataCadastro || data.criadoEm || null;
-        return `
-          <tr data-id="${id}">
-            <td><strong>${email}</strong></td>
-            <td class="hide">${nome}</td>
-            <td>
-              <label class="switch">
-                <input type="checkbox" ${acesso ? "checked" : ""} data-act="toggle" />
-                <span class="slider"></span>
-              </label>
-              <span class="tag ${acesso ? "ok" : "no"}" style="margin-left:8px">${acesso ? "liberado" : "bloqueado"}</span>
-            </td>
-            <td>${cadastrado ? fmt(cadastrado) : "—"}</td>
-            <td><button class="btn secondary" data-act="copy">Copiar UID</button></td>
-          </tr>
-        `;
-      }).join("");
-      countEl.textContent = `${list.length} usuário(s) nesta página`;
-    }
-
-    async function loadPage(){
-      if (unsub){ unsub(); unsub = null; }
-      const q = query(collection(db, "users"), orderBy("email"), limit(15));
-      unsub = onSnapshot(q, (snap)=>{
-        const arr = snap.docs.map(d => ({ id:d.id, data:d.data() }));
-        setLive(true);
-        const t = qInput.value.trim().toLowerCase();
-        const filtered = t ? arr.filter(({data}) => (data.email||"").toLowerCase().includes(t) || (data.nome||"").toLowerCase().includes(t)) : arr;
-        render(filtered);
-      }, (err)=>{
-        console.error(err);
-        setLive(false);
-        rowsEl.innerHTML = `<tr><td colspan="5" class="empty err">Erro: ${err.message}</td></tr>`;
-      });
-    }
-
-    rowsEl.addEventListener("click", async (ev)=>{
-      const tr = ev.target.closest("tr");
-      if (!tr) return;
-      const id = tr.getAttribute("data-id");
-      const act = ev.target.getAttribute("data-act");
-      if (act === "toggle"){
-        const chk = ev.target;
-        try{ await updateDoc(doc(db,"users",id),{acesso:chk.checked}); }
-        catch(e){ console.error(e); alert("Falha ao atualizar acesso."); chk.checked=!chk.checked; }
-      }
-      if (act === "copy"){
-        await navigator.clipboard.writeText(id);
-        ev.target.textContent = "Copiado!";
-        setTimeout(()=>ev.target.textContent="Copiar UID",900);
-      }
-    });
-
-    qInput.addEventListener("input", ()=>loadPage());
-    refreshBtn.addEventListener("click", ()=>loadPage());
-    logoutBtn.addEventListener("click", async()=>{ await signOut(auth); location.href="./index.html"; });
-
-    onAuthStateChanged(auth, async(user)=>{
-      if (!user){ alert("Faça login para acessar o admin."); location.href="./index.html"; return; }
-      who.textContent = user.email;
-      if (!gate(user.email)) return;
-      loadPage();
-    });
-  </script>
-</body>
-</html>
+/* === LINHA DO ADMIN LOGADO === */
+.admin-row{
+  background:rgba(10,132,255,0.08);
+  box-shadow:0 0 12px rgba(10,132,255,0.25) inset;
+}
