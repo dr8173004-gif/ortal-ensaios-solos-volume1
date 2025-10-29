@@ -7,7 +7,7 @@ const firebaseConfig = {
   apiKey: "AIzaSyDY5IFakVFbbLn8UQHUCgea7KOx_zZjvlY",
   authDomain: "portal-ensaios-solos-vol1.firebaseapp.com",
   projectId: "portal-ensaios-solos-vol1",
-  storageBucket: "portal-ensaios-solos-vol1.firebasestorage.app",
+ storageBucket: "portal-ensaios-solos-vol1.appspot.com",
   messagingSenderId: "217730071254",
   appId: "1:217730071254:web:a79fa9cbf49f742ff62777"
 };
