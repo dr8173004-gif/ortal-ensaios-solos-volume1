@@ -175,6 +175,23 @@ await ensureUserDoc(user);
       try {
         log("AUTH", "Criando conta...", "orange");
         const cred = await createUserWithEmailAndPassword(auth, v.email, v.pass);
+        const cred = await createUserWithEmailAndPassword(auth, v.email, v.pass);
+
+// 🔥 Salva o usuário imediatamente no Firestore
+try {
+  const ref = doc(db, "users", cred.user.uid);
+  await setDoc(ref, {
+    email: cred.user.email,
+    criadoEm: new Date().toISOString(),
+    progresso: { mod0:false, mod1:false, mod2:false, mod3:false, mod4:false }
+  });
+  console.log("🔥 Usuário salvo no Firestore:", cred.user.email);
+} catch (err) {
+  console.error("❌ Erro ao salvar no Firestore:", err);
+}
+
+await ensureUserDoc(cred.user);
+
         await ensureUserDoc(cred.user);
         mark("register-end");
         log("AUTH", `✅ Conta criada e salva: ${cred.user.email}`, "lime");
