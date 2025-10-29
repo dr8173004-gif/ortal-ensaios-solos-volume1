@@ -142,6 +142,26 @@
 // depois continua o fluxo normal
 await ensureUserDoc(user);
 
+// === VERIFICAÇÃO DE ACESSO NO FIRESTORE ===
+const ref = doc(db, "users", user.uid);
+const snap = await getDoc(ref);
+
+if (snap.exists()) {
+  const dados = snap.data();
+
+  if (dados.acesso === false) {
+    log("ACCESS", "🚫 Acesso bloqueado: usuário não autorizado.", "red");
+    alert("🚫 Seu acesso ao portal ainda não foi liberado.\nEntre em contato com o suporte.");
+    await auth.signOut();
+    return; // interrompe o login
+  } else {
+    log("ACCESS", "✅ Acesso liberado para o portal.", "lime");
+  }
+} else {
+  log("ACCESS", "⚠️ Usuário não encontrado no Firestore.", "gold");
+}
+
+        
         mark("login-end");
         log("AUTH", `✔️ Login bem-sucedido: ${cred.user.email}`, "lime");
         console.log("⏱️ Tempo total login:", performance.measure("login", "login-start", "login-end").duration.toFixed(2), "ms");
