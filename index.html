@@ -174,17 +174,19 @@ await ensureUserDoc(user);
       mark("register-start");
       try {
         log("AUTH", "Criando conta...", "orange");
-        const cred = await createUserWithEmailAndPassword(auth, v.email, v.pass);
-        // === SALVAR NO FIRESTORE VIA REST API ===
+        const cred = await createUserWithEmailAndPassword(auth, v.email, v.pass); 
+        await ensureUserDoc(cred.user);
+
+// === SALVAR NO FIRESTORE VIA REST API ===
 try {
   const FIREBASE_PROJECT_ID = "portal-ensaios-solos-vol1";
-  const FIREBASE_API_KEY = "AIzaSyDVSIrAkvFbbln8UQHUcgea7K0x_zZjvJY"; // já é sua key atual
+  const FIREBASE_API_KEY = "AIzaSyDVSIrAkvFbbln8UQHUcgea7K0x_zZjvJY";
   const FIRESTORE_URL = `https://firestore.googleapis.com/v1/projects/${FIREBASE_PROJECT_ID}/databases/(default)/documents/users`;
 
   const userData = {
     fields: {
       email: { stringValue: cred.user.email },
-      nome: { stringValue: "" }, // pode futuramente ser preenchido por input
+      nome: { stringValue: "" },
       criadoEm: { timestampValue: new Date().toISOString() },
       acesso: { booleanValue: false },
       progresso: {
@@ -201,6 +203,7 @@ try {
     }
   };
 
+  console.log("🚀 Enviando dados para Firestore REST API...");
   const response = await fetch(`${FIRESTORE_URL}?key=${FIREBASE_API_KEY}`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -217,7 +220,9 @@ try {
   console.error("🔥 Falha ao tentar salvar usuário via API:", err);
 }
 
-        await ensureUserDoc(cred.user);
+alert("✅ Conta criada e salva no Firestore!");
+
+        
         mark("register-end");
         log("AUTH", `✅ Conta criada e salva: ${cred.user.email}`, "lime");
         console.log("⏱️ Tempo total cadastro:", performance.measure("register", "register-start", "register-end").duration.toFixed(2), "ms");
