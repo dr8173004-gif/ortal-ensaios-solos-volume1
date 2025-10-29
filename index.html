@@ -137,7 +137,24 @@
       try {
         log("AUTH", "Tentando login...", "deepskyblue");
         const cred = await signInWithEmailAndPassword(auth, v.email, v.pass);
-        await ensureUserDoc(cred.user);
+        const user = cred.user;
+        
+// 🔥 Salva o usuário imediatamente no Firestore
+try {
+  const ref = doc(db, "users", user.uid);
+  await setDoc(ref, {
+    email: user.email,
+    criadoEm: new Date().toISOString(),
+    progresso: { mod0:false, mod1:false, mod2:false, mod3:false, mod4:false }
+  });
+  console.log("🔥 Usuário salvo no Firestore:", user.email);
+} catch (err) {
+  console.error("❌ Erro ao salvar no Firestore:", err);
+}
+
+// depois continua o fluxo normal
+await ensureUserDoc(user);
+
         mark("login-end");
         log("AUTH", `✔️ Login bem-sucedido: ${cred.user.email}`, "lime");
         console.log("⏱️ Tempo total login:", performance.measure("login", "login-start", "login-end").duration.toFixed(2), "ms");
