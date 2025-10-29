@@ -1613,50 +1613,7 @@ document.addEventListener('DOMContentLoaded',()=>{
 .logout-btn:hover { transform: scale(1.05); box-shadow: 0 0 15px rgba(255,78,80,0.6); }
 </style>
 
-<!-- =================== FIREBASE AUTH (sem loop) =================== -->
-<script type="module">
-  import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
-  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyDY5IFakVFbbLn8UQHUCgea7KOx_zZjvlY",
-    authDomain: "portal-ensaios-solos-vol1.firebaseapp.com",
-    projectId: "portal-ensaios-solos-vol1",
-    storageBucket: "portal-ensaios-solos-vol1.firebasestorage.app",
-    messagingSenderId: "217730071254",
-    appId: "1:217730071254:web:a79fa9cbf49f742ff62777"
-  };
-
-  const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-
-  const headerEl = document.getElementById("userHeader");
-  const nameEl = document.getElementById("userName");
-  const logoutBtn = document.getElementById("logoutBtn");
-
-  // IMPORTANTE: o portal NÃO redireciona automaticamente quando sem usuário.
-  // Ele só esconde o cabeçalho. Quem redireciona é o index.html (quando logado).
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      const nome = user.displayName || (user.email ? user.email.split("@")[0] : "aluno");
-      if (nameEl) nameEl.textContent = `👋 Olá, ${nome}`;
-      if (headerEl) headerEl.style.display = "flex";
-    } else {
-      if (headerEl) headerEl.style.display = "none";
-    }
-  });
-
-  logoutBtn?.addEventListener("click", async () => {
-    try {
-      await signOut(auth);     // garante que a sessão encerrou
-    } catch (e) {
-      console.error(e);
-    } finally {
-      // e só então vai para o login (index.html na raiz)
-      window.location.href = "./index.html";
-    }
-  });
-</script>
     <script>
 // ===== Progresso Geral Cinematográfico (com Pulso de Conquista) =====
 function atualizarProgressoGeral() {
