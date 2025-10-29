@@ -3,157 +3,266 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Painel Admin – Ensaios de Solos</title>
-
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Open+Sans&display=swap" rel="stylesheet" />
+  <title>Admin – Portal Interativo</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet" />
   <style>
-    body {
-      background: linear-gradient(120deg, #013C5A, #025072);
-      font-family: 'Open Sans', sans-serif;
-      color: #fff;
-      margin: 0;
-      padding: 20px;
+    :root{
+      --bg:#0b0b0c; --panel:rgba(255,255,255,.06); --glass-b:1px solid rgba(255,255,255,.12);
+      --txt:#f2f5f7; --muted:#a9b4c0; --accent:#0071E3; --accent2:#0A84FF; --ok:#22c55e; --warn:#ffb020; --err:#ef4444;
+      --radius:16px; --shadow:0 10px 40px rgba(0,0,0,.35);
     }
-
-    h1 {
-      font-family: 'Montserrat', sans-serif;
-      text-align: center;
-      color: #fff;
-      margin-bottom: 24px;
+    *{box-sizing:border-box}
+    body{
+      margin:0; color:var(--txt); background: radial-gradient(1200px 600px at 10% -10%, #121417 0%, #0b0b0c 55%);
+      font-family:'Open Sans',sans-serif;
+      min-height:100dvh; display:flex; flex-direction:column;
     }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      background: rgba(255,255,255,0.1);
-      border-radius: 12px;
-      overflow: hidden;
+    header{
+      position:sticky; top:0; z-index:9; backdrop-filter:saturate(1.1) blur(8px);
+      background:linear-gradient(180deg, rgba(0,0,0,.55), rgba(0,0,0,.25));
+      border-bottom:var(--glass-b);
     }
-
-    th, td {
-      padding: 10px;
-      text-align: center;
-      border-bottom: 1px solid rgba(255,255,255,0.2);
+    .wrap{ max-width:1100px; margin:0 auto; padding:18px 16px; display:flex; align-items:center; gap:14px; }
+    h1{ font-family:'Montserrat',sans-serif; font-size:1.25rem; letter-spacing:.3px; margin:0 }
+    .chip{ padding:6px 10px; border-radius:999px; background:var(--panel); border:var(--glass-b); color:var(--muted); font-size:.85rem }
+    .grow{ flex:1 }
+    .btn{
+      appearance:none; border:0; border-radius:12px; padding:10px 14px; cursor:pointer;
+      background:var(--accent); color:#fff; font-weight:600; transition:.2s; box-shadow:var(--shadow)
     }
+    .btn:hover{ background:var(--accent2); transform:translateY(-1px) }
+    .btn.secondary{ background:transparent; border:var(--glass-b); color:var(--txt); box-shadow:none }
+    main{ max-width:1100px; margin:22px auto 40px; padding:0 16px; width:100% }
 
-    th {
-      background: rgba(1,60,90,0.8);
-      font-weight: 700;
+    .panel{
+      background:var(--panel); border:var(--glass-b); border-radius:var(--radius); box-shadow:var(--shadow);
+      padding:16px
     }
-
-    tr:hover {
-      background: rgba(255,255,255,0.15);
+    .toolbar{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:10px }
+    input[type="text"]{
+      flex:1; min-width:240px; padding:12px 14px; border-radius:12px; border:var(--glass-b);
+      background:rgba(255,255,255,.04); color:var(--txt); outline:none
     }
-
-    .logout {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      background: #ff4444;
-      color: #fff;
-      border: none;
-      padding: 10px 18px;
-      border-radius: 999px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: background 0.3s;
-      z-index: 1000;
+    .table{ width:100%; overflow:auto; border-radius:12px; border:var(--glass-b) }
+    table{ width:100%; border-collapse:collapse; font-size:.95rem; }
+    thead th{ text-align:left; font-weight:700; font-family:'Montserrat',sans-serif; color:#dfe6ee; background:rgba(255,255,255,.04) }
+    th, td{ padding:12px 14px; border-bottom:1px solid rgba(255,255,255,.08) }
+    tbody tr:hover{ background:rgba(255,255,255,.03) }
+    .tag{ font-size:.78rem; padding:4px 8px; border-radius:999px; border:var(--glass-b); color:var(--muted)}
+    .tag.ok{ color:#c0f2d1; border-color:rgba(34,197,94,.4); background:rgba(34,197,94,.12) }
+    .tag.no{ color:#ffd2d2; border-color:rgba(239,68,68,.35); background:rgba(239,68,68,.12) }
+    .switch{ position:relative; width:50px; height:28px; display:inline-block }
+    .switch input{ display:none }
+    .slider{
+      position:absolute; inset:0; background:#3a3f45; border-radius:999px; transition:.2s; border:var(--glass-b)
     }
-
-    .logout:hover {
-      background: #d63232;
+    .slider:before{
+      content:""; position:absolute; height:22px; width:22px; left:3px; top:3px; background:white; border-radius:50%; transition:.2s
     }
-
-    .check { color: #28a745; font-weight: 800; }
-    .x { color: #ff4444; font-weight: 800; }
+    input:checked + .slider{ background:#1e844a }
+    input:checked + .slider:before{ transform:translateX(22px) }
+    .footbar{ display:flex; justify-content:space-between; align-items:center; margin-top:12px; color:var(--muted); font-size:.9rem }
+    .link{ color:#9ecbff; text-decoration:none }
+    .empty{ padding:28px; text-align:center; color:var(--muted) }
+    .status{ display:flex; align-items:center; gap:8px; color:var(--muted); font-size:.9rem }
+    .dot{ width:8px; height:8px; border-radius:50%; background:#6b7280 }
+    .dot.live{ background:#22c55e; box-shadow:0 0 10px rgba(34,197,94,.7) }
+    .warn{ color:var(--warn) } .err{ color:var(--err) }
+    @media (max-width:640px){
+      th.hide, td.hide{ display:none }
+    }
   </style>
 </head>
-
 <body>
-  <button class="logout" id="logoutBtn">Sair</button>
-  <h1>📊 Painel de Alunos — Volume 1</h1>
+  <header>
+    <div class="wrap">
+      <h1>Admin • Portal Interativo</h1>
+      <span id="liveDot" class="dot"></span><span id="liveTxt" class="status">Conectando…</span>
+      <span class="grow"></span>
+      <span id="who" class="chip">—</span>
+      <button id="logoutBtn" class="btn secondary">Sair</button>
+    </div>
+  </header>
 
-  <table>
-    <thead>
-      <tr>
-        <th>Nome</th>
-        <th>E-mail</th>
-        <th>Mód.0</th>
-        <th>Mód.1</th>
-        <th>Mód.2</th>
-        <th>Mód.3</th>
-        <th>Mód.4</th>
-        <th>Data</th>
-      </tr>
-    </thead>
-    <tbody id="tabela-alunos"></tbody>
-  </table>
+  <main>
+    <div class="panel">
+      <div class="toolbar">
+        <input id="q" type="text" placeholder="Buscar por e-mail ou nome…" />
+        <button id="refreshBtn" class="btn secondary">Atualizar</button>
+      </div>
+
+      <div class="table">
+        <table>
+          <thead>
+            <tr>
+              <th style="width:34%">Usuário (e-mail)</th>
+              <th class="hide" style="width:22%">Nome</th>
+              <th style="width:14%">Acesso</th>
+              <th class="hide" style="width:16%">Criado</th>
+              <th style="width:14%">Ações</th>
+            </tr>
+          </thead>
+          <tbody id="rows">
+            <tr><td colspan="5" class="empty">Carregando…</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="footbar">
+        <div id="count">—</div>
+        <div>
+          <button id="prevBtn" class="btn secondary">◀ Anterior</button>
+          <button id="nextBtn" class="btn secondary">Próxima ▶</button>
+        </div>
+      </div>
+    </div>
+    <p style="margin:14px 6px;color:#92a1ae">Dica: clique no interruptor para liberar/bloquear acesso. A tabela atualiza em tempo real.</p>
+  </main>
 
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
-    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
-    import { getFirestore, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+    import { app, auth, db } from "./firebase-init.js";
+    import {
+      onAuthStateChanged, signOut
+    } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+    import {
+      collection, query, orderBy, limit, startAfter, onSnapshot,
+      doc, updateDoc
+    } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
 
-    // 🔧 Configuração Firebase
-    const firebaseConfig = {
-      apiKey: "AIzaSyDY5IFakVFbbLn8UQHUCgea7KOx_zZjvlY",
-      authDomain: "portal-ensaios-solos-vol1.firebaseapp.com",
-      projectId: "portal-ensaios-solos-vol1",
-      storageBucket: "portal-ensaios-solos-vol1.firebasestorage.app",
-      messagingSenderId: "217730071254",
-      appId: "1:217730071254:web:a79fa9cbf49f742ff62777"
-    };
+    // === LISTA DE ADMs AUTORIZADOS ===
+    const ADMIN_EMAILS = ["diegorodrigues1931@outlook.com"]; // ✅ único admin atual
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
+    const who = document.getElementById("who");
+    const qInput = document.getElementById("q");
+    const rowsEl = document.getElementById("rows");
+    const countEl = document.getElementById("count");
+    const refreshBtn = document.getElementById("refreshBtn");
+    const logoutBtn = document.getElementById("logoutBtn");
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    const liveTxt = document.getElementById("liveTxt");
+    const liveDot = document.getElementById("liveDot");
 
-    // 👑 Email do administrador autorizado
-    const ADMIN_EMAIL = "diegorodrigues1784@outlook.com";
+    let unsub = null;
+    let lastDoc = null;
+    let firstDoc = null;
+    let cachePageStart = [];
 
-    // 🔐 Controle de acesso
-    onAuthStateChanged(auth, (user) => {
-      if (!user || user.email !== ADMIN_EMAIL) {
-        alert("Acesso restrito. Faça login como administrador.");
-        window.location.href = "/ortal-ensaios-solos-volume1/main/login.html";
-      } else {
-        console.log("✅ Acesso de administrador permitido:", user.email);
-        carregarAlunos();
+    function setLive(on) {
+      liveTxt.textContent = on ? "Ao vivo" : "Conectando…";
+      liveDot.classList.toggle("live", !!on);
+    }
+
+    function gate(email) {
+      if (!ADMIN_EMAILS.includes(email)) {
+        alert("🚫 Este e-mail não tem permissão para acessar o painel admin.");
+        location.href = "./portal.html";
+        return false;
       }
-    });
+      return true;
+    }
 
-    // 📊 Função que carrega alunos em tempo real
-    function carregarAlunos() {
-      const tabela = document.getElementById("tabela-alunos");
-      const alunosRef = collection(db, "users");
+    function render(list) {
+      if (!list || list.length === 0) {
+        rowsEl.innerHTML = `<tr><td colspan="5" class="empty">Nenhum registro encontrado.</td></tr>`;
+        countEl.textContent = "0 usuários";
+        return;
+      }
+      const fmt = ts => {
+        if (!ts || !ts.toDate) return "—";
+        const d = ts.toDate(); return d.toLocaleString();
+      };
+      rowsEl.innerHTML = list.map(({ id, data }) => {
+        const acesso = data.acesso === true;
+        const nome = (data.nome ?? "").toString();
+        const email = (data.email ?? "—").toString();
+        const criado = data.dataCadastro || data.criadoEm || null;
+        return `
+          <tr data-id="${id}">
+            <td><strong>${email}</strong></td>
+            <td class="hide">${nome || "—"}</td>
+            <td>
+              <label class="switch">
+                <input type="checkbox" ${acesso ? "checked" : ""} data-act="toggle" />
+                <span class="slider"></span>
+              </label>
+              <span class="tag ${acesso ? "ok" : "no"}" style="margin-left:8px">${acesso ? "liberado" : "bloqueado"}</span>
+            </td>
+            <td class="hide">${criado ? fmt(criado) : "—"}</td>
+            <td>
+              <button class="btn secondary" data-act="copy">Copiar UID</button>
+            </td>
+          </tr>
+        `;
+      }).join("");
+      countEl.textContent = `${list.length} usuário(s) nesta página`;
+    }
 
-      onSnapshot(alunosRef, (snapshot) => {
-        tabela.innerHTML = "";
-        snapshot.forEach((doc) => {
-          const data = doc.data();
-          const p = data.progresso || {};
-          const linha = `
-            <tr>
-              <td>${data.nome || "-"}</td>
-              <td>${data.email || "-"}</td>
-              <td>${p.mod0 ? "✅" : "❌"}</td>
-              <td>${p.mod1 ? "✅" : "❌"}</td>
-              <td>${p.mod2 ? "✅" : "❌"}</td>
-              <td>${p.mod3 ? "✅" : "❌"}</td>
-              <td>${p.mod4 ? "✅" : "❌"}</td>
-              <td>${data.criadoEm?.toDate ? data.criadoEm.toDate().toLocaleDateString() : "-"}</td>
-            </tr>`;
-          tabela.innerHTML += linha;
-        });
+    const pageSize = 15;
+    async function loadPage({ reset = false, startsAfter = null, textFilter = "" } = {}) {
+      if (unsub) { unsub(); unsub = null; }
+      let q = query(collection(db, "users"), orderBy("email"), limit(pageSize));
+      unsub = onSnapshot(q, (snap) => {
+        const arr = snap.docs.map(d => ({ id: d.id, data: d.data() }));
+        firstDoc = snap.docs[0] || null;
+        lastDoc = snap.docs[snap.docs.length - 1] || null;
+        setLive(true);
+        let filtered = arr;
+        const t = textFilter.trim().toLowerCase();
+        if (t) {
+          filtered = arr.filter(({ data }) => {
+            const e = (data.email || "").toLowerCase();
+            const n = (data.nome || "").toLowerCase();
+            return e.includes(t) || n.includes(t);
+          });
+        }
+        render(filtered);
+      }, (err) => {
+        console.error(err);
+        setLive(false);
+        rowsEl.innerHTML = `<tr><td colspan="5" class="empty err">Erro: ${err.message}</td></tr>`;
       });
     }
 
-    // 🚪 Logout funcional
-    const logoutBtn = document.getElementById("logoutBtn");
+    rowsEl.addEventListener("click", async (ev) => {
+      const tr = ev.target.closest("tr");
+      if (!tr) return;
+      const id = tr.getAttribute("data-id");
+      const act = ev.target.getAttribute("data-act");
+      if (act === "toggle") {
+        const chk = ev.target;
+        try {
+          await updateDoc(doc(db, "users", id), { acesso: chk.checked });
+        } catch (e) {
+          console.error(e);
+          alert("Falha ao atualizar acesso.");
+          chk.checked = !chk.checked;
+        }
+      }
+      if (act === "copy") {
+        await navigator.clipboard.writeText(id);
+        ev.target.textContent = "Copiado!";
+        setTimeout(() => ev.target.textContent = "Copiar UID", 900);
+      }
+    });
+
+    qInput.addEventListener("input", () => loadPage({ reset: true, textFilter: qInput.value }));
+    refreshBtn.addEventListener("click", () => loadPage({ reset: true, textFilter: qInput.value }));
+
     logoutBtn.addEventListener("click", async () => {
       await signOut(auth);
-      alert("Sessão encerrada com sucesso!");
-      window.location.href = "/ortal-ensaios-solos-volume1/main/login.html";
+      location.href = "./index.html";
+    });
+
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        alert("Faça login para acessar o admin.");
+        location.href = "./index.html";
+        return;
+      }
+      who.textContent = user.email;
+      if (!gate(user.email)) return;
+      loadPage({ reset: true });
     });
   </script>
 </body>
