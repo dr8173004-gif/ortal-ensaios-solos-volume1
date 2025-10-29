@@ -74,74 +74,50 @@
     <h1>Entrar no Portal</h1>
     <input type="email" id="email" placeholder="E-mail" />
     <input type="password" id="password" placeholder="Senha" />
-   <button id="loginBtn" type="button">Entrar</button>
-<button id="registerBtn" type="button">Cadastrar</button>
+    <button id="loginBtn" type="button">Entrar</button>
+    <button id="registerBtn" type="button">Cadastrar</button>
     <div class="alt">
       <a href="vitrine.html">← Voltar à vitrine</a>
     </div>
   </div>
+
+  <!-- Firebase -->
   <script type="module">
-  // --- imports com cache-buster:
-  import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js?v=4";
-  import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged }
-    from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js?v=4";
-  import { getFirestore, doc, getDoc, setDoc, serverTimestamp }
-    from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js?v=4";
+    import { app, auth, db } from "./firebase-init.js";
+    import { createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } 
+      from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+    import { doc, getDoc, setDoc, serverTimestamp } 
+      from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
 
-  document.addEventListener("DOMContentLoaded", () => {
-    const app = getApps().length ? getApps()[0] : initializeApp({
-      apiKey: "AIzaSyDY5IFakVFbbLn8UQHUCgea7KOx_zZjvlY",
-      authDomain: "portal-ensaios-solos-vol1.firebaseapp.com",
-      projectId: "portal-ensaios-solos-vol1",
-      storageBucket: "portal-ensaios-solos-vol1.firebasestorage.app",
-      messagingSenderId: "217730071254",
-      appId: "1:217730071254:web:a79fa9cbf49f742ff62777"
-    });
-    const auth = getAuth(app);
-    const db   = getFirestore(app);
-
-    // pega elementos com fallback
-    const emailEl = document.getElementById("email") || document.querySelector("#email");
-    const passEl  = document.getElementById("password") || document.querySelector("#password");
-    const loginBtn = document.getElementById("loginBtn") || document.querySelector("#loginBtn");
-    const regBtn   = document.getElementById("registerBtn") || document.querySelector("#registerBtn");
-
-    // se tiver overlay de fade, garante que não bloqueia clique
-    const fade = document.getElementById("fade-overlay");
-    if (fade) fade.style.pointerEvents = "none";
+    const emailEl = document.getElementById("email");
+    const passEl  = document.getElementById("password");
+    const loginBtn = document.getElementById("loginBtn");
+    const regBtn   = document.getElementById("registerBtn");
 
     function val() {
-      const email = (emailEl?.value || "").trim();
-      const pass  = (passEl?.value  || "").trim();
+      const email = (emailEl.value || "").trim();
+      const pass  = (passEl.value  || "").trim();
       if (!email || !pass) { alert("Preencha e-mail e senha."); return null; }
       return { email, pass };
     }
 
     async function ensureUserDoc(user) {
       if (!user) return;
-      // pequeno delay ajuda na propagação das regras
-      await new Promise(r=>setTimeout(r, 300));
       const ref = doc(db, "users", user.uid);
       const snap = await getDoc(ref);
       if (!snap.exists()) {
         await setDoc(ref, {
           email: user.email || "",
-          nome:  user.displayName || "",
-          acesso: false,                         // você libera depois do pagamento
+          nome: "",
+          acesso: false,
           dataCadastro: serverTimestamp(),
           progresso: { mod0:false, mod1:false, mod2:false, mod3:false, mod4:false }
         });
+        console.log("✅ Usuário salvo no Firestore:", user.email);
       }
     }
 
-    onAuthStateChanged(auth, (user) => {
-      if (user && !location.href.includes("portal.html")) {
-        location.href = "./portal.html";
-      }
-    });
-
-    // listeners com preventDefault por segurança
-    loginBtn?.addEventListener("click", async (e) => {
+    loginBtn.addEventListener("click", async (e) => {
       e.preventDefault();
       const v = val(); if (!v) return;
       try {
@@ -150,25 +126,29 @@
         alert("✔️ Login realizado com sucesso!");
         location.href = "./portal.html";
       } catch (er) {
-        console.error(er);
+        console.error("Erro ao fazer login:", er.message);
         alert("❌ Erro ao fazer login: " + er.message);
       }
     });
 
-    regBtn?.addEventListener("click", async (e) => {
+    regBtn.addEventListener("click", async (e) => {
       e.preventDefault();
       const v = val(); if (!v) return;
       try {
         const cred = await createUserWithEmailAndPassword(auth, v.email, v.pass);
         await ensureUserDoc(cred.user);
-        alert("✅ Conta criada com sucesso! Agora entre no portal.");
+        alert("✅ Conta criada e salva no Firestore!");
       } catch (er) {
-        console.error(er);
+        console.error("Erro ao criar conta:", er.message);
         alert("❌ Erro ao criar conta: " + er.message);
       }
     });
-  });
-</script>
 
+    onAuthStateChanged(auth, (user) => {
+      if (user && !location.href.includes("portal.html")) {
+        location.href = "./portal.html";
+      }
+    });
+  </script>
 </body>
 </html>
