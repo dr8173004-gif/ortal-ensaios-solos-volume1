@@ -74,111 +74,103 @@
     <h1>Entrar no Portal</h1>
     <input type="email" id="email" placeholder="E-mail" />
     <input type="password" id="password" placeholder="Senha" />
-    <button id="loginBtn">Entrar</button>
-    <button id="registerBtn">Cadastrar</button>
+   <button id="loginBtn" type="button">Entrar</button>
+<button id="registerBtn" type="button">Cadastrar</button>
     <div class="alt">
       <a href="vitrine.html">← Voltar à vitrine</a>
     </div>
   </div>
-<script type="module">
-  // ====== IMPORTS (com cache-buster) ======
-  import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js?v=3";
+  <script type="module">
+  // --- imports com cache-buster:
+  import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js?v=4";
   import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged }
-    from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js?v=3";
+    from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js?v=4";
   import { getFirestore, doc, getDoc, setDoc, serverTimestamp }
-    from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js?v=3";
+    from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js?v=4";
 
-  // ====== DEBUG BÁSICO ======
-  const log = (...a)=>console.log("🔧", ...a);
-  const err = (...a)=>console.error("💥", ...a);
+  document.addEventListener("DOMContentLoaded", () => {
+    const app = getApps().length ? getApps()[0] : initializeApp({
+      apiKey: "AIzaSyDY5IFakVFbbLn8UQHUCgea7KOx_zZjvlY",
+      authDomain: "portal-ensaios-solos-vol1.firebaseapp.com",
+      projectId: "portal-ensaios-solos-vol1",
+      storageBucket: "portal-ensaios-solos-vol1.firebasestorage.app",
+      messagingSenderId: "217730071254",
+      appId: "1:217730071254:web:a79fa9cbf49f742ff62777"
+    });
+    const auth = getAuth(app);
+    const db   = getFirestore(app);
 
-  // ====== CONFIG ======
-  const firebaseConfig = {
-    apiKey: "AIzaSyDY5IFakVFbbLn8UQHUCgea7KOx_zZjvlY",
-    authDomain: "portal-ensaios-solos-vol1.firebaseapp.com",
-    projectId: "portal-ensaios-solos-vol1",
-    storageBucket: "portal-ensaios-solos-vol1.firebasestorage.app",
-    messagingSenderId: "217730071254",
-    appId: "1:217730071254:web:a79fa9cbf49f742ff62777"
-  };
+    // pega elementos com fallback
+    const emailEl = document.getElementById("email") || document.querySelector("#email");
+    const passEl  = document.getElementById("password") || document.querySelector("#password");
+    const loginBtn = document.getElementById("loginBtn") || document.querySelector("#loginBtn");
+    const regBtn   = document.getElementById("registerBtn") || document.querySelector("#registerBtn");
 
-  // ====== APP / AUTH / DB ======
-  const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db   = getFirestore(app);
-  log("Firebase OK:", { projectId: app.options.projectId });
+    // se tiver overlay de fade, garante que não bloqueia clique
+    const fade = document.getElementById("fade-overlay");
+    if (fade) fade.style.pointerEvents = "none";
 
-  // ====== PEGA ELEMENTOS (com assertivas) ======
-  const $ = (sel)=>document.querySelector(sel);
-  const emailEl = $("#email");
-  const passEl  = $("#password");
-  const loginBtn = document.getElementById("loginBtn") || $("#loginBtn");
-  const regBtn   = document.getElementById("registerBtn") || $("#registerBtn");
-
-  console.assert(emailEl && passEl && loginBtn && regBtn, "IDs não encontrados. Confere se #email, #password, #loginBtn, #registerBtn existem no HTML.");
-
-  // ====== GARANTE DOC EM /users/{uid} ======
-  async function ensureUserDoc(user) {
-    if (!user) return;
-    // pequeno delay ajuda nas regras recém publicadas + propagação de auth
-    await new Promise(r=>setTimeout(r, 400));
-    const ref  = doc(db, "users", user.uid);
-    const snap = await getDoc(ref);
-    if (!snap.exists()) {
-      await setDoc(ref, {
-        email: user.email || "",
-        nome:  user.displayName || "",
-        acesso: false, // libera manual depois do pagamento
-        dataCadastro: serverTimestamp(),
-        progresso: { mod0:false, mod1:false, mod2:false, mod3:false, mod4:false }
-      });
-      log("Doc criado em /users:", user.uid);
-    } else {
-      log("Doc já existia:", user.uid);
+    function val() {
+      const email = (emailEl?.value || "").trim();
+      const pass  = (passEl?.value  || "").trim();
+      if (!email || !pass) { alert("Preencha e-mail e senha."); return null; }
+      return { email, pass };
     }
-  }
 
-  // ====== AUTO-REDIRECIONA SE JÁ LOGADO ======
-  onAuthStateChanged(auth, (user)=>{
-    log("AuthState:", !!user, user?.email);
-    if (user && !location.href.includes("portal.html")) {
-      location.href = "./portal.html";
+    async function ensureUserDoc(user) {
+      if (!user) return;
+      // pequeno delay ajuda na propagação das regras
+      await new Promise(r=>setTimeout(r, 300));
+      const ref = doc(db, "users", user.uid);
+      const snap = await getDoc(ref);
+      if (!snap.exists()) {
+        await setDoc(ref, {
+          email: user.email || "",
+          nome:  user.displayName || "",
+          acesso: false,                         // você libera depois do pagamento
+          dataCadastro: serverTimestamp(),
+          progresso: { mod0:false, mod1:false, mod2:false, mod3:false, mod4:false }
+        });
+      }
     }
+
+    onAuthStateChanged(auth, (user) => {
+      if (user && !location.href.includes("portal.html")) {
+        location.href = "./portal.html";
+      }
+    });
+
+    // listeners com preventDefault por segurança
+    loginBtn?.addEventListener("click", async (e) => {
+      e.preventDefault();
+      const v = val(); if (!v) return;
+      try {
+        const cred = await signInWithEmailAndPassword(auth, v.email, v.pass);
+        await ensureUserDoc(cred.user);
+        alert("✔️ Login realizado com sucesso!");
+        location.href = "./portal.html";
+      } catch (er) {
+        console.error(er);
+        alert("❌ Erro ao fazer login: " + er.message);
+      }
+    });
+
+    regBtn?.addEventListener("click", async (e) => {
+      e.preventDefault();
+      const v = val(); if (!v) return;
+      try {
+        const cred = await createUserWithEmailAndPassword(auth, v.email, v.pass);
+        await ensureUserDoc(cred.user);
+        alert("✅ Conta criada com sucesso! Agora entre no portal.");
+      } catch (er) {
+        console.error(er);
+        alert("❌ Erro ao criar conta: " + er.message);
+      }
+    });
   });
+</script>
 
-  // ====== Ações ======
-  loginBtn?.addEventListener("click", async ()=>{
-    const email = emailEl.value.trim();
-    const pass  = passEl.value.trim();
-    if (!email || !pass) return alert("Preencha e-mail e senha.");
-
-    try {
-      const cred = await signInWithEmailAndPassword(auth, email, pass);
-      log("Login OK:", cred.user.uid);
-      await ensureUserDoc(cred.user);
-      alert("✔️ Login realizado com sucesso!");
-      location.href = "./portal.html";
-    } catch (e) {
-      err("Login falhou:", e);
-      alert("❌ Erro ao fazer login: " + e.message);
-    }
-  });
-
-  regBtn?.addEventListener("click", async ()=>{
-    const email = emailEl.value.trim();
-    const pass  = passEl.value.trim();
-    if (!email || !pass) return alert("Preencha e-mail e senha.");
-
-    try {
-      const cred = await createUserWithEmailAndPassword(auth, email, pass);
-      log("Cadastro OK:", cred.user.uid);
-      await ensureUserDoc(cred.user);
-      alert("✅ Conta criada com sucesso! Agora entre no portal.");
-    } catch (e) {
-      err("Cadastro falhou:", e);
-      alert("❌ Erro ao criar conta: " + e.message);
-    }
-  });
+<body>
 </script>
 
 
