@@ -175,6 +175,48 @@ await ensureUserDoc(user);
       try {
         log("AUTH", "Criando conta...", "orange");
         const cred = await createUserWithEmailAndPassword(auth, v.email, v.pass);
+        // === SALVAR NO FIRESTORE VIA REST API ===
+try {
+  const FIREBASE_PROJECT_ID = "portal-ensaios-solos-vol1";
+  const FIREBASE_API_KEY = "AIzaSyDVSIrAkvFbbln8UQHUcgea7K0x_zZjvJY"; // já é sua key atual
+  const FIRESTORE_URL = `https://firestore.googleapis.com/v1/projects/${FIREBASE_PROJECT_ID}/databases/(default)/documents/users`;
+
+  const userData = {
+    fields: {
+      email: { stringValue: cred.user.email },
+      nome: { stringValue: "" }, // pode futuramente ser preenchido por input
+      criadoEm: { timestampValue: new Date().toISOString() },
+      acesso: { booleanValue: false },
+      progresso: {
+        mapValue: {
+          fields: {
+            mod0: { booleanValue: false },
+            mod1: { booleanValue: false },
+            mod2: { booleanValue: false },
+            mod3: { booleanValue: false },
+            mod4: { booleanValue: false },
+          }
+        }
+      }
+    }
+  };
+
+  const response = await fetch(`${FIRESTORE_URL}?key=${FIREBASE_API_KEY}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(userData)
+  });
+
+  if (response.ok) {
+    console.log("✅ Usuário salvo via REST API no Firestore");
+  } else {
+    const err = await response.json();
+    console.error("❌ Erro ao salvar no Firestore:", err);
+  }
+} catch (err) {
+  console.error("🔥 Falha ao tentar salvar usuário via API:", err);
+}
+
         await ensureUserDoc(cred.user);
         mark("register-end");
         log("AUTH", `✅ Conta criada e salva: ${cred.user.email}`, "lime");
