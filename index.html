@@ -80,112 +80,107 @@
       <a href="vitrine.html">← Voltar à vitrine</a>
     </div>
   </div>
+<script type="module">
+  // ====== IMPORTS (com cache-buster) ======
+  import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js?v=3";
+  import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged }
+    from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js?v=3";
+  import { getFirestore, doc, getDoc, setDoc, serverTimestamp }
+    from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js?v=3";
 
-  <script type="module">
-    // === Importações Firebase ===
-    import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
-    import {
-      getAuth,
-      signInWithEmailAndPassword,
-      createUserWithEmailAndPassword,
-      onAuthStateChanged
-    } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
-    import {
-      getFirestore,
-      doc,
-      getDoc,
-      setDoc,
-      serverTimestamp
-    } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+  // ====== DEBUG BÁSICO ======
+  const log = (...a)=>console.log("🔧", ...a);
+  const err = (...a)=>console.error("💥", ...a);
 
-    // === Configuração do Firebase ===
-    const firebaseConfig = {
-      apiKey: "AIzaSyDY5IFakVFbbLn8UQHUCgea7KOx_zZjvlY",
-      authDomain: "portal-ensaios-solos-vol1.firebaseapp.com",
-      projectId: "portal-ensaios-solos-vol1",
-      storageBucket: "portal-ensaios-solos-vol1.firebasestorage.app",
-      messagingSenderId: "217730071254",
-      appId: "1:217730071254:web:a79fa9cbf49f742ff62777"
-    };
+  // ====== CONFIG ======
+  const firebaseConfig = {
+    apiKey: "AIzaSyDY5IFakVFbbLn8UQHUCgea7KOx_zZjvlY",
+    authDomain: "portal-ensaios-solos-vol1.firebaseapp.com",
+    projectId: "portal-ensaios-solos-vol1",
+    storageBucket: "portal-ensaios-solos-vol1.firebasestorage.app",
+    messagingSenderId: "217730071254",
+    appId: "1:217730071254:web:a79fa9cbf49f742ff62777"
+  };
 
-    // === Inicialização segura ===
-    const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
+  // ====== APP / AUTH / DB ======
+  const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db   = getFirestore(app);
+  log("Firebase OK:", { projectId: app.options.projectId });
 
-    // === Cria documento do usuário ===
+  // ====== PEGA ELEMENTOS (com assertivas) ======
+  const $ = (sel)=>document.querySelector(sel);
+  const emailEl = $("#email");
+  const passEl  = $("#password");
+  const loginBtn = document.getElementById("loginBtn") || $("#loginBtn");
+  const regBtn   = document.getElementById("registerBtn") || $("#registerBtn");
+
+  console.assert(emailEl && passEl && loginBtn && regBtn, "IDs não encontrados. Confere se #email, #password, #loginBtn, #registerBtn existem no HTML.");
+
+  // ====== GARANTE DOC EM /users/{uid} ======
   async function ensureUserDoc(user) {
-  if (!user) return;
-
-  // 🔹 Garante um pequeno delay para sincronizar UID (essencial no Firestore)
-  await new Promise(resolve => setTimeout(resolve, 500));
-
-  const ref = doc(db, "users", user.uid);
-  const snap = await getDoc(ref);
-
-  if (!snap.exists()) {
-    try {
+    if (!user) return;
+    // pequeno delay ajuda nas regras recém publicadas + propagação de auth
+    await new Promise(r=>setTimeout(r, 400));
+    const ref  = doc(db, "users", user.uid);
+    const snap = await getDoc(ref);
+    if (!snap.exists()) {
       await setDoc(ref, {
         email: user.email || "",
-        nome: user.displayName || "",
-        acesso: false,
+        nome:  user.displayName || "",
+        acesso: false, // libera manual depois do pagamento
         dataCadastro: serverTimestamp(),
-        progresso: { mod0: false, mod1: false, mod2: false, mod3: false, mod4: false }
+        progresso: { mod0:false, mod1:false, mod2:false, mod3:false, mod4:false }
       });
-      console.log("📄 Documento criado no Firestore:", user.email);
-    } catch (err) {
-      console.error("🔥 Erro ao salvar no Firestore:", err.message);
+      log("Doc criado em /users:", user.uid);
+    } else {
+      log("Doc já existia:", user.uid);
     }
-  } else {
-    console.log("✅ Documento já existia:", user.email);
   }
-}
 
-    // === Redirecionamento automático se logado ===
-    onAuthStateChanged(auth, (user) => {
-      if (user && !window.location.href.includes("portal.html")) {
-        window.location.href = "./portal.html";
-      }
-    });
+  // ====== AUTO-REDIRECIONA SE JÁ LOGADO ======
+  onAuthStateChanged(auth, (user)=>{
+    log("AuthState:", !!user, user?.email);
+    if (user && !location.href.includes("portal.html")) {
+      location.href = "./portal.html";
+    }
+  });
 
-    // === LOGIN ===
-    document.getElementById("loginBtn").addEventListener("click", async () => {
-      const email = document.getElementById("email").value.trim();
-      const password = document.getElementById("password").value.trim();
-      if (!email || !password) return alert("Preencha e-mail e senha.");
+  // ====== Ações ======
+  loginBtn?.addEventListener("click", async ()=>{
+    const email = emailEl.value.trim();
+    const pass  = passEl.value.trim();
+    if (!email || !pass) return alert("Preencha e-mail e senha.");
 
-      try {
-        const cred = await signInWithEmailAndPassword(auth, email, password);
-        console.log("🔑 Login de:", cred.user.email);
-        await ensureUserDoc(cred.user);
-        alert("✔️ Login realizado com sucesso!");
-        window.location.href = "./portal.html";
-      } catch (error) {
-        console.error(error);
-        alert("❌ Erro ao fazer login: " + error.message);
-      }
-    });
+    try {
+      const cred = await signInWithEmailAndPassword(auth, email, pass);
+      log("Login OK:", cred.user.uid);
+      await ensureUserDoc(cred.user);
+      alert("✔️ Login realizado com sucesso!");
+      location.href = "./portal.html";
+    } catch (e) {
+      err("Login falhou:", e);
+      alert("❌ Erro ao fazer login: " + e.message);
+    }
+  });
 
-    // === CADASTRO ===
-    document.getElementById("registerBtn").addEventListener("click", async () => {
-      const email = document.getElementById("email").value.trim();
-      const password = document.getElementById("password").value.trim();
-      if (!email || !password) return alert("Preencha e-mail e senha.");
+  regBtn?.addEventListener("click", async ()=>{
+    const email = emailEl.value.trim();
+    const pass  = passEl.value.trim();
+    if (!email || !pass) return alert("Preencha e-mail e senha.");
 
-      try {
-        const cred = await createUserWithEmailAndPassword(auth, email, password);
-        console.log("✅ Usuário criado:", cred.user.uid);
+    try {
+      const cred = await createUserWithEmailAndPassword(auth, email, pass);
+      log("Cadastro OK:", cred.user.uid);
+      await ensureUserDoc(cred.user);
+      alert("✅ Conta criada com sucesso! Agora entre no portal.");
+    } catch (e) {
+      err("Cadastro falhou:", e);
+      alert("❌ Erro ao criar conta: " + e.message);
+    }
+  });
+</script>
 
-        // Aguarda autenticação completa antes de salvar no Firestore
-        await new Promise(resolve => setTimeout(resolve, 500));
-        await ensureUserDoc(cred.user);
 
-        alert("✅ Conta criada com sucesso! Agora entre no portal.");
-      } catch (error) {
-        console.error("❌ Erro no cadastro:", error);
-        alert("❌ Erro ao criar conta: " + error.message);
-      }
-    });
-  </script>
 </body>
 </html>
