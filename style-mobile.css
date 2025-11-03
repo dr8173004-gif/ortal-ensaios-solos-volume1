@@ -1,0 +1,112 @@
+/* =======================================================
+   STYLE-MOBILE.CSS — Portal Interativo (Versão Premium)
+   Autor: Diego R. Jesus
+   Descrição: Estilos animados, gamificação e interações
+   ======================================================= */
+
+/* ========== ANIMAÇÕES DE ENTRADA DOS CARDS ========== */
+[data-animate].show {
+  opacity: 1;
+  transform: none;
+}
+
+.step {
+  opacity: 0;
+  transform: scale(0.96) translateY(30px);
+  animation: fadeBounce 0.9s cubic-bezier(0.22, 1.28, 0.36, 1) forwards;
+}
+
+@keyframes fadeBounce {
+  0% { opacity: 0; transform: scale(0.96) translateY(30px); }
+  60% { opacity: 1; transform: scale(1.02) translateY(-4px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* Tilt 3D leve nos cards */
+.step:hover {
+  transform: perspective(800px) rotateX(2deg) rotateY(-2deg) scale(1.02);
+  transition: transform 0.4s ease;
+}
+
+/* ========== BOTÕES INTERATIVOS ========== */
+.btn {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.25s ease;
+}
+
+.btn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.5), transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.btn:hover::after {
+  opacity: 0.5;
+}
+
+.btn:active {
+  transform: scale(0.96);
+  box-shadow: 0 0 15px rgba(255,255,255,0.4);
+}
+
+/* ========== XP FLOAT (ganho de experiência) ========== */
+.xp-float {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 60px;
+  font-weight: 900;
+  color: #28a745;
+  font-size: 1.4rem;
+  text-shadow: 0 0 10px rgba(40,167,69,.6);
+  animation: xpFloat 1.3s ease-out forwards;
+  z-index: 200;
+}
+
+@keyframes xpFloat {
+  0% { transform: translate(-50%, 10px); opacity: 0; }
+  30% { transform: translate(-50%, 0); opacity: 1; }
+  100% { transform: translate(-50%, -70px); opacity: 0; }
+}
+
+/* ========== CONFETE ANIMADO MELHORADO ========== */
+.confetti {
+  position: fixed;
+  width: 10px; height: 10px;
+  top: -10px;
+  border-radius: 50%;
+  opacity: 0.8;
+  animation: fall 2.8s linear forwards;
+  z-index: 300;
+}
+
+@keyframes fall {
+  to {
+    transform: translateY(100vh) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+/* ========== MEDALHA ANIMADA ========== */
+#modal.open .medal {
+  animation: medalPop 1s cubic-bezier(.24,1.55,.44,1.02);
+}
+
+@keyframes medalPop {
+  0% { transform: scale(0.2) rotate(-20deg); opacity: 0; }
+  60% { transform: scale(1.15) rotate(10deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0); }
+}
+
+/* ========== LUZ AMBIENTE NO FUNDO ========== */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at 20% 20%, rgba(255,255,255,0.08), transparent 70%);
+  z-index: -1;
+}
