@@ -51,13 +51,40 @@
     /* Navegação por módulo */
     .nav-inline{display:flex; gap:10px; margin-top:8px}
     .nav-inline .btn{flex:1}
+  /* Footer fixo premium (dock flutuante) */
+  .footer-actions{
+    position:fixed; 
+    left:50%; 
+    transform:translateX(-50%);
+    bottom:20px; 
+    z-index:20;
+    background:rgba(255,255,255,0.25);
+    backdrop-filter:blur(12px);
+    border:1px solid rgba(255,255,255,0.3);
+    box-shadow:0 8px 24px rgba(1,60,90,0.3);
+    display:flex; 
+    gap:12px; 
+    padding:10px 14px;
+    border-radius:40px;
+    width:90%;
+    max-width:420px;
+  }
+  .footer-actions .btn{
+    flex:1;
+    border:none;
+    border-radius:999px;
+    font-weight:700;
+    background:linear-gradient(135deg,#28a745,#1b853d);
+    color:#fff;
+    transition:all .3s ease;
+  }
+  .footer-actions .btn.alt{
+    background:linear-gradient(135deg,#046b8f,#013C5A);
+  }
+  .footer-actions .btn:active{
+    transform:scale(.97);
+  }
 
-    /* Footer fixo leve (atalhos globais) */
-    .footer-actions{
-      position:fixed; left:0; right:0; bottom:0; z-index:10;
-      background:#fff; border-top:1px solid rgba(1,60,90,.10);
-      display:flex; gap:10px; padding:10px 14px;
-    }
     .footer-actions .btn{flex:1}
 
     /* Acessibilidade e toque */
