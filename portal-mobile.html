@@ -96,6 +96,60 @@ p{margin:6px 0 10px; color:#193645}
 /* hide sections (router) */
 section[hidden]{display:none !important}
 </style>
+
+  <!-- ===== UPGRADE VISUAL — MÓDULO 0 PREMIUM ===== -->
+<style>
+/* animação de entrada dos cards */
+.step {
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 18px;
+  box-shadow: 0 6px 20px rgba(1, 60, 90, 0.15);
+  padding: 18px;
+  margin-bottom: 14px;
+  transform: translateY(20px);
+  opacity: 0;
+  animation: fadeUp 0.6s ease forwards;
+}
+@keyframes fadeUp {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* efeito pulse nos botões */
+.btn.primary, .btn.secondary {
+  position: relative;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.btn.primary:hover, .btn.secondary:hover {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 6px 14px rgba(1, 60, 90, 0.3);
+}
+.btn.primary::after, .btn.secondary::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border-radius: 999px;
+  background: radial-gradient(circle at center, rgba(255,255,255,0.4) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.btn.primary:hover::after, .btn.secondary:hover::after {
+  opacity: 1;
+}
+
+/* confete colorido */
+.confetti {
+  position: fixed;
+  width: 8px; height: 8px;
+  background: hsl(var(--hue), 90%, 60%);
+  top: -10px;
+  border-radius: 50%;
+  animation: fall 2s linear forwards;
+}
+@keyframes fall {
+  to { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+}
+</style>
+
 </head>
 <body>
 
@@ -469,5 +523,28 @@ document.addEventListener('DOMContentLoaded',()=>{
 });
 </script>
 
+<script>
+// ===== CONFETE ANIMADO =====
+function confettiRain() {
+  for (let i = 0; i < 25; i++) {
+    const c = document.createElement("div");
+    c.className = "confetti";
+    c.style.left = Math.random() * 100 + "vw";
+    c.style.backgroundColor = `hsl(${Math.random() * 360}, 80%, 60%)`;
+    c.style.animationDuration = 1.5 + Math.random() + "s";
+    document.body.appendChild(c);
+    setTimeout(() => c.remove(), 2000);
+  }
+}
+
+// intercepta quando o aluno ganha uma medalha
+const oldToast = UI.toast;
+UI.toast = (msg) => {
+  if (msg.includes("🏅")) confettiRain();
+  oldToast(msg);
+};
+</script>
+
+  
 </body>
 </html>
