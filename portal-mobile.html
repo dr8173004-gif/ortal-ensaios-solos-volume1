@@ -106,52 +106,64 @@
     </section>
 
     <!-- MÓDULO 0 -->
-    
-    <section id="mod0" class="card" data-id="1">
+<!-- MÓDULO 0 – Pocket Interativo -->
+<section id="mod0" class="card" data-id="1">
   <h2>🎓 Módulo 0 — Boas-Vindas e Contexto Profissional</h2>
   <p><strong>Seja bem-vindo(a) ao Portal Interativo – Ensaios de Solos (Volume 1)!</strong></p>
 
-  <p>Antes de colocar a mão na massa, é importante entender o cenário em que você está entrando. O <strong>laboratorista de solos</strong> é o profissional que executa, registra e interpreta ensaios de campo e de laboratório segundo as normas da <strong>ABNT – Associação Brasileira de Normas Técnicas</strong>.</p>
+  <p>Antes de colocar a mão na massa, entenda o cenário em que você está entrando.  
+  O <strong>laboratorista de solos</strong> é o profissional que executa, registra e interpreta ensaios segundo as normas da <strong>ABNT</strong>.</p>
 
   <div class="note">
-    <p>💡 Esses ensaios são fundamentais para obras de <strong>terraplenagem, pavimentação, fundações e contenções</strong>.  
-    A precisão do laboratorista garante que o solo seja classificado corretamente e que a obra seja segura e econômica.</p>
+    <p>💡 Esses ensaios são fundamentais para obras de <strong>terraplenagem, pavimentação e fundações</strong>.  
+    A precisão do laboratorista garante que o solo seja classificado corretamente e a obra seja segura.</p>
   </div>
 
   <h3>📍 Objetivos deste módulo</h3>
-  <ul style="margin-left:18px">
-    <li>Apresentar a profissão e suas oportunidades de crescimento.</li>
-    <li>Mostrar os principais ensaios do Volume 1 – Umidade Natural e Granulometria.</li>
-    <li>Explicar o papel do laboratorista dentro de uma equipe de engenharia.</li>
+  <ul class="checklist">
+    <li><label><input type="checkbox" data-check="obj1"> Apresentar a profissão e oportunidades de crescimento.</label></li>
+    <li><label><input type="checkbox" data-check="obj2"> Mostrar os ensaios do Volume 1 – Umidade Natural e Granulometria.</label></li>
+    <li><label><input type="checkbox" data-check="obj3"> Explicar o papel do laboratorista em equipes de engenharia.</label></li>
   </ul>
 
   <h3>👷‍♂️ Perfil do laboratorista</h3>
-  <p>Um bom laboratorista é alguém curioso, observador e metódico.  
-  Ele trabalha com <strong>segurança, paciência e responsabilidade técnica</strong>, garantindo que cada resultado reflita com fidelidade o comportamento real do solo em campo.</p>
+  <p>Um bom laboratorista é curioso, observador e metódico.  
+  Trabalha com <strong>segurança e responsabilidade técnica</strong>, garantindo resultados confiáveis.</p>
 
-  <div class="note">
-    <p>🧠 Dica: o laboratorista não apenas executa; ele pensa!  
-    Cada peso, cada peneirada e cada medida contam uma história sobre a natureza do terreno.</p>
+  <div class="note tip">
+    <p>🧠 <strong>Dica:</strong> o laboratorista não apenas executa; ele interpreta cada ensaio como quem lê o solo.</p>
   </div>
 
   <h3>🧰 Equipamentos fundamentais</h3>
-  <p>Durante os próximos módulos, você verá na prática o uso de equipamentos como:</p>
+  <p>Durante o curso você verá equipamentos como:</p>
   <ul style="margin-left:18px">
     <li>Balança de precisão;</li>
-    <li>Estufa elétrica para secagem de amostras;</li>
+    <li>Estufa elétrica para secagem;</li>
     <li>Peneiros padronizados (ABNT);</li>
-    <li>Picnômetro e proveta (ensaios de densidade);</li>
-    <li>Conjunto de cápsulas metálicas (teor de umidade).</li>
+    <li>Picnômetro e proveta;</li>
+    <li>Cápsulas metálicas (teor de umidade).</li>
   </ul>
 
-  <h3>📚 Como o curso está organizado</h3>
+  <!-- Card interativo de curiosidade -->
+  <div class="curiosity" data-open="false">
+    <div class="curiosity-header">
+      <span>🔍 Curiosidade técnica</span>
+      <span class="toggle">＋</span>
+    </div>
+    <div class="curiosity-body">
+      <p>Os ensaios de solos surgiram no Brasil em 1934 com a criação do IPT.  
+      A partir daí as normas ABNT começaram a padronizar a mecânica dos solos em todo o país.</p>
+    </div>
+  </div>
+
+  <h3>📚 Estrutura do curso</h3>
   <p>Cada módulo segue a sequência:</p>
   <ol style="margin-left:18px">
     <li><strong>Introdução</strong> — conceito e finalidade do ensaio;</li>
     <li><strong>Equipamentos</strong> — instrumentos necessários;</li>
     <li><strong>Execução</strong> — passo a passo segundo ABNT;</li>
     <li><strong>Cálculos</strong> — fórmulas automáticas e exemplos;</li>
-    <li><strong>Interpretação</strong> — como ler os resultados.</li>
+    <li><strong>Interpretação</strong> — leitura dos resultados.</li>
   </ol>
 
   <div class="note">
@@ -159,15 +171,74 @@
   </div>
 
   <h3>🚀 Antes de prosseguir</h3>
-  <p>Ao final deste módulo, você já entenderá o propósito dos ensaios e estará pronto para iniciar o <strong>Módulo 1 – Determinação do Teor de Umidade Natural</strong>.</p>
+  <p>Ao concluir as tarefas acima, você estará pronto para o <strong>Módulo 1 – Determinação do Teor de Umidade Natural</strong>.</p>
 
   <div class="nav-inline">
     <button class="btn alt" data-prev="#index">◀ Voltar</button>
     <button class="btn" data-next="#mod1">Avançar ▶</button>
   </div>
+
+  <style>
+    /* ======= estilos adicionais ======= */
+    .checklist input[type="checkbox"]{
+      width:20px;height:20px;margin-right:8px;accent-color:var(--green);
+    }
+    .checklist li{margin:6px 0;font-weight:600;display:flex;align-items:center;}
+    .curiosity{
+      margin:14px 0;padding:12px;border:1px solid rgba(1,60,90,.15);
+      border-radius:12px;background:#f9fcff;box-shadow:0 3px 10px rgba(1,60,90,.05);
+      transition:all .3s ease;overflow:hidden;
+    }
+    .curiosity-header{display:flex;justify-content:space-between;align-items:center;cursor:pointer;}
+    .curiosity-body{max-height:0;opacity:0;transition:all .35s ease;font-weight:500;color:#333;}
+    .curiosity.open .curiosity-body{max-height:300px;opacity:1;margin-top:8px;}
+    .curiosity.open .toggle{transform:rotate(45deg);color:var(--green);}
+    .note.tip{background:#eaf8ff;border-color:#b6e1ff;}
+    [data-animate]{opacity:0;transform:translateY(20px);transition:all .5s ease-out;}
+    [data-animate].show{opacity:1;transform:none;}
+  </style>
+
+  <script>
+  // ======= CHECKBOXES COM LOCALSTORAGE =======
+  const checks = document.querySelectorAll('#mod0 [data-check]');
+  checks.forEach(ch=>{
+    const key = 'check_'+ch.dataset.check;
+    ch.checked = localStorage.getItem(key)==='true';
+    ch.addEventListener('change',()=>{
+      localStorage.setItem(key, ch.checked);
+      updateProgressFromChecks();
+    });
+  });
+
+  function updateProgressFromChecks(){
+    const total = checks.length;
+    const done = Array.from(checks).filter(c=>c.checked).length;
+    const pctExtra = Math.round((done/total)*5); // +5% bonus visual
+    const pctBar = parseInt(document.getElementById('pct').textContent) || 0;
+    document.getElementById('bar').style.width = Math.min(100,pctBar+pctExtra)+'%';
+  }
+
+  // ======= CARD DE CURIOSIDADE =======
+  const cur = document.querySelector('#mod0 .curiosity');
+  const header = cur.querySelector('.curiosity-header');
+  header.addEventListener('click',()=>{
+    const open = cur.classList.toggle('open');
+    header.querySelector('.toggle').textContent = open ? '－' : '＋';
+    cur.dataset.open = open;
+  });
+
+  // ======= ANIMAÇÕES DE ENTRADA =======
+  const animEls = document.querySelectorAll('#mod0 [data-animate]');
+  const observer = new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting) e.target.classList.add('show');
+    });
+  },{threshold:0.15});
+  animEls.forEach(el=>observer.observe(el));
+  </script>
 </section>
 
-
+    
     <!-- MÓDULO 1 -->
     <section id="mod1" class="card" data-id="2">
       <h2>Módulo 1 — Umidade Natural</h2>
