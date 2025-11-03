@@ -1762,75 +1762,162 @@ logoutBtn?.addEventListener("click", async () => {
 })();
 </script>
 
-  <script type="module">
+ <script type="module">
 import { auth, db } from "./firebase-init.js";
 import {
-  doc,
-  getDoc,
-  setDoc,
-  updateDoc,
-  onSnapshot,
+  doc, getDoc, setDoc, updateDoc
 } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+import { onAuthStateChanged, signOut }
+  from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
 
-/* === SINCRONIZAÇÃO DE PROGRESSO COM FIRESTORE === */
-(async function syncProgressWithFirestore() {
-  console.log("🔄 Sistema de sincronização de progresso iniciado...");
+/* ==========================================================
+   🔒 LOCAL STORAGE ISOLADO POR USUÁRIO (com inicialização segura)
+   ========================================================== */
+let currentUID = null;
+function setCurrentUID(uid) { currentUID = uid; }
+function userKey(key) { return currentUID ? `${currentUID}_${key}` : key; }
+function saveKV(key, value) { try { localStorage.setItem(userKey(key), value); } catch(e) {} }
+function loadKV(key) { try { return localStorage.getItem(userKey(key)); } catch(e) { return null; } }
 
-  // Função para carregar progresso salvo do Firestore
-  async function loadFromFirestore(uid) {
-    try {
-      const ref = doc(db, "users", uid);
-      const snap = await getDoc(ref);
-      if (snap.exists()) {
-        const data = snap.data();
-        if (data.progresso) {
-          console.log("📥 Progresso carregado do Firestore:", data.progresso);
-          for (const mod in data.progresso) {
-            localStorage.setItem(`${mod}_progress_pct`, data.progresso[mod]);
-          }
-        }
-      }
-    } catch (err) {
-      console.error("❌ Erro ao carregar progresso do Firestore:", err);
-    }
-  }
+/* ==========================================================
+   👤 AUTENTICAÇÃO E CONTROLE DE ACESSO
+   ========================================================== */
+const headerEl = document.getElementById("userHeader");
+const nameEl = document.getElementById("userName");
+const logoutBtn = document.getElementById("logoutBtn");
 
-  // Função para salvar progresso no Firestore
-  async function saveToFirestore(uid) {
-    try {
-      const ref = doc(db, "users", uid);
-      const progresso = {
-        mod0: parseFloat(localStorage.getItem("m0_progress_pct") || 0),
-        mod1: parseFloat(localStorage.getItem("m1_progress_pct") || 0),
-        mod2: parseFloat(localStorage.getItem("m2_progress_pct") || 0),
-        geral: parseFloat(localStorage.getItem("geral_progress_pct") || 0),
-      };
-      await updateDoc(ref, { progresso });
-      console.log("✅ Progresso salvo no Firestore:", progresso);
-    } catch (err) {
-      console.error("❌ Erro ao salvar progresso no Firestore:", err);
-    }
-  }
+logoutBtn?.addEventListener("click", async () => {
+  try { await signOut(auth); } finally { window.location.href = "./index.html"; }
+});
 
-  // Escuta autenticação para vincular progresso ao usuário logado
-  auth.onAuthStateChanged(async (user) => {
-    if (!user) {
-      console.warn("⚠️ Nenhum usuário logado — sincronização pausada.");
-      return;
-    }
+/* ==========================================================
+   🧠 FUNÇÕES DO PORTAL
+   ========================================================== */
+function initPortal() {
+  console.log("🚀 Portal inicializado para UID:", currentUID);
+  initChecks();
+  initPeneiras();
+  atualizarBarraGeral();
+  startSyncWithFirestore();
+}
 
-    console.log("👤 Usuário autenticado:", user.email);
-    await loadFromFirestore(user.uid);
+/* ===== CHECKLIST + PROGRESSO ===== */
+function resolveModFor(el){
+  const explicit = el.dataset.mod;
+  if (explicit) return explicit;
+  let p = el.closest('section[id^="mod"]');
+  if (p && /^mod[0-9]+$/.test(p.id)) return p.id.replace('mod','m');
+  return null;
+}
 
-    // Salva progresso inicial no Firestore (garante documento criado)
-    await saveToFirestore(user.uid);
-
-    // Salva automaticamente a cada 10 segundos
-    setInterval(() => saveToFirestore(user.uid), 10000);
+function initChecks(){
+  const checks = document.querySelectorAll('input.ck');
+  const mods = {};
+  checks.forEach(el=>{
+    const mod = resolveModFor(el);
+    if (mod && !el.dataset.mod) el.dataset.mod = mod;
+    const key = el.dataset.key;
+    const m = el.dataset.mod;
+    if(!key || !m) return;
+    const saved = loadKV(key);
+    if(saved !== null) el.checked = (saved === '1');
+    if(!mods[m]) mods[m] = {done:0,total:0};
+    mods[m].total++; if(el.checked) mods[m].done++;
+    el.addEventListener('change', ()=>{
+      saveKV(key, el.checked?'1':'0');
+      updateModuleProgress(m);
+      updateOverallProgress();
+    });
   });
-})();
+  Object.keys(mods).forEach(m=>updateModuleProgress(m, mods[m].done, mods[m].total));
+  updateOverallProgress();
+}
+
+function updateModuleProgress(mod, doneOpt, totalOpt){
+  const checks = document.querySelectorAll(`input.ck[data-mod="${mod}"]`);
+  const done = (typeof doneOpt === 'number') ? doneOpt : Array.from(checks).filter(c=>c.checked).length;
+  const total = (typeof totalOpt === 'number') ? totalOpt : checks.length;
+  const pct = total>0 ? Math.round((done/total)*100) : 0;
+  const bar = document.getElementById(`${mod}_bar`);
+  const txt = document.getElementById(`${mod}_pct`);
+  if(bar) bar.style.width = pct + '%';
+  if(txt) txt.textContent = pct + '%';
+  saveKV(`${mod}_progress_pct`, pct);
+}
+
+function updateOverallProgress(){
+  const mods = ['m0','m1','m2'];
+  let sum=0,count=0;
+  mods.forEach(m=>{
+    const pct = parseFloat(loadKV(`${m}_progress_pct`));
+    if(!isNaN(pct)){sum+=pct;count++;}
+  });
+  const avg = count>0 ? Math.round(sum/count) : 0;
+  const bar=document.getElementById('barraGeral');
+  const txt=document.getElementById('percentualGeral');
+  if(bar) bar.style.width = avg+'%';
+  if(txt) txt.textContent = avg+'%';
+  saveKV('geral_progress_pct', avg);
+}
+
+/* ==========================================================
+   🔄 SINCRONIZAÇÃO COM FIRESTORE
+   ========================================================== */
+async function loadFromFirestore(uid){
+  try{
+    const ref=doc(db,"users",uid);
+    const snap=await getDoc(ref);
+    if(snap.exists()){
+      const data=snap.data();
+      if(data.progresso){
+        for(const mod in data.progresso){
+          saveKV(`${mod}_progress_pct`,data.progresso[mod]);
+        }
+        console.log("📥 Progresso restaurado do Firestore:",data.progresso);
+      }
+    }
+  }catch(e){console.error("Erro ao carregar Firestore:",e);}
+}
+
+async function saveToFirestore(uid){
+  try{
+    const ref=doc(db,"users",uid);
+    const progresso={
+      mod0:parseFloat(loadKV("m0_progress_pct")||0),
+      mod1:parseFloat(loadKV("m1_progress_pct")||0),
+      mod2:parseFloat(loadKV("m2_progress_pct")||0),
+      geral:parseFloat(loadKV("geral_progress_pct")||0),
+    };
+    await updateDoc(ref,{progresso});
+    console.log("✅ Progresso salvo no Firestore:",progresso);
+  }catch(e){console.error("Erro ao salvar Firestore:",e);}
+}
+
+function startSyncWithFirestore(){
+  if(!currentUID)return;
+  loadFromFirestore(currentUID).then(()=>saveToFirestore(currentUID));
+  setInterval(()=>saveToFirestore(currentUID),10000);
+}
+
+/* ==========================================================
+   ⏱️ ESPERA LOGIN PARA INICIALIZAR PORTAL
+   ========================================================== */
+onAuthStateChanged(auth, (user)=>{
+  if(user){
+    setCurrentUID(user.uid);
+    const nome=user.displayName||(user.email?user.email.split("@")[0]:"aluno");
+    if(nameEl) nameEl.textContent=`👋 Olá, ${nome}`;
+    if(headerEl) headerEl.style.display="flex";
+    console.log("✅ Usuário autenticado:", user.email);
+    initPortal();
+  }else{
+    if(headerEl) headerEl.style.display="none";
+    alert("⚠️ Faça login para acessar o portal.");
+    window.location.href="./index.html";
+  }
+});
 </script>
-  
+
     
 </body>
 </html>
