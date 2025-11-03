@@ -26,10 +26,10 @@
     .brand{font-weight:800; color:var(--blue); letter-spacing:.2px}
     .progress-mini{margin-left:auto; display:flex; align-items:center; gap:8px}
     .bar{width:120px; height:8px; background:#e9eef2; border-radius:999px; overflow:hidden}
-    .bar i{display:block; height:100%; width:22%; background:var(--green)} /* valor fictício p/ visual */
+    .bar i{display:block; height:100%; width:22%; background:var(--green)} /* inicia com 22% */
 
     /* Conteúdo */
-    main{padding:12px 14px 80px; max-width:760px; margin:0 auto}
+    main{padding:12px 14px 100px; max-width:760px; margin:0 auto}
     section{margin:12px 0}
     .card{
       background:#fff; border:1px solid rgba(1,60,90,.08); border-radius:var(--radius);
@@ -48,7 +48,11 @@
     .note{background:#fff9e6; border:1px solid #ffe5a3; border-radius:12px; padding:10px}
     .chip{display:inline-flex; align-items:center; gap:6px; background:#eef4f7; color:var(--blue); padding:6px 10px; border-radius:999px; font-weight:700; font-size:.85rem}
 
-    /* Footer fixo leve (sem blur) */
+    /* Navegação por módulo */
+    .nav-inline{display:flex; gap:10px; margin-top:8px}
+    .nav-inline .btn{flex:1}
+
+    /* Footer fixo leve (atalhos globais) */
     .footer-actions{
       position:fixed; left:0; right:0; bottom:0; z-index:10;
       background:#fff; border-top:1px solid rgba(1,60,90,.10);
@@ -60,8 +64,10 @@
     a, button { -webkit-tap-highlight-color: rgba(0,0,0,0); }
     .btn:active { transform: scale(.98); }
 
-    /* Ícones simples em linha (SVG) */
-    .ico{width:18px;height:18px;display:inline-block}
+    /* inputs simples */
+    input[type="number"]{
+      width:100%; padding:10px; border:1px solid #cfd6dc; border-radius:10px; font-size:16px;
+    }
   </style>
 </head>
 <body>
@@ -69,7 +75,7 @@
   <!-- Header -->
   <header class="top">
     <span class="brand">Ensaios de Solos — Mobile</span>
-    <div class="progress-mini" aria-label="progresso geral (demo)">
+    <div class="progress-mini" aria-label="progresso geral">
       <span style="font-weight:800;color:var(--blue);font-size:.9rem" id="pct">22%</span>
       <span class="bar" aria-hidden="true"><i id="bar"></i></span>
     </div>
@@ -77,7 +83,7 @@
 
   <main>
     <!-- HOME -->
-    <section id="home" class="card">
+    <section id="home" class="card" data-id="-1">
       <span class="badge">Pocket Edition</span>
       <h1>Curso Interativo – Volume 1</h1>
       <p>Versão mobile super leve. Aprenda <strong>Umidade Natural</strong> e <strong>Granulometria</strong> com passo a passo e calculadoras.</p>
@@ -88,7 +94,7 @@
     </section>
 
     <!-- ÍNDICE -->
-    <section id="index" class="card">
+    <section id="index" class="card" data-id="0">
       <h2>Índice do Curso</h2>
       <div class="grid">
         <a class="btn alt" href="#mod0">Módulo 0 — Introdução</a>
@@ -99,33 +105,69 @@
       </div>
     </section>
 
-    <!-- MÓDULO 0 (resumo curto só para teste de rolagem) -->
-    <section id="mod0" class="card">
+    <!-- MÓDULO 0 -->
+    <section id="mod0" class="card" data-id="1">
       <h2>Módulo 0 — Introdução</h2>
       <p class="note">Resumo curto: papel do laboratorista, mercado, equipamentos básicos e visão geral dos próximos módulos.</p>
+      <div class="nav-inline">
+        <button class="btn alt" data-prev="#index">◀ Voltar</button>
+        <button class="btn" data-next="#mod1">Avançar ▶</button>
+      </div>
     </section>
 
-    <!-- MÓDULO 1 (placeholder leve com inputs) -->
-    <section id="mod1" class="card">
+    <!-- MÓDULO 1 -->
+    <section id="mod1" class="card" data-id="2">
       <h2>Módulo 1 — Umidade Natural</h2>
       <p>Preencha os campos para testar a calculadora (versão leve de validação local).</p>
       <div class="grid">
-        <label>Tara (lata) <input id="m_lata" type="number" step="0.01" style="width:100%;padding:10px;border:1px solid #cfd6dc;border-radius:10px"></label>
-        <label>Lata + solo úmido <input id="m_umida" type="number" step="0.01" style="width:100%;padding:10px;border:1px solid #cfd6dc;border-radius:10px"></label>
-        <label>Lata + solo seco <input id="m_seca" type="number" step="0.01" style="width:100%;padding:10px;border:1px solid #cfd6dc;border-radius:10px"></label>
+        <label>Tara (lata) <input id="m_lata" type="number" step="0.01"></label>
+        <label>Lata + solo úmido <input id="m_umida" type="number" step="0.01"></label>
+        <label>Lata + solo seco <input id="m_seca" type="number" step="0.01"></label>
         <button class="btn" id="btnCalc">Calcular w</button>
         <p id="w_out" style="font-weight:800;margin:0"></p>
       </div>
       <p class="note" style="margin-top:10px">Fórmula: <strong>w = (m<sub>água</sub> / m<sub>solo seco</sub>) × 100%</strong>.</p>
+      <div class="nav-inline">
+        <button class="btn alt" data-prev="#mod0">◀ Voltar</button>
+        <button class="btn" data-next="#mod2">Avançar ▶</button>
+      </div>
     </section>
 
-    <!-- MÓDULO 2/3/4 placeholders só para garantir rolagem total -->
-    <section id="mod2" class="card"><h2>Módulo 2 — Granulometria</h2><p>Placeholder leve — tabela e curva entram em próximo passo.</p></section>
-    <section id="mod3" class="card"><h2>Módulo 3 — Mentoria</h2><p>Agendamento simplificado via WhatsApp — entra no próximo passo.</p></section>
-    <section id="mod4" class="card"><h2>Módulo 4 — Certificado</h2><p>Geração de PDF otimizada — entra no próximo passo.</p></section>
+    <!-- MÓDULO 2 -->
+    <section id="mod2" class="card" data-id="3">
+      <h2>Módulo 2 — Granulometria</h2>
+      <p>Placeholder leve — tabela e curva entram em próximo passo.</p>
+      <div class="nav-inline">
+        <button class="btn alt" data-prev="#mod1">◀ Voltar</button>
+        <button class="btn" data-next="#mod3">Avançar ▶</button>
+      </div>
+    </section>
 
-    <!-- Final (ancora para testar rolagem completa) -->
-    <section class="card" aria-hidden="true"><h3>Fim da página (teste)</h3><p>Se você chegou aqui no celular que travava, ✅ a rolagem está OK.</p></section>
+    <!-- MÓDULO 3 -->
+    <section id="mod3" class="card" data-id="4">
+      <h2>Módulo 3 — Mentoria</h2>
+      <p>Agendamento simplificado via WhatsApp — entra no próximo passo.</p>
+      <div class="nav-inline">
+        <button class="btn alt" data-prev="#mod2">◀ Voltar</button>
+        <button class="btn" data-next="#mod4">Avançar ▶</button>
+      </div>
+    </section>
+
+    <!-- MÓDULO 4 -->
+    <section id="mod4" class="card" data-id="5">
+      <h2>Módulo 4 — Certificado</h2>
+      <p>Geração de PDF otimizada — entra no próximo passo.</p>
+      <div class="nav-inline">
+        <button class="btn alt" data-prev="#mod3">◀ Voltar</button>
+        <a class="btn" href="#home">Concluir</a>
+      </div>
+    </section>
+
+    <!-- Final (teste de rolagem) -->
+    <section class="card" aria-hidden="true" data-id="6">
+      <h3>Fim da página (teste)</h3>
+      <p>Se você chegou aqui no celular que travava, ✅ a rolagem está OK.</p>
+    </section>
   </main>
 
   <!-- Footer ações -->
@@ -135,30 +177,74 @@
   </div>
 
   <script>
-    // calculadora leve
     const $ = (id)=>document.getElementById(id);
-    $('btnCalc').addEventListener('click', ()=>{
-      const ml=parseFloat($('m_lata').value.replace(',','.'));
-      const mu=parseFloat($('m_umida').value.replace(',','.'));
-      const ms=parseFloat($('m_seca').value.replace(',','.'));
-      if([ml,mu,ms].some(v=>isNaN(v))){$('w_out').textContent='Preencha todos os campos.'; return;}
-      const magua = mu - ms;
-      const msec  = ms - ml;
-      if(msec<=0){$('w_out').textContent='Verifique as massas.'; return;}
-      const w = (magua/msec)*100;
-      $('w_out').textContent = 'w = ' + w.toFixed(2) + ' %';
+
+    // calculadora leve
+    const btn = document.getElementById('btnCalc');
+    if(btn){
+      btn.addEventListener('click', ()=>{
+        const ml=parseFloat(($('m_lata').value||'').replace(',','.'));
+        const mu=parseFloat(($('m_umida').value||'').replace(',','.'));
+        const ms=parseFloat(($('m_seca').value||'').replace(',','.'));
+        if([ml,mu,ms].some(v=>isNaN(v))){$('w_out').textContent='Preencha todos os campos.'; return;}
+        const magua = mu - ms;
+        const msec  = ms - ml;
+        if(msec<=0){$('w_out').textContent='Verifique as massas.'; return;}
+        const w = (magua/msec)*100;
+        $('w_out').textContent = 'w = ' + w.toFixed(2) + ' %';
+      });
+    }
+
+    // navegação suave por hash + botões
+    function goTo(hash, behavior='smooth'){
+      const target = document.querySelector(hash);
+      if(target){
+        target.scrollIntoView({behavior, block:'start'});
+        target.setAttribute('tabindex','-1'); target.focus({preventScroll:true});
+      }
+    }
+    document.querySelectorAll('[data-next]').forEach(b=>b.addEventListener('click',()=>goTo(b.dataset.next)));
+    document.querySelectorAll('[data-prev]').forEach(b=>b.addEventListener('click',()=>goTo(b.dataset.prev)));
+
+    // === SISTEMA DE PROGRESSO REAL ===
+    function updateProgressById(n){
+      const total = 5; // módulos 0..4
+      const pct = Math.max(1, Math.min(100, Math.round(((parseInt(n)+1)/total)*100)));
+      document.getElementById('pct').textContent = pct + '%';
+      document.getElementById('bar').style.width = pct + '%';
+    }
+    function saveProgress(n){
+      localStorage.setItem('mod_atual_mobile', n);
+      updateProgressById(n);
+    }
+    // Detecta seção visível
+    function trackOnScroll(){
+      const sections = document.querySelectorAll('section[data-id]');
+      let current = 1; // índice do índice (id=0 é o menu)
+      sections.forEach(sec=>{
+        const r = sec.getBoundingClientRect();
+        if(r.top < window.innerHeight*0.4) current = sec.dataset.id;
+      });
+      saveProgress(current);
+    }
+    window.addEventListener('scroll', trackOnScroll, {passive:true});
+
+    // Recupera progresso ao abrir
+    window.addEventListener('load', ()=>{
+      const saved = localStorage.getItem('mod_atual_mobile');
+      if(saved){
+        const target = document.querySelector(`[data-id="${saved}"]`);
+        if(target){ goTo('#'+target.id, 'instant'); updateProgressById(saved); return; }
+      }
+      // sem progresso salvo, inicializa barra
+      updateProgressById(1);
     });
 
-    // navegação suave por hash (com foco acessível)
-    function focusTarget(hash){
-      const el = document.querySelector(hash);
+    // hashchange mantém foco acessível
+    window.addEventListener('hashchange', ()=>{
+      const el = document.querySelector(location.hash);
       if(el){ el.setAttribute('tabindex','-1'); el.focus({preventScroll:true}); }
-    }
-    window.addEventListener('hashchange', ()=>focusTarget(location.hash));
-    window.addEventListener('load', ()=>{ if(location.hash) focusTarget(location.hash); });
-
-    // Simula progresso mini (apenas visual neste passo)
-    // Mantemos 22% fixo para validar layout
+    });
   </script>
 </body>
 </html>
