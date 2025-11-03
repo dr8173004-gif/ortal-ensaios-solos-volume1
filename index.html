@@ -108,10 +108,9 @@
       return { email, pass };
     }
 
-import { auth, db } from "./firebase-init.js";
-import { doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+    // === EVITAR DUPLICAÇÃO DE DOCUMENTOS ===
 
-// Garante que o documento do usuário seja criado apenas uma vez
+// Cria o documento do usuário apenas se ainda não existir
 async function ensureUserDoc(user) {
   if (!user) return;
 
@@ -119,11 +118,10 @@ async function ensureUserDoc(user) {
   const snap = await getDoc(ref);
 
   if (!snap.exists()) {
-    // Criar documento com campos iniciais
     await setDoc(ref, {
       email: user.email,
       nome: user.displayName || "",
-      dataCadastro: new Date().toISOString(), // mantém a data de cadastro
+      dataCadastro: new Date().toISOString(),
       acesso: false,
       progresso: {
         mod0: 0,
@@ -134,17 +132,10 @@ async function ensureUserDoc(user) {
     });
     console.log("✅ Novo usuário criado:", user.email);
   } else {
-    // Nenhuma recriação; usamos updateDoc apenas quando necessário
     console.log("📁 Usuário já existe, evitando duplicação.");
   }
 }
-
-// Chame ensureUserDoc assim que o usuário fizer login ou cadastro
-auth.onAuthStateChanged(async (user) => {
-  if (user) await ensureUserDoc(user);
-});
-
-    
+  
     // === LOGIN ===
     loginBtn.addEventListener("click", async (e) => {
       e.preventDefault();
