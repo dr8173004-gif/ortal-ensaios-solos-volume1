@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>Ensaios de Solos — Mobile (Premium)</title>
 <meta name="description" content="Portal Interativo — Versão Mobile premium com gamificação." />
+  
 
 <!-- ===== DESIGN TOKENS ===== -->
 <style>
@@ -491,12 +492,39 @@ const Game = {
 };
 
 /* ---------- UI HELPERS ---------- */
-const UI = {
-  toast(msg){ const t = $('#toast'); $('#toast-text').textContent = msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 1600); },
-  modal(emoji,title,text){ $('#modal-emoji').textContent=emoji; $('#modal-title').textContent=title; $('#modal-text').textContent=text; $('#modal').classList.add('open'); }
+  const UI = {
+  toast(msg){ 
+    const t = $('#toast'); 
+    $('#toast-text').textContent = msg; 
+    t.classList.add('show'); 
+    setTimeout(()=>t.classList.remove('show'), 1600); 
+  },
+  modal(emoji,title,text){ 
+    $('#modal-emoji').textContent=emoji; 
+    $('#modal-title').textContent=title; 
+    $('#modal-text').textContent=text; 
+    $('#modal').classList.add('open'); 
+  }
 };
-$('#modal-ok').addEventListener('click',()=>$('#modal').classList.remove('open'));
 
+$('#modal-ok').addEventListener('click',()=>$('#modal').classList.remove('open'));
+  
+// === BLOCO NOVO: efeito XP flutuante ===
+function showXP(amount) {
+  const xp = document.createElement('div');
+  xp.className = 'xp-float';
+  xp.textContent = `+${amount} XP`;
+  document.body.appendChild(xp);
+  setTimeout(() => xp.remove(), 1400);
+}
+
+const oldToast = UI.toast;
+UI.toast = (msg) => {
+  const match = msg.match(/\+(\d+)\s*XP/);
+  if (match) showXP(match[1]);
+  oldToast(msg);
+};
+  
 /* ---------- ROUTER (hash) ---------- */
 function route(){
   const id = (location.hash||'#home').replace('#','');
