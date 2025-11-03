@@ -492,7 +492,7 @@ const Game = {
 };
 
 /* ---------- UI HELPERS ---------- */
-  const UI = {
+const UI = {
   toast(msg){ 
     const t = $('#toast'); 
     $('#toast-text').textContent = msg; 
@@ -506,24 +506,51 @@ const Game = {
     $('#modal').classList.add('open'); 
   }
 };
-
 $('#modal-ok').addEventListener('click',()=>$('#modal').classList.remove('open'));
-  
+
 // === BLOCO NOVO: efeito XP flutuante ===
 function showXP(amount) {
   const xp = document.createElement('div');
   xp.className = 'xp-float';
   xp.textContent = `+${amount} XP`;
+  xp.style.position = 'fixed';
+  xp.style.bottom = '80px';
+  xp.style.left = '50%';
+  xp.style.transform = 'translateX(-50%)';
+  xp.style.color = '#28a745';
+  xp.style.fontWeight = '900';
+  xp.style.fontSize = '1.2rem';
+  xp.style.textShadow = '0 2px 8px rgba(0,0,0,.3)';
+  xp.style.opacity = '1';
+  xp.style.transition = 'all 1.4s ease-out';
   document.body.appendChild(xp);
+  requestAnimationFrame(()=>{
+    xp.style.transform = 'translate(-50%, -80px)';
+    xp.style.opacity = '0';
+  });
   setTimeout(() => xp.remove(), 1400);
+}
+
+function confettiRain() {
+  for (let i = 0; i < 25; i++) {
+    const c = document.createElement("div");
+    c.className = "confetti";
+    c.style.left = Math.random() * 100 + "vw";
+    c.style.backgroundColor = `hsl(${Math.random() * 360}, 80%, 60%)`;
+    c.style.animationDuration = 1.5 + Math.random() + "s";
+    document.body.appendChild(c);
+    setTimeout(() => c.remove(), 2000);
+  }
 }
 
 const oldToast = UI.toast;
 UI.toast = (msg) => {
   const match = msg.match(/\+(\d+)\s*XP/);
   if (match) showXP(match[1]);
+  if (msg.includes("🏅")) confettiRain();
   oldToast(msg);
 };
+
   
 /* ---------- ROUTER (hash) ---------- */
 function route(){
