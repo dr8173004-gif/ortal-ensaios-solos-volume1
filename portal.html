@@ -1649,5 +1649,106 @@ document.addEventListener('DOMContentLoaded',()=>{
   });
 </script>
 
+<script>
+(function atualizarBarraGeral(){
+  const mods = [0, 1, 2];
+  const barra = document.getElementById("barraGeral");
+  const txt = document.getElementById("percentualGeral");
+
+  function getPct(i){
+    try {
+      return parseFloat(localStorage.getItem(`m${i}_progress_pct`) || "0");
+    } catch(e){ return 0; }
+  }
+
+  function calcMedia(){
+    const valores = mods.map(getPct);
+    const media = valores.reduce((a,b)=>a+b,0) / mods.length;
+    return Math.round(media);
+  }
+
+  function render(){
+    const pct = calcMedia();
+    if(barra) barra.style.width = pct + "%";
+    if(txt) txt.textContent = pct + "%";
+    try{ localStorage.setItem("geral_progress_pct", pct); }catch(e){}
+  }
+
+  // Atualiza de 2 em 2 segundos (monitoramento leve)
+  setInterval(render, 2000);
+  render();
+})();
+</script>
+
+  <script type="module">
+import { auth, db } from "./firebase-init.js";
+import {
+  doc,
+  getDoc,
+  setDoc,
+  updateDoc,
+  onSnapshot,
+} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+
+/* === SINCRONIZAÇÃO DE PROGRESSO COM FIRESTORE === */
+(async function syncProgressWithFirestore() {
+  console.log("🔄 Sistema de sincronização de progresso iniciado...");
+
+  // Função para carregar progresso salvo do Firestore
+  async function loadFromFirestore(uid) {
+    try {
+      const ref = doc(db, "users", uid);
+      const snap = await getDoc(ref);
+      if (snap.exists()) {
+        const data = snap.data();
+        if (data.progresso) {
+          console.log("📥 Progresso carregado do Firestore:", data.progresso);
+          for (const mod in data.progresso) {
+            localStorage.setItem(`${mod}_progress_pct`, data.progresso[mod]);
+          }
+        }
+      }
+    } catch (err) {
+      console.error("❌ Erro ao carregar progresso do Firestore:", err);
+    }
+  }
+
+  // Função para salvar progresso no Firestore
+  async function saveToFirestore(uid) {
+    try {
+      const ref = doc(db, "users", uid);
+      const progresso = {
+        mod0: parseFloat(localStorage.getItem("m0_progress_pct") || 0),
+        mod1: parseFloat(localStorage.getItem("m1_progress_pct") || 0),
+        mod2: parseFloat(localStorage.getItem("m2_progress_pct") || 0),
+        geral: parseFloat(localStorage.getItem("geral_progress_pct") || 0),
+      };
+      await updateDoc(ref, { progresso });
+      console.log("✅ Progresso salvo no Firestore:", progresso);
+    } catch (err) {
+      console.error("❌ Erro ao salvar progresso no Firestore:", err);
+    }
+  }
+
+  // Escuta autenticação para vincular progresso ao usuário logado
+  auth.onAuthStateChanged(async (user) => {
+    if (!user) {
+      console.warn("⚠️ Nenhum usuário logado — sincronização pausada.");
+      return;
+    }
+
+    console.log("👤 Usuário autenticado:", user.email);
+    await loadFromFirestore(user.uid);
+
+    // Salva progresso inicial no Firestore (garante documento criado)
+    await saveToFirestore(user.uid);
+
+    // Salva automaticamente a cada 10 segundos
+    setInterval(() => saveToFirestore(user.uid), 10000);
+  });
+})();
+</script>
+  
+    
 </body>
 </html>
