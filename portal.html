@@ -1613,40 +1613,122 @@ document.addEventListener('DOMContentLoaded',()=>{
 .logout-btn:hover { transform: scale(1.05); box-shadow: 0 0 15px rgba(255,78,80,0.6); }
 </style>
 <!-- ==================== FIREBASE SESSÃO SEGURA ==================== -->
+
 <script type="module">
-  import { auth } from "./firebase-init.js";
-  import { onAuthStateChanged, signOut } 
-    from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+import { auth, db } from "./firebase-init.js";
+import {
+  doc,
+  getDoc,
+  setDoc,
+  updateDoc,
+  onSnapshot,
+} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+import { onAuthStateChanged, signOut } 
+  from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
 
-  const headerEl = document.getElementById("userHeader");
-  const nameEl = document.getElementById("userName");
-  const logoutBtn = document.getElementById("logoutBtn");
+/* ==========================================================
+   🔒 SISTEMA DE LOGIN + ISOLAMENTO DE LOCALSTORAGE POR USUÁRIO
+   ========================================================== */
 
-  // Verifica login ativo
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      const nome = user.displayName || (user.email ? user.email.split("@")[0] : "aluno");
-      if (nameEl) nameEl.textContent = `👋 Olá, ${nome}`;
-      if (headerEl) headerEl.style.display = "flex";
-      console.log(`✅ Usuário autenticado: ${user.email}`);
-    } else {
-      if (headerEl) headerEl.style.display = "none";
-      alert("⚠️ Você precisa estar logado para acessar o portal.");
-      window.location.href = "./index.html";
-    }
-  });
+// UID atual
+let currentUID = null;
 
-  // Botão de logout — encerra sessão antes do redirecionamento
-  logoutBtn?.addEventListener("click", async () => {
+// Define UID do usuário logado
+function setCurrentUID(uid) { currentUID = uid; }
+
+// Gera chave com prefixo do usuário
+function userKey(key) { return currentUID ? `${currentUID}_${key}` : key; }
+
+// Substitui localStorage global por localStorage isolado
+function saveKV(key, value) { try { localStorage.setItem(userKey(key), value); }catch(e){} }
+function loadKV(key) { try { return localStorage.getItem(userKey(key)); }catch(e){ return null; } }
+
+/* ==========================================================
+   👤 AUTENTICAÇÃO E CONTROLE DE ACESSO
+   ========================================================== */
+const headerEl = document.getElementById("userHeader");
+const nameEl = document.getElementById("userName");
+const logoutBtn = document.getElementById("logoutBtn");
+
+// Observa mudanças de autenticação
+onAuthStateChanged(auth, async (user) => {
+  if (user) {
+    setCurrentUID(user.uid);
+    const nome = user.displayName || (user.email ? user.email.split("@")[0] : "aluno");
+    if (nameEl) nameEl.textContent = `👋 Olá, ${nome}`;
+    if (headerEl) headerEl.style.display = "flex";
+    console.log(`✅ Usuário autenticado: ${user.email}`);
+  } else {
+    if (headerEl) headerEl.style.display = "none";
+    alert("⚠️ Você precisa estar logado para acessar o portal.");
+    window.location.href = "./index.html";
+  }
+});
+
+// Botão de logout
+logoutBtn?.addEventListener("click", async () => {
+  try {
+    await signOut(auth);
+    console.log("👋 Sessão encerrada com sucesso.");
+  } catch (error) {
+    console.error("Erro ao sair:", error);
+  } finally {
+    window.location.href = "./index.html";
+  }
+});
+
+/* ==========================================================
+   🔄 SINCRONIZAÇÃO AUTOMÁTICA DE PROGRESSO COM FIRESTORE
+   ========================================================== */
+(async function syncProgressWithFirestore() {
+  console.log("🔄 Sistema de sincronização de progresso iniciado...");
+
+  async function loadFromFirestore(uid) {
     try {
-      await signOut(auth);
-      console.log("👋 Sessão encerrada com sucesso.");
-    } catch (error) {
-      console.error("Erro ao sair:", error);
-    } finally {
-      window.location.href = "./index.html";
+      const ref = doc(db, "users", uid);
+      const snap = await getDoc(ref);
+      if (snap.exists()) {
+        const data = snap.data();
+        if (data.progresso) {
+          console.log("📥 Progresso carregado do Firestore:", data.progresso);
+          for (const mod in data.progresso) {
+            localStorage.setItem(userKey(`${mod}_progress_pct`), data.progresso[mod]);
+          }
+        }
+      }
+    } catch (err) {
+      console.error("❌ Erro ao carregar progresso do Firestore:", err);
     }
+  }
+
+  async function saveToFirestore(uid) {
+    try {
+      const ref = doc(db, "users", uid);
+      const progresso = {
+        mod0: parseFloat(loadKV("m0_progress_pct") || 0),
+        mod1: parseFloat(loadKV("m1_progress_pct") || 0),
+        mod2: parseFloat(loadKV("m2_progress_pct") || 0),
+        geral: parseFloat(loadKV("geral_progress_pct") || 0),
+      };
+      await updateDoc(ref, { progresso });
+      console.log("✅ Progresso salvo no Firestore:", progresso);
+    } catch (err) {
+      console.error("❌ Erro ao salvar progresso no Firestore:", err);
+    }
+  }
+
+  auth.onAuthStateChanged(async (user) => {
+    if (!user) {
+      console.warn("⚠️ Nenhum usuário logado — sincronização pausada.");
+      return;
+    }
+    setCurrentUID(user.uid);
+    console.log("👤 Sincronizando progresso de:", user.email);
+    await loadFromFirestore(user.uid);
+    await saveToFirestore(user.uid);
+    setInterval(() => saveToFirestore(user.uid), 10000);
   });
+})();
 </script>
 
 <script>
