@@ -1,474 +1,416 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Portal Interativo — Mobile Edition</title>
-  <meta name="description" content="Versão Mobile leve do Portal Interativo — Ensaios de Solos (Volume 1)" />
-  <style>
-    :root{
-      --blue:#013C5A; --gray:#666; --green:#28a745; --bg:#f6f8fb; --radius:14px;
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, "Open Sans", sans-serif;
-      background:#FFFFFF; color:#0f2532; line-height:1.55;
-      -webkit-font-smoothing:antialiased; -webkit-text-size-adjust:100%;
-    }
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Ensaios de Solos — Mobile (Premium)</title>
+<meta name="description" content="Portal Interativo — Versão Mobile premium com gamificação." />
 
-    /* Header compacto fixo (leve, sem blur) */
-    .top{
-      position:sticky; top:0; z-index:10;
-      display:flex; align-items:center; gap:10px;
-      padding:10px 14px; background:#fff; border-bottom:1px solid rgba(1,60,90,.10);
-    }
-    .brand{font-weight:800; color:var(--blue); letter-spacing:.2px}
-    .progress-mini{margin-left:auto; display:flex; align-items:center; gap:8px}
-    .bar{width:120px; height:8px; background:#e9eef2; border-radius:999px; overflow:hidden}
-    .bar i{display:block; height:100%; width:22%; background:var(--green)} /* inicia com 22% */
+<!-- ===== DESIGN TOKENS ===== -->
+<style>
+:root{
+  --blue:#013C5A;
+  --blue-2:#0b617f;
+  --green:#28a745;
+  --yellow:#FFC107;
+  --gray:#667085;
+  --card: rgba(255,255,255,.92);
+  --glass: blur(10px) saturate(120%);
+  --radius:16px;
+  --shadow: 0 10px 30px rgba(1,60,90,.18);
+  --shadow-sm: 0 6px 18px rgba(1,60,90,.12);
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, "Open Sans", sans-serif;
+  color:#0f2532; line-height:1.55; -webkit-font-smoothing:antialiased; -webkit-text-size-adjust:100%;
+  background:linear-gradient(180deg,rgba(1,60,90,.96) 0%, rgba(1,60,90,.88) 100%);
+  background-attachment:fixed;
+}
 
-    /* Conteúdo */
-    main{padding:12px 14px 100px; max-width:760px; margin:0 auto}
-    section{margin:12px 0}
-    .card{
-      background:#fff; border:1px solid rgba(1,60,90,.08); border-radius:var(--radius);
-      box-shadow:0 6px 16px rgba(1,60,90,.06); padding:14px;
-    }
-    h1,h2,h3{margin:0 0 8px; font-weight:800; color:var(--blue)}
-    p{margin:6px 0 10px; color:#333}
-    .badge{display:inline-block; padding:6px 10px; border-radius:999px; background:#e8f5ee; color:#2a7f3e; font-weight:800; font-size:.85rem}
-    .grid{display:grid; grid-template-columns:1fr; gap:10px}
-    .btn{
-      display:inline-flex; align-items:center; justify-content:center; gap:8px;
-      background:var(--green); color:#fff; font-weight:800; text-decoration:none;
-      padding:12px 16px; border-radius:999px; border:none; cursor:pointer;
-    }
-    .btn.alt{background:#eef4f7; color:var(--blue)}
-    .note{background:#fff9e6; border:1px solid #ffe5a3; border-radius:12px; padding:10px}
-    .chip{display:inline-flex; align-items:center; gap:6px; background:#eef4f7; color:var(--blue); padding:6px 10px; border-radius:999px; font-weight:700; font-size:.85rem}
+/* ===== LAYOUT ===== */
+.container{max-width:820px; margin:0 auto; padding:12px 14px 120px;}
+.card{background:var(--card); backdrop-filter:var(--glass); border-radius:var(--radius);
+      box-shadow:var(--shadow-sm); padding:16px; margin:12px 0; border:1px solid rgba(255,255,255,.35)}
+h1,h2,h3{margin:0 0 8px; color:var(--blue); font-weight:800}
+p{margin:6px 0 10px; color:#193645}
+.badge{display:inline-flex; align-items:center; gap:6px; padding:6px 10px; border-radius:999px;
+       font-weight:800; background:#e8f5ee; color:#1e6c3a; font-size:.85rem}
+.btn{display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:12px 16px;
+     border-radius:999px; font-weight:800; text-decoration:none; cursor:pointer; user-select:none; border:none}
+.btn.primary{color:#fff; background:linear-gradient(135deg,var(--green),#1c8c3e)}
+.btn.secondary{color:#fff; background:linear-gradient(135deg,#0b7aa0,var(--blue))}
+.btn.ghost{background:rgba(255,255,255,.6); color:var(--blue)}
+.btn:active{transform:scale(.98)}
+.grid{display:grid; grid-template-columns:1fr; gap:10px}
 
-    /* Navegação por módulo */
-    .nav-inline{display:flex; gap:10px; margin-top:8px}
-    .nav-inline .btn{flex:1}
-  /* Footer fixo premium (dock flutuante) */
-  .footer-actions{
-    position:fixed; 
-    left:50%; 
-    transform:translateX(-50%);
-    bottom:20px; 
-    z-index:20;
-    background:rgba(255,255,255,0.25);
-    backdrop-filter:blur(12px);
-    border:1px solid rgba(255,255,255,0.3);
-    box-shadow:0 8px 24px rgba(1,60,90,0.3);
-    display:flex; 
-    gap:12px; 
-    padding:10px 14px;
-    border-radius:40px;
-    width:90%;
-    max-width:420px;
-  }
-  .footer-actions .btn{
-    flex:1;
-    border:none;
-    border-radius:999px;
-    font-weight:700;
-    background:linear-gradient(135deg,#28a745,#1b853d);
-    color:#fff;
-    transition:all .3s ease;
-  }
-  .footer-actions .btn.alt{
-    background:linear-gradient(135deg,#046b8f,#013C5A);
-  }
-  .footer-actions .btn:active{
-    transform:scale(.97);
-  }
+/* header */
+.top{position:sticky; top:0; z-index:10; display:flex; align-items:center; gap:10px;
+     padding:10px 14px; background:rgba(255,255,255,.18); backdrop-filter:var(--glass);
+     border-bottom:1px solid rgba(255,255,255,.25)}
+.brand{font-weight:900; color:#fff; letter-spacing:.2px}
+.progress-mini{margin-left:auto; display:flex; align-items:center; gap:8px}
+.meter{width:120px; height:8px; background:rgba(255,255,255,.35); border-radius:999px; overflow:hidden}
+.meter i{display:block; height:100%; width:0%; background:var(--yellow)}
+#pct{color:#fff; font-weight:800; font-size:.9rem}
 
-    .footer-actions .btn{flex:1}
+/* navigation tabs (index) */
+.navlist a{display:block; padding:14px; border-radius:999px; background:rgba(255,255,255,.7);
+           color:var(--blue); font-weight:800; text-decoration:none; text-align:center; border:1px solid rgba(255,255,255,.5)}
+.navlist a:hover{filter:brightness(1.02)}
 
-    /* Acessibilidade e toque */
-    a, button { -webkit-tap-highlight-color: rgba(0,0,0,0); }
-    .btn:active { transform: scale(.98); }
+/* module shell */
+.module-head{display:flex; align-items:center; gap:10px; margin-bottom:6px}
+.tag{display:inline-flex; align-items:center; gap:6px; padding:6px 10px; border-radius:999px; background:#e9eff3; color:var(--blue); font-weight:800; font-size:.85rem}
+.step{background:rgba(255,255,255,.8); border:1px dashed rgba(1,60,90,.15); padding:12px; border-radius:12px}
+.steps{display:grid; gap:10px}
 
-    /* inputs simples */
-    input[type="number"]{
-      width:100%; padding:10px; border:1px solid #cfd6dc; border-radius:10px; font-size:16px;
-    }
-  </style>
+/* module actions (bottom of each module) */
+.actions{display:flex; gap:10px; margin-top:12px}
+.actions .btn{flex:1}
 
-  <style>
-  body{
-    background:linear-gradient(180deg,rgba(1,60,90,0.92) 0%,rgba(1,60,90,0.85) 100%);
-    background-attachment:fixed;
-    color:#013C5A;
-    backdrop-filter:blur(4px);
-  }
-  .module, .panel{
-    background-color:rgba(255,255,255,0.9);
-    backdrop-filter:blur(8px);
-    border-radius:16px;
-  }
+/* progress bars */
+.progress-wrap{display:flex; align-items:center; gap:10px}
+.progress{flex:1; height:10px; background:#e7eef1; border-radius:999px; overflow:hidden}
+.progress i{display:block; height:100%; width:0%; background:linear-gradient(135deg,var(--green),#1c8c3e)}
+
+/* achievements modal */
+.modal{position:fixed; inset:0; display:none; align-items:center; justify-content:center; z-index:50;
+       background:rgba(0,0,0,.35)}
+.modal.open{display:flex}
+.modal-card{background:var(--card); backdrop-filter:var(--glass); border-radius:20px; padding:18px; width:min(92vw,420px);
+            box-shadow:var(--shadow); border:1px solid rgba(255,255,255,.5); text-align:center}
+.medal{font-size:42px; margin:6px 0}
+.kudos{color:#1e6c3a; font-weight:800}
+
+/* toasts */
+.toast{position:fixed; left:50%; transform:translateX(-50%); bottom:20px; z-index:60; display:none}
+.toast.show{display:block}
+.toast .card{margin:0; padding:10px 14px}
+
+/* simple reveal */
+[data-animate]{opacity:0; transform:translateY(8px); transition:all .5s ease}
+[data-animate].show{opacity:1; transform:none}
+
+/* hide sections (router) */
+section[hidden]{display:none !important}
 </style>
-
-  
 </head>
 <body>
 
-  <!-- Header -->
-  <header class="top">
-    <span class="brand">Ensaios de Solos — Mobile</span>
-    <div class="progress-mini" aria-label="progresso geral">
-      <span style="font-weight:800;color:var(--blue);font-size:.9rem" id="pct">22%</span>
-      <span class="bar" aria-hidden="true"><i id="bar"></i></span>
+<!-- ===== HEADER ===== -->
+<header class="top">
+  <span class="brand">Ensaios de Solos — Mobile</span>
+  <div class="progress-mini">
+    <span id="pct">0%</span>
+    <span class="meter" aria-hidden="true"><i id="bar"></i></span>
+  </div>
+</header>
+
+<main class="container">
+
+  <!-- ===== HOME ===== -->
+  <section id="home" class="card" data-animate>
+    <span class="badge">Pocket Premium</span>
+    <h1>Curso Interativo — Volume 1</h1>
+    <p>Aprenda <strong>Umidade Natural</strong> e <strong>Granulometria</strong> com experiência imersiva, gamificação e calculadoras.</p>
+    <div class="grid">
+      <a class="btn primary" href="#index">Abrir Índice</a>
+      <a class="btn ghost" href="#mod1">Ir direto ao Módulo 1</a>
     </div>
-  </header>
+  </section>
 
-  <main>
-    <!-- HOME -->
-    <section id="home" class="card" data-id="-1">
-      <span class="badge">Pocket Edition</span>
-      <h1>Curso Interativo – Volume 1</h1>
-      <p>Curso Pratico Interativo. Aprenda <strong>Umidade Natural</strong> e <strong>Granulometria</strong> com passo a passo e calculadoras.</p>
-      <div class="grid">
-        <a class="btn" href="#index">Abrir Índice</a>
-        <a class="btn alt" href="#mod1">Ir direto ao Módulo 1</a>
+  <!-- ===== ÍNDICE ===== -->
+  <section id="index" class="card" data-animate>
+    <h2>Índice do Curso</h2>
+    <p style="color:#193645">Seu progresso é salvo automaticamente no dispositivo. Toque em um módulo para continuar.</p>
+    <div class="grid navlist">
+      <a href="#mod0">Módulo 0 — Introdução</a>
+      <a href="#mod1">Módulo 1 — Umidade Natural</a>
+      <a href="#mod2">Módulo 2 — Granulometria</a>
+      <a href="#mod3">Módulo 3 — Mentoria</a>
+      <a href="#mod4">Módulo 4 — Certificado</a>
+      <a href="#achievements">Conquistas & Medalhas</a>
+    </div>
+    <div class="card" style="margin-top:12px">
+      <div class="progress-wrap">
+        <span class="tag">Progresso geral</span>
+        <div class="progress"><i id="gbar"></i></div>
+        <strong id="gtxt">0%</strong>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- ÍNDICE -->
-    <section id="index" class="card" data-id="0">
-      <h2>Índice do Curso</h2>
-      <div class="grid">
-        <a class="btn alt" href="#mod0">Módulo 0 — Introdução</a>
-        <a class="btn alt" href="#mod1">Módulo 1 — Umidade Natural</a>
-        <a class="btn alt" href="#mod2">Módulo 2 — Granulometria</a>
-        <a class="btn alt" href="#mod3">Módulo 3 — Mentoria</a>
-        <a class="btn alt" href="#mod4">Módulo 4 — Certificado</a>
-      </div>
-    </section>
+  <!-- ===== MÓDULO 0 (SHELL) ===== -->
+  <section id="mod0" class="card" data-animate aria-labelledby="mod0-title">
+    <header class="module-head">
+      <span class="tag">🎓 Módulo 0</span>
+      <h2 id="mod0-title">Boas-vindas & Contexto Profissional</h2>
+    </header>
 
-<!-- ===================== MÓDULO 0 — Edição Imersiva (Duolingo Style) ===================== -->
-<section id="mod0" class="module immersive" aria-labelledby="mod0-title">
-  <div class="panel" id="content-mod-0">
-
-    <!-- Header animado -->
-    <div class="cover">
-      <h2 class="fade-in">🎓 Módulo 0 — Boas-vindas e Contexto Profissional</h2>
-      <p class="fade-in-delay">Descubra por que o laboratorista de solos é essencial em obras e como essa profissão pode mudar sua carreira.</p>
+    <!-- STEPS-AREA: insira aqui cards/etapas do Módulo 0 posteriormente -->
+    <div class="steps" id="mod0-steps">
+      <div class="step">[placeholder de etapa do Módulo 0]</div>
     </div>
 
-    <!-- Sequência de aprendizado -->
-    <div class="lesson-seq">
-
-      <!-- Passo 1 -->
-      <div class="lesson-card" data-step="1">
-        <div class="icon">📋</div>
-        <h3>Objetivo do Módulo</h3>
-        <p>Compreender o papel do laboratorista e se preparar para os ensaios práticos.</p>
-        <button class="btn-go" data-next="2">Continuar</button>
-      </div>
-
-      <!-- Passo 2 -->
-      <div class="lesson-card hidden" data-step="2">
-        <div class="icon">🔧</div>
-        <h3>O que faz um laboratorista?</h3>
-        <p>Executa e registra ensaios de solos segundo as normas da ABNT, garantindo precisão e segurança nas obras.</p>
-        <button class="btn-go" data-next="3">Continuar</button>
-      </div>
-
-      <!-- Passo 3 -->
-      <div class="lesson-card hidden" data-step="3">
-        <div class="icon">💼</div>
-        <h3>Mercado e Salário</h3>
-        <p>Salário médio de R$ 2.800/mês, podendo ultrapassar R$ 5.300 com especialização. Um setor com carência de profissionais qualificados.</p>
-        <button class="btn-go" data-next="4">Continuar</button>
-      </div>
-
-      <!-- Passo 4 -->
-      <div class="lesson-card hidden" data-step="4">
-        <div class="icon">🧠</div>
-        <h3>Curiosidade</h3>
-        <p>Um ensaio mal executado pode atrasar uma obra inteira e custar milhares de reais. Cada dado importa!</p>
-        <button class="btn-go" data-next="5">Continuar</button>
-      </div>
-
-      <!-- Passo 5 -->
-      <div class="lesson-card hidden" data-step="5">
-        <div class="icon">📚</div>
-        <h3>O que vem a seguir</h3>
-        <ul>
-          <li>🧪 Módulo 1 — Umidade Natural</li>
-          <li>📊 Módulo 2 — Granulometria</li>
-          <li>🧭 Módulo 3 — Mentoria ao vivo</li>
-          <li>🏅 Módulo 4 — Certificação</li>
-        </ul>
-        <button class="btn-finish">Concluir Módulo</button>
-      </div>
-
-      <!-- Final -->
-      <div class="lesson-card hidden" data-step="end">
-        <div class="icon big">🎉</div>
-        <h3>Parabéns!</h3>
-        <p>Você concluiu o Módulo 0 e já está pronto para iniciar os ensaios práticos!</p>
-        <div class="actions">
-          <a class="btn btn-alt" href="#index">☰ Índice</a>
-          <a class="btn btn-next" href="#mod1">Avançar →</a>
-        </div>
+    <div class="card">
+      <div class="progress-wrap">
+        <span class="tag">Progresso — Módulo 0</span>
+        <div class="progress"><i id="m0_bar"></i></div>
+        <strong id="m0_txt">0%</strong>
       </div>
     </div>
 
-    <!-- Barra de progresso -->
-    <div class="progressbar">
-      <div class="bar"><i></i></div>
-      <span id="progress-txt">0%</span>
+    <div class="actions">
+      <a class="btn ghost" href="#home">Início</a>
+      <a class="btn secondary" href="#index">Índice</a>
+      <a class="btn primary" href="#mod1">Avançar</a>
+    </div>
+  </section>
+
+  <!-- ===== MÓDULO 1 (SHELL) ===== -->
+  <section id="mod1" class="card" data-animate aria-labelledby="mod1-title">
+    <header class="module-head">
+      <span class="tag">🧪 Módulo 1</span>
+      <h2 id="mod1-title">Teor de Umidade Natural</h2>
+    </header>
+
+    <!-- STEPS-AREA: aqui entram cards e a calculadora -->
+    <div class="steps" id="mod1-steps">
+      <div class="step">[placeholder de etapa do Módulo 1]</div>
+    </div>
+
+    <div class="card">
+      <div class="progress-wrap">
+        <span class="tag">Progresso — Módulo 1</span>
+        <div class="progress"><i id="m1_bar"></i></div>
+        <strong id="m1_txt">0%</strong>
+      </div>
+    </div>
+
+    <div class="actions">
+      <a class="btn ghost" href="#mod0">Voltar</a>
+      <a class="btn secondary" href="#index">Índice</a>
+      <a class="btn primary" href="#mod2">Avançar</a>
+    </div>
+  </section>
+
+  <!-- ===== MÓDULO 2 (SHELL) ===== -->
+  <section id="mod2" class="card" data-animate aria-labelledby="mod2-title">
+    <header class="module-head">
+      <span class="tag">📊 Módulo 2</span>
+      <h2 id="mod2-title">Granulometria (Peneiramento + Sedimentação)</h2>
+    </header>
+
+    <!-- STEPS-AREA: aqui entram tabela, curva e etapas -->
+    <div class="steps" id="mod2-steps">
+      <div class="step">[placeholder de etapa do Módulo 2]</div>
+    </div>
+
+    <div class="card">
+      <div class="progress-wrap">
+        <span class="tag">Progresso — Módulo 2</span>
+        <div class="progress"><i id="m2_bar"></i></div>
+        <strong id="m2_txt">0%</strong>
+      </div>
+    </div>
+
+    <div class="actions">
+      <a class="btn ghost" href="#mod1">Voltar</a>
+      <a class="btn secondary" href="#index">Índice</a>
+      <a class="btn primary" href="#mod3">Avançar</a>
+    </div>
+  </section>
+
+  <!-- ===== MÓDULO 3 (SHELL) ===== -->
+  <section id="mod3" class="card" data-animate aria-labelledby="mod3-title">
+    <header class="module-head">
+      <span class="tag">🧭 Módulo 3</span>
+      <h2 id="mod3-title">Mentoria Técnica</h2>
+    </header>
+
+    <div class="steps" id="mod3-steps">
+      <div class="step">[placeholder de etapa do Módulo 3]</div>
+    </div>
+
+    <div class="card">
+      <div class="progress-wrap">
+        <span class="tag">Progresso — Módulo 3</span>
+        <div class="progress"><i id="m3_bar"></i></div>
+        <strong id="m3_txt">0%</strong>
+      </div>
+    </div>
+
+    <div class="actions">
+      <a class="btn ghost" href="#mod2">Voltar</a>
+      <a class="btn secondary" href="#index">Índice</a>
+      <a class="btn primary" href="#mod4">Avançar</a>
+    </div>
+  </section>
+
+  <!-- ===== MÓDULO 4 (SHELL) ===== -->
+  <section id="mod4" class="card" data-animate aria-labelledby="mod4-title">
+    <header class="module-head">
+      <span class="tag">🏅 Módulo 4</span>
+      <h2 id="mod4-title">Certificação</h2>
+    </header>
+
+    <div class="steps" id="mod4-steps">
+      <div class="step">[placeholder de etapa do Módulo 4]</div>
+    </div>
+
+    <div class="card">
+      <div class="progress-wrap">
+        <span class="tag">Progresso — Módulo 4</span>
+        <div class="progress"><i id="m4_bar"></i></div>
+        <strong id="m4_txt">0%</strong>
+      </div>
+    </div>
+
+    <div class="actions">
+      <a class="btn ghost" href="#mod3">Voltar</a>
+      <a class="btn secondary" href="#index">Índice</a>
+      <a class="btn primary" href="#home">Concluir</a>
+    </div>
+  </section>
+
+  <!-- ===== CONQUISTAS ===== -->
+  <section id="achievements" class="card" data-animate aria-labelledby="ach-title">
+    <h2 id="ach-title">Conquistas & Medalhas</h2>
+    <p style="color:#193645">Complete atividades dos módulos para ganhar XP e desbloquear medalhas.</p>
+    <div id="ach-list" class="steps">
+      <!-- Preenchido via JS -->
+    </div>
+  </section>
+
+</main>
+
+<!-- ===== MODAL DE CONQUISTA ===== -->
+<div id="modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+  <div class="modal-card">
+    <div class="medal" id="modal-emoji">🏅</div>
+    <h3 id="modal-title">Medalha desbloqueada!</h3>
+    <p class="kudos" id="modal-text">Você ganhou 50 XP.</p>
+    <div class="actions" style="margin-top:10px">
+      <button class="btn primary" id="modal-ok">Fechar</button>
     </div>
   </div>
+</div>
 
-  <!-- ===== ESTILO IMERSIVO ===== -->
-  <style>
-    .immersive{
-      padding:0;
-      background:transparent;
-      overflow:hidden;
-    }
-    .cover{
-      background:linear-gradient(135deg,#013C5A,#046b8f);
-      color:#fff;
-      border-radius:20px;
-      padding:24px;
-      text-align:center;
-      box-shadow:0 10px 30px rgba(1,60,90,.3);
-    }
-    .fade-in{animation:fadeIn 1.2s ease forwards;}
-    .fade-in-delay{animation:fadeIn 1.2s ease .4s forwards;opacity:0;}
-    @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
-    
-    .lesson-seq{
-      display:flex;
-      flex-direction:column;
-      gap:16px;
-      margin-top:20px;
-    }
-    .lesson-card{
-      background:rgba(255,255,255,0.95);
-      border-radius:16px;
-      padding:18px;
-      text-align:center;
-      box-shadow:0 4px 14px rgba(1,60,90,.1);
-      transform:scale(1);
-      transition:all .4s ease;
-      opacity:1;
-    }
-    .lesson-card.hidden{opacity:0;transform:translateY(10px);pointer-events:none;height:0;overflow:hidden;margin:0;padding:0;}
-    .lesson-card .icon{
-      font-size:2rem;margin-bottom:8px;
-    }
-    .btn-go, .btn-finish{
-      border:none;
-      border-radius:999px;
-      background:linear-gradient(135deg,#28a745,#1b853d);
-      color:#fff;
-      font-weight:700;
-      padding:10px 20px;
-      margin-top:12px;
-      cursor:pointer;
-      transition:.3s;
-    }
-    .btn-go:hover, .btn-finish:hover{
-      transform:translateY(-2px);
-      box-shadow:0 4px 12px rgba(1,60,90,.2);
-    }
-    .icon.big{font-size:3rem;}
-    .progressbar{
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      gap:8px;
-      margin:24px 0;
-    }
-    .bar{
-      flex:1;
-      max-width:240px;
-      height:10px;
-      background:#e8f4f1;
-      border-radius:999px;
-      overflow:hidden;
-    }
-    .bar i{
-      display:block;
-      height:100%;
-      width:0%;
-      background:linear-gradient(135deg,#28a745,#1b853d);
-      transition:width .5s ease;
-    }
-    #progress-txt{
-      font-weight:700;
-      color:#013C5A;
-      font-size:.9rem;
-    }
-  </style>
+<!-- ===== TOAST ===== -->
+<div id="toast" class="toast"><div class="card" id="toast-text">Concluído!</div></div>
 
-  <!-- ===== SCRIPT IMERSIVO ===== -->
-  <script>
-    (function(){
-      let step=1;
-      const total=5;
-      const updateProgress=()=>{
-        const pct=Math.round((step/total)*100);
-        document.querySelector('.bar i').style.width=pct+'%';
-        document.getElementById('progress-txt').textContent=pct+'%';
-      };
-      const next=(n)=>{
-        document.querySelector(`[data-step="${n-1}"]`)?.classList.add('hidden');
-        const el=document.querySelector(`[data-step="${n}"]`);
-        if(el){el.classList.remove('hidden');step=n;updateProgress();}
-        else{
-          document.querySelector(`[data-step="end"]`).classList.remove('hidden');
-          document.querySelector('.bar i').style.width='100%';
-          document.getElementById('progress-txt').textContent='100%';
-        }
-      };
-      document.querySelectorAll('.btn-go').forEach(b=>{
-        b.addEventListener('click',()=>next(parseInt(b.dataset.next)));
-      });
-      document.querySelector('.btn-finish').addEventListener('click',()=>next('end'));
-      updateProgress();
-    })();
-  </script>
-</section>
+<!-- ===== SCRIPTS (Router + Gamificação) ===== -->
+<script>
+/* ---------- UTIL ---------- */
+const $ = sel => document.querySelector(sel);
+const $$ = sel => Array.from(document.querySelectorAll(sel));
+const safeGet = (k, d) => { try{ return JSON.parse(localStorage.getItem(k)) ?? d; } catch(e){ return d; } };
+const safeSet = (k, v) => { try{ localStorage.setItem(k, JSON.stringify(v)); } catch(e){} };
+const clamp = (n, a, b) => Math.max(a, Math.min(b, n));
 
-    
-    <!-- MÓDULO 1 -->
-    <section id="mod1" class="card" data-id="2">
-      <h2>Módulo 1 — Umidade Natural</h2>
-      <p>Preencha os campos para testar a calculadora (versão leve de validação local).</p>
-      <div class="grid">
-        <label>Tara (lata) <input id="m_lata" type="number" step="0.01"></label>
-        <label>Lata + solo úmido <input id="m_umida" type="number" step="0.01"></label>
-        <label>Lata + solo seco <input id="m_seca" type="number" step="0.01"></label>
-        <button class="btn" id="btnCalc">Calcular w</button>
-        <p id="w_out" style="font-weight:800;margin:0"></p>
-      </div>
-      <p class="note" style="margin-top:10px">Fórmula: <strong>w = (m<sub>água</sub> / m<sub>solo seco</sub>) × 100%</strong>.</p>
-      <div class="nav-inline">
-        <button class="btn alt" data-prev="#mod0">◀ Voltar</button>
-        <button class="btn" data-next="#mod2">Avançar ▶</button>
-      </div>
-    </section>
+/* ---------- GAME ENGINE ---------- */
+const Game = {
+  state: safeGet('es_mobile_state', {
+    xp:0,
+    modules:{ m0:{xp:0, pct:0, activities:{}}, m1:{xp:0, pct:0, activities:{}},
+              m2:{xp:0, pct:0, activities:{}}, m3:{xp:0, pct:0, activities:{}},
+              m4:{xp:0, pct:0, activities:{}} },
+    medals:{}
+  }),
+  save(){ safeSet('es_mobile_state', this.state); this.render(); },
 
-    <!-- MÓDULO 2 -->
-    <section id="mod2" class="card" data-id="3">
-      <h2>Módulo 2 — Granulometria</h2>
-      <p>Placeholder leve — tabela e curva entram em próximo passo.</p>
-      <div class="nav-inline">
-        <button class="btn alt" data-prev="#mod1">◀ Voltar</button>
-        <button class="btn" data-next="#mod3">Avançar ▶</button>
-      </div>
-    </section>
+  /* concluir atividade: module 'm0'…'m4', id string, options {xp, medal} */
+  completeActivity(mod, id, {xp=10, medal=null}={}){
+    const M = this.state.modules[mod];
+    if(!M.activities[id]){ M.activities[id] = true; M.xp += xp; this.state.xp += xp; }
+    /* atualizar % do módulo (proporcional à qtd de atividades) */
+    const total = Object.keys(M.activities).length;
+    M.pct = clamp(total*10, 0, 100); // por padrão: 10% por atividade (ajuste depois por módulo)
+    if(medal && !this.state.medals[medal]){
+      this.state.medals[medal] = { when: Date.now(), mod };
+      UI.modal(`🏅`, `Medalha desbloqueada!`, `Você conquistou “${medal}”. +${xp} XP`);
+    }else{
+      UI.toast(`+${xp} XP`);
+    }
+    this.save();
+  },
 
-    <!-- MÓDULO 3 -->
-    <section id="mod3" class="card" data-id="4">
-      <h2>Módulo 3 — Mentoria</h2>
-      <p>Agendamento simplificado via WhatsApp — entra no próximo passo.</p>
-      <div class="nav-inline">
-        <button class="btn alt" data-prev="#mod2">◀ Voltar</button>
-        <button class="btn" data-next="#mod4">Avançar ▶</button>
-      </div>
-    </section>
+  /* progresso geral = média simples % dos módulos */
+  progress(){
+    const ms = Object.values(this.state.modules).map(m=>m.pct||0);
+    const pct = Math.round(ms.reduce((a,b)=>a+b,0)/ms.length);
+    return clamp(pct,0,100);
+  },
 
-    <!-- MÓDULO 4 -->
-    <section id="mod4" class="card" data-id="5">
-      <h2>Módulo 4 — Certificado</h2>
-      <p>Geração de PDF otimizada — entra no próximo passo.</p>
-      <div class="nav-inline">
-        <button class="btn alt" data-prev="#mod3">◀ Voltar</button>
-        <a class="btn" href="#home">Concluir</a>
-      </div>
-    </section>
+  render(){
+    /* header */
+    const g = this.progress();
+    $('#bar').style.width = g+'%';
+    $('#pct').textContent = g+'%';
+    $('#gbar').style.width = g+'%';
+    $('#gtxt').textContent = g+'%';
 
-    <!-- Final (teste de rolagem) -->
-    <section class="card" aria-hidden="true" data-id="6">
-      <h3>Fim da página (teste)</h3>
-      <p>Se você chegou aqui no celular que travava, ✅ a rolagem está OK.</p>
-    </section>
-  </main>
-
-  <!-- Footer ações -->
-  <div class="footer-actions">
-    <a class="btn alt" href="#home">Início</a>
-    <a class="btn" href="#index">Índice</a>
-  </div>
-
-  <script>
-    const $ = (id)=>document.getElementById(id);
-
-    // calculadora leve
-    const btn = document.getElementById('btnCalc');
-    if(btn){
-      btn.addEventListener('click', ()=>{
-        const ml=parseFloat(($('m_lata').value||'').replace(',','.'));
-        const mu=parseFloat(($('m_umida').value||'').replace(',','.'));
-        const ms=parseFloat(($('m_seca').value||'').replace(',','.'));
-        if([ml,mu,ms].some(v=>isNaN(v))){$('w_out').textContent='Preencha todos os campos.'; return;}
-        const magua = mu - ms;
-        const msec  = ms - ml;
-        if(msec<=0){$('w_out').textContent='Verifique as massas.'; return;}
-        const w = (magua/msec)*100;
-        $('w_out').textContent = 'w = ' + w.toFixed(2) + ' %';
-      });
+    /* módulos barras */
+    for(let i=0;i<=4;i++){
+      const m = this.state.modules['m'+i];
+      const bar = $('#m'+i+'_bar'), txt = $('#m'+i+'_txt');
+      if(bar) bar.style.width = (m?.pct||0)+'%';
+      if(txt) txt.textContent = (m?.pct||0)+'%';
     }
 
-    // navegação suave por hash + botões
-    function goTo(hash, behavior='smooth'){
-      const target = document.querySelector(hash);
-      if(target){
-        target.scrollIntoView({behavior, block:'start'});
-        target.setAttribute('tabindex','-1'); target.focus({preventScroll:true});
+    /* conquistas list */
+    const list = $('#ach-list');
+    if(list){
+      list.innerHTML = '';
+      const medals = Object.entries(this.state.medals);
+      if(medals.length===0){
+        list.innerHTML = `<div class="step">Nenhuma medalha ainda. Complete atividades para desbloquear 🏅</div>`;
+      } else {
+        medals.forEach(([name,info])=>{
+          const el = document.createElement('div');
+          el.className = 'step';
+          el.innerHTML = `<strong>🏅 ${name}</strong><br><small>Desbloqueada em ${new Date(info.when).toLocaleDateString()}</small>`;
+          list.appendChild(el);
+        });
       }
     }
-    document.querySelectorAll('[data-next]').forEach(b=>b.addEventListener('click',()=>goTo(b.dataset.next)));
-    document.querySelectorAll('[data-prev]').forEach(b=>b.addEventListener('click',()=>goTo(b.dataset.prev)));
+  }
+};
 
-    // === SISTEMA DE PROGRESSO REAL ===
-    function updateProgressById(n){
-      const total = 5; // módulos 0..4
-      const pct = Math.max(1, Math.min(100, Math.round(((parseInt(n)+1)/total)*100)));
-      document.getElementById('pct').textContent = pct + '%';
-      document.getElementById('bar').style.width = pct + '%';
-    }
-    function saveProgress(n){
-      localStorage.setItem('mod_atual_mobile', n);
-      updateProgressById(n);
-    }
-    // Detecta seção visível
-    function trackOnScroll(){
-      const sections = document.querySelectorAll('section[data-id]');
-      let current = 1; // índice do índice (id=0 é o menu)
-      sections.forEach(sec=>{
-        const r = sec.getBoundingClientRect();
-        if(r.top < window.innerHeight*0.4) current = sec.dataset.id;
-      });
-      saveProgress(current);
-    }
-    window.addEventListener('scroll', trackOnScroll, {passive:true});
+/* ---------- UI HELPERS ---------- */
+const UI = {
+  toast(msg){ const t = $('#toast'); $('#toast-text').textContent = msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 1600); },
+  modal(emoji,title,text){ $('#modal-emoji').textContent=emoji; $('#modal-title').textContent=title; $('#modal-text').textContent=text; $('#modal').classList.add('open'); }
+};
+$('#modal-ok').addEventListener('click',()=>$('#modal').classList.remove('open'));
 
-    // Recupera progresso ao abrir
-    window.addEventListener('load', ()=>{
-      const saved = localStorage.getItem('mod_atual_mobile');
-      if(saved){
-        const target = document.querySelector(`[data-id="${saved}"]`);
-        if(target){ goTo('#'+target.id, 'instant'); updateProgressById(saved); return; }
-      }
-      // sem progresso salvo, inicializa barra
-      updateProgressById(1);
-    });
+/* ---------- ROUTER (hash) ---------- */
+function route(){
+  const id = (location.hash||'#home').replace('#','');
+  $$('main section').forEach(s => s.hidden = s.id !== id);
+  /* reveal anim */
+  const el = document.getElementById(id);
+  if(el){ requestAnimationFrame(()=> el.setAttribute('data-animate','show')); }
+}
+window.addEventListener('hashchange', route);
 
-    // hashchange mantém foco acessível
-    window.addEventListener('hashchange', ()=>{
-      const el = document.querySelector(location.hash);
-      if(el){ el.setAttribute('tabindex','-1'); el.focus({preventScroll:true}); }
-    });
-  </script>
+/* ---------- INIT ---------- */
+document.addEventListener('DOMContentLoaded',()=>{
+  /* observers para animação suave */
+  const obs = new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('show'); }),{threshold:.2});
+  $$('[data-animate]').forEach(el=>obs.observe(el));
+
+  /* render inicial + rota */
+  Game.render();
+  route();
+
+  /* EXEMPLO: deixe uma atividade prontinha para testar (apague depois)
+     Game.completeActivity('m0','intro_1',{xp:20, medal:'Primeiro Passo — Módulo 0'});
+  */
+});
+</script>
+
 </body>
 </html>
