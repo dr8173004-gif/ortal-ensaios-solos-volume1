@@ -69,6 +69,22 @@
       width:100%; padding:10px; border:1px solid #cfd6dc; border-radius:10px; font-size:16px;
     }
   </style>
+
+  <style>
+  body{
+    background:linear-gradient(180deg,rgba(1,60,90,0.92) 0%,rgba(1,60,90,0.85) 100%);
+    background-attachment:fixed;
+    color:#013C5A;
+    backdrop-filter:blur(4px);
+  }
+  .module, .panel{
+    background-color:rgba(255,255,255,0.9);
+    backdrop-filter:blur(8px);
+    border-radius:16px;
+  }
+</style>
+
+  
 </head>
 <body>
 
@@ -105,164 +121,146 @@
       </div>
     </section>
 
-<!-- MÓDULO 0 – Premium Experience -->
-<section id="mod0" class="card premium" data-id="1">
+<!-- ===================== MÓDULO 0 – Premium Final ===================== -->
+<section id="mod0" class="module premium" aria-labelledby="mod0-title">
+  <div class="panel" id="content-mod-0">
 
-  <!-- Header animado -->
-  <div class="hero-card" data-animate>
-    <div class="icon-float">🎓</div>
-    <h2>Bem-vindo(a) ao Curso de Ensaios de Solos – Volume 1</h2>
-    <p>Descubra como transformar o solo em conhecimento técnico com o padrão ABNT e metodologia profissional.</p>
-  </div>
-
-  <!-- Card 1 – Introdução com conquista -->
-  <div class="interactive-card" data-animate>
-    <div class="icon">📘</div>
-    <h3>O que faz um laboratorista de solos?</h3>
-    <p>É o profissional que executa, registra e interpreta ensaios seguindo as normas ABNT.  
-    Sua precisão garante a qualidade e a segurança das obras.</p>
-    <button class="btn-check" data-badge="intro">✔️ Marcar como lido</button>
-  </div>
-
-  <!-- Card 2 – Curiosidade com flip -->
-  <div class="flip-card" data-animate>
-    <div class="flip-inner">
-      <div class="flip-front">
-        <span>🔍 Curiosidade Técnica</span>
-        <p>Toque para virar e descobrir uma curiosidade sobre a história dos ensaios de solos.</p>
+    <!-- Banner superior -->
+    <div class="cover">
+      <div>
+        <h2>Por que trabalhar com ensaios de solos</h2>
+        <p>Entenda a profissão, o mercado e por que dominar esse conhecimento agora — comece sua jornada para atuar em
+           terraplenagem, geotecnia e infraestrutura com confiança.</p>
+        <div class="badge-row">
+          <span class="bchip">🔬 Laboratório</span>
+          <span class="bchip">🧪 Ensaios ABNT</span>
+          <span class="bchip">📈 Mercado em alta</span>
+        </div>
       </div>
-      <div class="flip-back">
-        <p>🧠 Os primeiros ensaios de solos no Brasil surgiram em 1934 no IPT.  
-        Isso iniciou a padronização das normas ABNT em geotecnia.</p>
+    </div>
+
+    <!-- Conteúdo -->
+    <div class="cols" data-animate>
+      <div>
+        <header class="module-head">
+          <span class="tag">🎓 Módulo 0</span>
+          <h2 id="mod0-title">Panorama da profissão & oportunidades</h2>
+        </header>
+
+        <div class="steps">
+          <div class="step"><span class="num">1</span>
+            <div>
+              <strong>📋 Objetivo deste módulo</strong><br/>
+              Apresentar o cenário do laboratorista de solos e te preparar mentalmente para a jornada:  
+              onde você pode atuar, quais ensaios fará e como isso te torna valioso na obra.
+            </div>
+          </div>
+          <div class="step"><span class="num">2</span>
+            <div>
+              <strong>🔧 O que faz um laboratorista?</strong><br/>
+              Executa e registra ensaios (umidade, granulometria, etc.), confere equipamentos, prepara amostras e interpreta resultados.
+            </div>
+          </div>
+          <div class="step"><span class="num">3</span>
+            <div>
+              <strong>💼 Mercado & salário</strong><br/>
+              Salário médio ≈ R$ 2.800/mês → com experiência pode ultrapassar R$ 5.300/mês.  
+              A falta de profissionais cria oportunidade para quem começa agora.
+            </div>
+          </div>
+        </div>
+
+        <div class="note-hero">
+          <strong>💡 Curiosidade:</strong> Um ensaio mal executado pode atrasar uma obra inteira e custar milhares de reais.
+        </div>
+
+        <h3>📚 O que você vai ver nos próximos módulos</h3>
+        <ul class="list">
+          <li>🧪 <strong>Módulo 1:</strong> Teor de Umidade Natural — pesagem, estufa e cálculo.</li>
+          <li>📊 <strong>Módulo 2:</strong> Granulometria — peneiramento + sedimentação com curva semi-log.</li>
+          <li>🧭 <strong>Módulo 3:</strong> Mentoria ao vivo (bônus) — revisão guiada e dicas profissionais.</li>
+          <li>🏅 <strong>Módulo 4:</strong> Certificação & Volume 2 — certificado PDF e CTA para o Volume 2.</li>
+          <li>🚀 <strong>Módulo 5:</strong> Roadmap de especialização e materiais extras.</li>
+        </ul>
       </div>
+
+      <!-- Desafio rápido -->
+      <div>
+        <div class="panel inner">
+          <h3>🧠 Desafio rápido</h3>
+          <div class="checklist">
+            <label><input type="checkbox" data-key="m0_ck_1"/> ✏️ Anote: Por que quero trabalhar com ensaios de solos?</label>
+            <label><input type="checkbox" data-key="m0_ck_2"/> 🎯 Defina sua meta para o final do curso.</label>
+            <label><input type="checkbox" data-key="m0_ck_3"/> 🗂️ Explore o Índice do curso para visualizar sua jornada.</label>
+          </div>
+
+          <div class="progress-wrap">
+            <span class="mini">Progresso no Módulo 0</span>
+            <div class="meter"><i id="m0_bar"></i></div>
+            <span id="m0_pct" class="mini">0%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ações -->
+    <div class="actions">
+      <a class="btn btn-prev" href="#home">← Início</a>
+      <a class="btn btn-alt" href="#index">☰ Índice</a>
+      <a class="btn btn-next" href="#mod1">Avançar →</a>
     </div>
   </div>
 
-  <!-- Card 3 – Checkpoints -->
-  <div class="interactive-card" data-animate>
-    <div class="icon">📍</div>
-    <h3>Objetivos deste módulo</h3>
-    <ul class="checklist">
-      <li><label><input type="checkbox" data-check="obj1"> Compreender a função do laboratorista e seu papel nas obras.</label></li>
-      <li><label><input type="checkbox" data-check="obj2"> Reconhecer os equipamentos fundamentais de laboratório.</label></li>
-      <li><label><input type="checkbox" data-check="obj3"> Entender a estrutura do curso e seu fluxo de aprendizado.</label></li>
-    </ul>
-  </div>
-
-  <!-- Card 4 – Equipamentos com efeito -->
-  <div class="interactive-card" data-animate>
-    <div class="icon">🧰</div>
-    <h3>Equipamentos fundamentais</h3>
-    <p>Durante o curso, você verá na prática:</p>
-    <ul>
-      <li>Balança de precisão (0,01 g);</li>
-      <li>Estufa de secagem (105–110 °C);</li>
-      <li>Peneiros ABNT com tampa e fundo;</li>
-      <li>Picnômetro e proveta graduada;</li>
-      <li>Cápsulas metálicas para umidade.</li>
-    </ul>
-    <button class="btn-check" data-badge="equip">🏅 Conquistar Medalha de Conhecimento</button>
-  </div>
-
-  <!-- Card 5 – Estrutura -->
-  <div class="interactive-card" data-animate>
-    <div class="icon">📚</div>
-    <h3>Estrutura do curso</h3>
-    <ol>
-      <li><strong>Introdução</strong> – conceito e finalidade do ensaio;</li>
-      <li><strong>Equipamentos</strong> – instrumentos necessários;</li>
-      <li><strong>Execução</strong> – passo a passo ABNT;</li>
-      <li><strong>Cálculos</strong> – fórmulas automáticas e exemplos;</li>
-      <li><strong>Interpretação</strong> – análise dos resultados.</li>
-    </ol>
-  </div>
-
-  <!-- Card Final -->
-  <div class="interactive-card end" data-animate>
-    <div class="icon">🚀</div>
-    <h3>Antes de prosseguir</h3>
-    <p>Ao concluir este módulo, você estará pronto para iniciar o <strong>Módulo 1 – Teor de Umidade Natural</strong>.</p>
-    <div class="nav-inline">
-      <button class="btn alt" data-prev="#index">◀ Voltar</button>
-      <button class="btn" data-next="#mod1">Avançar ▶</button>
-    </div>
-  </div>
-
-  <!-- ======= ESTILOS DO MÓDULO PREMIUM ======= -->
+  <!-- ===== ESTILOS PREMIUM ===== -->
   <style>
-    .premium{
-      background:linear-gradient(180deg,#e9f3f8 0%,#ffffff 70%);
-      border:none;box-shadow:none;padding:0;
+    .premium{padding:0;background:transparent;}
+    .cover{
+      border-radius:20px;margin:16px;background:linear-gradient(145deg,#013C5Acc,#046b8fcc);
+      color:#fff;padding:24px;box-shadow:0 6px 20px rgba(1,60,90,.25);
     }
-    .hero-card{
-      background:linear-gradient(135deg,#013C5A 0%,#046b8f 100%);
-      color:#fff;border-radius:18px;padding:20px 16px;
-      box-shadow:0 6px 20px rgba(1,60,90,.2);
-      text-align:center;position:relative;overflow:hidden;
-    }
-    .icon-float{font-size:40px;animation:float 3s ease-in-out infinite;}
-    @keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-6px);}}
-    .interactive-card{
-      background:#fff;border-radius:16px;padding:16px;margin:16px 10px;
-      box-shadow:0 4px 18px rgba(1,60,90,.1);transition:transform .25s ease;
-    }
-    .interactive-card:hover{transform:translateY(-3px);}
-    .interactive-card .icon{font-size:26px;margin-bottom:8px;}
-    .checklist input{width:20px;height:20px;margin-right:8px;accent-color:#28a745;}
-    .btn-check{
-      background:#28a745;color:#fff;border:none;border-radius:999px;
-      padding:10px 16px;font-weight:700;margin-top:8px;
-      cursor:pointer;transition:all .25s;
-    }
-    .btn-check.done{background:#ffd43b;color:#013C5A;}
-    /* flip-card */
-    .flip-card{perspective:1000px;margin:18px 10px;}
-    .flip-inner{position:relative;transition:transform .6s;transform-style:preserve-3d;}
-    .flip-card.flipped .flip-inner{transform:rotateY(180deg);}
-    .flip-front,.flip-back{
-      position:absolute;width:100%;backface-visibility:hidden;
-      background:#fff;border-radius:16px;box-shadow:0 4px 14px rgba(1,60,90,.1);
-      padding:16px;text-align:center;
-    }
-    .flip-back{transform:rotateY(180deg);}
-    [data-animate]{opacity:0;transform:translateY(30px);transition:all .6s ease-out;}
+    .badge-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;}
+    .bchip{background:#e8f5ee;color:#1c5c31;padding:6px 10px;border-radius:999px;font-weight:700;}
+    .cols{display:flex;flex-direction:column;gap:16px;margin-top:16px;}
+    .panel.inner{background:#ffffffbb;border-radius:16px;padding:16px;backdrop-filter:blur(8px);}
+    .checklist label{display:flex;align-items:center;gap:8px;font-weight:600;margin:6px 0;}
+    input[type="checkbox"]{width:20px;height:20px;accent-color:#28a745;}
+    .meter{flex:1;height:10px;background:#eef4f7;border-radius:999px;overflow:hidden;}
+    .meter i{display:block;height:100%;width:0%;background:#28a745;}
+    .actions{display:flex;justify-content:space-between;gap:8px;margin:20px 0;}
+    .btn{flex:1;text-align:center;border:none;padding:10px 0;border-radius:999px;
+         font-weight:700;font-family:Montserrat;color:#fff;cursor:pointer;transition:.3s;}
+    .btn-prev{background:linear-gradient(135deg,#046b8f,#013C5A);}
+    .btn-alt{background:linear-gradient(135deg,#28a745,#1b853d);}
+    .btn-next{background:linear-gradient(135deg,#ffc107,#ff9800);}
+    .btn:hover{transform:translateY(-2px);box-shadow:0 4px 10px rgba(0,0,0,.2);}
+    [data-animate]{opacity:0;transform:translateY(20px);transition:all .6s ease;}
     [data-animate].show{opacity:1;transform:none;}
   </style>
 
-  <!-- ======= SCRIPT DE INTERATIVIDADE ======= -->
+  <!-- ===== SCRIPT ===== -->
   <script>
-  // animações on-scroll
-  const obs=new IntersectionObserver(e=>e.forEach(x=>{
-    if(x.isIntersecting)x.target.classList.add('show');
-  }),{threshold:0.15});
-  document.querySelectorAll('#mod0 [data-animate]').forEach(el=>obs.observe(el));
+    // animações
+    const obs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('show')}),{threshold:.2});
+    document.querySelectorAll('#mod0 [data-animate]').forEach(el=>obs.observe(el));
 
-  // conquistas (botões)
-  document.querySelectorAll('#mod0 .btn-check').forEach(btn=>{
-    const key='badge_'+btn.dataset.badge;
-    if(localStorage.getItem(key)==='done'){
-      btn.classList.add('done');btn.textContent='🏆 Conquista obtida!';
-    }
-    btn.addEventListener('click',()=>{
-      btn.classList.add('done');
-      btn.textContent='🏆 Conquista obtida!';
-      localStorage.setItem(key,'done');
-      // pequeno brilho visual
-      btn.animate([{transform:'scale(1)'},{transform:'scale(1.1)'},{transform:'scale(1)'}],
-                  {duration:400,easing:'ease-in-out'});
-    });
-  });
-
-  // checkboxes salvos
-  document.querySelectorAll('#mod0 [data-check]').forEach(ch=>{
-    const key='check_'+ch.dataset.check;
-    ch.checked=localStorage.getItem(key)==='true';
-    ch.addEventListener('change',()=>localStorage.setItem(key,ch.checked));
-  });
-
-  // flip-cards
-  const flip=document.querySelector('#mod0 .flip-card');
-  flip.addEventListener('click',()=>flip.classList.toggle('flipped'));
+    // progresso localStorage
+    (function(){
+      const keys=['m0_ck_1','m0_ck_2','m0_ck_3'];
+      function val(k){try{return localStorage.getItem(k)}catch(e){return null}}
+      function update(){
+        const done=keys.filter(k=>document.querySelector('[data-key="'+k+'"]').checked).length;
+        const pct=Math.round((done/keys.length)*100);
+        document.getElementById('m0_bar').style.width=pct+'%';
+        document.getElementById('m0_pct').textContent=pct+'%';
+        try{localStorage.setItem('m0_progress_pct',pct)}catch(e){}
+      }
+      keys.forEach(k=>{
+        const el=document.querySelector('[data-key="'+k+'"]');
+        if(val(k)==='true'||val(k)==='1')el.checked=true;
+        el.addEventListener('change',()=>{localStorage.setItem(k,el.checked);update();});
+      });
+      update();
+    })();
   </script>
 </section>
 
