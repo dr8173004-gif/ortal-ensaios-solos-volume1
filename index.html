@@ -83,16 +83,21 @@
 
   <script type="module">
     import { app, auth, db } from "./firebase-init.js";
-    import { createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } 
-      from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
-    import { doc, getDoc, setDoc, serverTimestamp } 
-      from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+    import { 
+      createUserWithEmailAndPassword, 
+      signInWithEmailAndPassword, 
+      onAuthStateChanged 
+    } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+    import { 
+      doc, 
+      getDoc, 
+      setDoc, 
+      serverTimestamp, 
+      updateDoc 
+    } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
 
-    // === LOGGER PRO ===
+    // === LOGGER ===
     const log = (tag, msg, color="cyan") => console.log(`%c[${tag}] %c${msg}`, "color:gray;font-weight:600", `color:${color};font-weight:600`);
-    const mark = (label) => performance.mark(label);
-
-    log("SYSTEM", "🔥 Firebase inicializado via firebase-init.js", "lime");
 
     // === ELEMENTOS ===
     const emailEl = document.getElementById("email");
@@ -100,7 +105,7 @@
     const loginBtn = document.getElementById("loginBtn");
     const regBtn   = document.getElementById("registerBtn");
 
-    // === FUNÇÕES ===
+    // === VALIDAR CAMPOS ===
     function val() {
       const email = (emailEl.value || "").trim();
       const pass  = (passEl.value  || "").trim();
@@ -108,111 +113,80 @@
       return { email, pass };
     }
 
-    // === EVITAR DUPLICAÇÃO DE DOCUMENTOS ===
+    // === CRIA DOCUMENTO DO USUÁRIO ===
+    async function ensureUserDoc(user) {
+      if (!user) return;
+      const ref = doc(db, "users", user.uid);
+      const snap = await getDoc(ref);
 
-// Cria o documento do usuário apenas se ainda não existir
-async function ensureUserDoc(user) {
-  if (!user) return;
-
-  const ref = doc(db, "users", user.uid);
-  const snap = await getDoc(ref);
-
-  if (!snap.exists()) {
-    await setDoc(ref, {
-      email: user.email,
-      nome: user.displayName || "",
-      dataCadastro: new Date().toISOString(),
-      acesso: false,
-      progresso: {
-        mod0: 0,
-        mod1: 0,
-        mod2: 0,
-        geral: 0
+      if (!snap.exists()) {
+        await setDoc(ref, {
+          email: user.email,
+          nome: user.displayName || "",
+          dataCadastro: serverTimestamp(),
+          acesso: false,
+          progresso: { mod0: 0, mod1: 0, mod2: 0, geral: 0 }
+        });
+        console.log("✅ Novo usuário criado:", user.email);
+      } else {
+        console.log("📁 Usuário já existe, evitando duplicação.");
       }
-    });
-    console.log("✅ Novo usuário criado:", user.email);
-  } else {
-    console.log("📁 Usuário já existe, evitando duplicação.");
-  }
-}
-  
+    }
+
     // === LOGIN ===
     loginBtn.addEventListener("click", async (e) => {
       e.preventDefault();
       const v = val(); if (!v) return;
-      mark("login-start");
       try {
         log("AUTH", "Tentando login...", "deepskyblue");
         const cred = await signInWithEmailAndPassword(auth, v.email, v.pass);
         const user = cred.user;
 
-// depois continua o fluxo normal
-await ensureUserDoc(user);
+        // Garante que o documento existe
+        await ensureUserDoc(user);
 
-// === VERIFICAÇÃO DE ACESSO NO FIRESTORE ===
-const ref = doc(db, "users", user.uid);
-const snap = await getDoc(ref);
-
-if (snap.exists()) {
-  const dados = snap.data();
-
-  if (dados.acesso === false) {
-    log("ACCESS", "🚫 Acesso bloqueado: usuário não autorizado.", "red");
-    alert("🚫 Seu acesso ao portal ainda não foi liberado.\nEntre em contato com o suporte.");
-    await auth.signOut();
-    return; // interrompe o login
-  } else {
-    log("ACCESS", "✅ Acesso liberado para o portal.", "lime");
-  }
-} else {
-  log("ACCESS", "⚠️ Usuário não encontrado no Firestore.", "gold");
-}
-
-        
-        mark("login-end");
-        log("AUTH", `✔️ Login bem-sucedido: ${cred.user.email}`, "lime");
-        console.log("⏱️ Tempo total login:", performance.measure("login", "login-start", "login-end").duration.toFixed(2), "ms");
+        // Verifica se o usuário foi liberado
+        const ref = doc(db, "users", user.uid);
+        const snap = await getDoc(ref);
+        if (snap.exists()) {
+          const dados = snap.data();
+          if (dados.acesso === false) {
+            alert("🚫 Seu acesso ao portal ainda não foi liberado.\nEntre em contato com o suporte.");
+            await auth.signOut();
+            return;
+          }
+        }
         alert("✔️ Login realizado com sucesso!");
         location.href = "./portal.html";
       } catch (er) {
-        log("AUTH", `❌ Falha no login: ${er.message}`, "red");
-        console.error(er);
+        console.error("❌ Erro no login:", er);
         alert("❌ Erro ao fazer login: " + er.message);
       }
     });
 
     // === CADASTRO ===
-   regBtn.addEventListener("click", async (e) => {
-  e.preventDefault();
-  const v = val(); if (!v) return;
-  mark("register-start");
-  try {
-    log("AUTH", "Criando conta...", "orange");
-    const cred = await createUserWithEmailAndPassword(auth, v.email, v.pass); 
+    regBtn.addEventListener("click", async (e) => {
+      e.preventDefault();
+      const v = val(); if (!v) return;
+      try {
+        log("AUTH", "Criando conta...", "orange");
+        const cred = await createUserWithEmailAndPassword(auth, v.email, v.pass);
+        await ensureUserDoc(cred.user);
+        alert("✅ Conta criada com sucesso! Aguarde liberação de acesso.");
+      } catch (er) {
+        console.error("❌ Erro ao criar conta:", er);
+        alert("❌ Erro ao criar conta: " + er.message);
+      }
+    });
 
-    // Cria documento do usuário (uma vez só)
-    await ensureUserDoc(cred.user);
-
-    alert("✅ Conta criada e salva no Firestore!");
-    mark("register-end");
-    log("AUTH", `✅ Conta criada e salva: ${cred.user.email}`, "lime");
-    console.log("⏱️ Tempo total cadastro:", performance.measure("register", "register-start", "register-end").duration.toFixed(2), "ms");
-  } catch (er) {
-    log("AUTH", `❌ Erro ao criar conta: ${er.message}`, "red");
-    console.error(er);
-    alert("❌ Erro ao criar conta: " + er.message);
-  }
-});
-
-  // === OBSERVADOR DE SESSÃO (somente login manual) ===
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    log("FLOW", `👤 Usuário autenticado: ${user.email}`, "gold");
-  } else {
-    log("FLOW", "👤 Nenhum usuário logado atualmente.", "gray");
-  }
-});
-
+    // === MONITORAR SESSÃO ===
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        log("FLOW", `👤 Usuário autenticado: ${user.email}`, "gold");
+      } else {
+        log("FLOW", "👤 Nenhum usuário logado.", "gray");
+      }
+    });
   </script>
 </body>
 </html>
