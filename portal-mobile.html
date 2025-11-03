@@ -352,18 +352,45 @@ const Game = {
   save(){ safeSet('es_mobile_state', this.state); this.render(); },
 
   /* concluir atividade: module 'm0'…'m4', id string, options {xp, medal} */
-  completeActivity(mod, id, {xp=10, medal=null}={}){
-    const M = this.state.modules[mod];
-    if(!M.activities[id]){ M.activities[id] = true; M.xp += xp; this.state.xp += xp; }
-    /* atualizar % do módulo (proporcional à qtd de atividades) */
-    const total = Object.keys(M.activities).length;
-    M.pct = clamp(total*10, 0, 100); // por padrão: 10% por atividade (ajuste depois por módulo)
-    if(medal && !this.state.medals[medal]){
+  completeActivity(mod, id, {xp=10, medal=null}={}) {
+    // Evita repetir XP se o aluno já concluiu a etapa
+    const module = this.state.modules[mod];
+    if (!module.activities[id]) {
+      module.activities[id] = true;
+      module.xp += xp;
+      this.state.xp += xp;
+    }
+
+    // Calcula o progresso do módulo com base nas etapas existentes
+    const steps = document.querySelectorAll(`#${mod}-steps .step`);
+    const done = Object.keys(module.activities).length;
+    const pct = Math.min(Math.round((done / steps.length) * 100), 100);
+    module.pct = pct;
+
+    // Atualiza o progresso geral (média de m0, m1, m2)
+    const mods = ['m0', 'm1', 'm2'];
+    const total = mods.reduce((sum, m) => sum + (this.state.modules[m]?.pct || 0), 0);
+    const geral = Math.round(total / mods.length);
+
+    // Atualiza as barras na interface
+    document.getElementById(`${mod}_bar`).style.width = pct + '%';
+    document.getElementById(`${mod}_txt`).textContent = pct + '%';
+    document.getElementById('bar').style.width = geral + '%';
+    document.getElementById('pct').textContent = geral + '%';
+    const gbar = document.getElementById('gbar');
+    const gtxt = document.getElementById('gtxt');
+    if (gbar) gbar.style.width = geral + '%';
+    if (gtxt) gtxt.textContent = geral + '%';
+
+    // Dá o feedback visual
+    if (medal && !this.state.medals[medal]) {
       this.state.medals[medal] = { when: Date.now(), mod };
-      UI.modal(`🏅`, `Medalha desbloqueada!`, `Você conquistou “${medal}”. +${xp} XP`);
-    }else{
+      UI.toast(`🏅 ${medal}! +${xp} XP`);
+    } else {
       UI.toast(`+${xp} XP`);
     }
+
+    // Salva e re-renderiza
     this.save();
   },
 
