@@ -207,34 +207,34 @@ section[hidden]{display:none !important}
 
     
     <!-- ===== MÓDULO 0 – Etapas interativas ===== -->
-<div class="step" id="m0_intro">
+<div class="step" id="m0_intro" data-animate>
   <h3>🎓 Boas-vindas!</h3>
   <p>Você está iniciando sua jornada como <strong>Laboratorista de Solos</strong>. Aqui aprenderá a realizar os ensaios mais usados em obras de terraplenagem e pavimentação.</p>
   <button class="btn primary" onclick="Game.completeActivity('m0','intro',{xp:20,medal:'Primeiro Passo – Módulo 0'})">Concluir etapa</button>
 </div>
 
-<div class="step" id="m0_profissao">
+<div class="step" id="m0_profissao" data-animate>
   <h3>👷‍♂️ A profissão</h3>
   <p>O laboratorista executa e interpreta ensaios segundo as normas da <strong>ABNT</strong>, garantindo a segurança e a economia das obras.</p>
   <button class="btn primary" onclick="Game.completeActivity('m0','profissao',{xp:10})">Concluir etapa</button>
 </div>
 
-<div class="step" id="m0_mercado">
+<div class="step" id="m0_mercado" data-animate>
   <h3>💼 Mercado e Oportunidades</h3>
   <p>Profissionais qualificados ganham entre <strong>R$ 2.800 e R$ 5.300</strong> mensais. Há escassez de laboratoristas em todo o país.</p>
   <button class="btn primary" onclick="Game.completeActivity('m0','mercado',{xp:15})">Concluir etapa</button>
 </div>
 
-<div class="step" id="m0_curiosidade">
+<div class="step" id="m0_curiosidade" data-animate>
   <h3>💡 Curiosidade técnica</h3>
   <p>Um ensaio de umidade mal executado pode atrasar uma obra inteira e gerar prejuízos enormes. Cada pesagem conta!</p>
   <button class="btn primary" onclick="Game.completeActivity('m0','curiosidade',{xp:10})">Concluir etapa</button>
 </div>
 
-<div class="step" id="m0_final">
+<div class="step" id="m0_final" data-animate>
   <h3>🏁 Fim do Módulo 0</h3>
   <p>Parabéns! Você concluiu o primeiro módulo e desbloqueou sua primeira medalha.</p>
-  <button class="btn secondary" onclick="Game.completeActivity('m0','fim',{xp:25,medal:'Módulo 0 Concluído'})">Finalizar módulo</button>
+<button class="btn secondary" onclick="Game.completeActivity('m0','fim',{xp:25,medal:'🎉 Módulo 0 Concluído'})">Finalizar módulo</button>
 </div>
 
 
@@ -512,6 +512,8 @@ document.addEventListener('DOMContentLoaded',()=>{
   /* observers para animação suave */
   const obs = new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('show'); }),{threshold:.2});
   $$('[data-animate]').forEach(el=>obs.observe(el));
+  $$('.step').forEach(el=>el.setAttribute('data-animate',''));
+
 
   /* render inicial + rota */
   Game.render();
