@@ -64,50 +64,38 @@
 
     
     <!-- ===== MÓDULO 0 – Etapas interativas ===== -->
-<div class="step" id="m0_intro" data-animate>
-  <h3>🎓 Boas-vindas!</h3>
-  <p>Você está iniciando sua jornada como <strong>Laboratorista de Solos</strong>. Aqui aprenderá a realizar os ensaios mais usados em obras de terraplenagem e pavimentação.</p>
-  <button class="btn primary" onclick="Game.completeActivity('m0','intro',{xp:20,medal:'Primeiro Passo – Módulo 0'})">Concluir etapa</button>
+<div class="steps" id="m0-steps">
+  <div class="step" id="m0_intro" data-animate>
+    <h3>🎓 Boas-vindas!</h3>
+    <p>Você está iniciando sua jornada como <strong>Laboratorista de Solos</strong>. Aqui aprenderá a realizar os ensaios mais usados em obras de terraplenagem e pavimentação.</p>
+    <button class="btn primary" onclick="Game.completeActivity('m0','intro',{xp:20,medal:'Primeiro Passo – Módulo 0'})">Concluir etapa</button>
+  </div>
+
+  <div class="step" id="m0_profissao" data-animate>
+    <h3>👷‍♂️ A profissão</h3>
+    <p>O laboratorista executa e interpreta ensaios segundo as normas da <strong>ABNT</strong>, garantindo a segurança e a economia das obras.</p>
+    <button class="btn primary" onclick="Game.completeActivity('m0','profissao',{xp:10})">Concluir etapa</button>
+  </div>
+
+  <div class="step" id="m0_mercado" data-animate>
+    <h3>💼 Mercado e Oportunidades</h3>
+    <p>Profissionais qualificados ganham entre <strong>R$ 2.800 e R$ 5.300</strong> mensais. Há escassez de laboratoristas em todo o país.</p>
+    <button class="btn primary" onclick="Game.completeActivity('m0','mercado',{xp:15})">Concluir etapa</button>
+  </div>
+
+  <div class="step" id="m0_curiosidade" data-animate>
+    <h3>💡 Curiosidade técnica</h3>
+    <p>Um ensaio de umidade mal executado pode atrasar uma obra inteira e gerar prejuízos enormes. Cada pesagem conta!</p>
+    <button class="btn primary" onclick="Game.completeActivity('m0','curiosidade',{xp:10})">Concluir etapa</button>
+  </div>
+
+  <div class="step" id="m0_final" data-animate>
+    <h3>🏁 Fim do Módulo 0</h3>
+    <p>Parabéns! Você concluiu o primeiro módulo e desbloqueou sua primeira medalha.</p>
+    <button class="btn secondary" onclick="Game.completeActivity('m0','fim',{xp:25,medal:'🎉 Módulo 0 Concluído'})">Finalizar módulo</button>
+  </div>
 </div>
 
-<div class="step" id="m0_profissao" data-animate>
-  <h3>👷‍♂️ A profissão</h3>
-  <p>O laboratorista executa e interpreta ensaios segundo as normas da <strong>ABNT</strong>, garantindo a segurança e a economia das obras.</p>
-  <button class="btn primary" onclick="Game.completeActivity('m0','profissao',{xp:10})">Concluir etapa</button>
-</div>
-
-<div class="step" id="m0_mercado" data-animate>
-  <h3>💼 Mercado e Oportunidades</h3>
-  <p>Profissionais qualificados ganham entre <strong>R$ 2.800 e R$ 5.300</strong> mensais. Há escassez de laboratoristas em todo o país.</p>
-  <button class="btn primary" onclick="Game.completeActivity('m0','mercado',{xp:15})">Concluir etapa</button>
-</div>
-
-<div class="step" id="m0_curiosidade" data-animate>
-  <h3>💡 Curiosidade técnica</h3>
-  <p>Um ensaio de umidade mal executado pode atrasar uma obra inteira e gerar prejuízos enormes. Cada pesagem conta!</p>
-  <button class="btn primary" onclick="Game.completeActivity('m0','curiosidade',{xp:10})">Concluir etapa</button>
-</div>
-
-<div class="step" id="m0_final" data-animate>
-  <h3>🏁 Fim do Módulo 0</h3>
-  <p>Parabéns! Você concluiu o primeiro módulo e desbloqueou sua primeira medalha.</p>
-<button class="btn secondary" onclick="Game.completeActivity('m0','fim',{xp:25,medal:'🎉 Módulo 0 Concluído'})">Finalizar módulo</button>
-</div>
-
-
-    <div class="card">
-      <div class="progress-wrap">
-        <span class="tag">Progresso — Módulo 0</span>
-        <div class="progress"><i id="m0_bar"></i></div>
-        <strong id="m0_txt">0%</strong>
-      </div>
-    </div>
-
-    <div class="actions">
-      <a class="btn ghost" href="#home">Início</a>
-      <a class="btn secondary" href="#index">Índice</a>
-      <a class="btn primary" href="#mod1">Avançar</a>
-    </div>
   </section>
 
   <!-- ===== MÓDULO 1 (SHELL) ===== -->
@@ -376,23 +364,6 @@ function confettiRain() {
     setTimeout(() => c.remove(), 2000);
   }
 }
-
-const oldToast = UI.toast;
-UI.toast = (msg) => {
-  const match = msg.match(/\+(\d+)\s*XP/);
-  if (match) showXP(match[1]);
-  if (msg.includes("🏅")) confettiRain();
-  // Efeito de medalha 3D no modal
-if (msg.includes("🏅")) {
-  const medal = document.getElementById('modal-emoji');
-  if (medal) {
-    medal.classList.remove('medal-3d'); // reset
-    void medal.offsetWidth; // força reflow
-    medal.classList.add('medal-3d');
-  }
-}
-  oldToast(msg);
-};
 
   
 /* ---------- ROUTER (hash) ---------- */
