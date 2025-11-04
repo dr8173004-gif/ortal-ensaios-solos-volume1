@@ -96,6 +96,35 @@ p{margin:6px 0 10px; color:#193645}
 
 /* hide sections (router) */
 section[hidden]{display:none !important}
+ /* ===== EFEITO 3D DE MEDALHA ===== */
+.medal-3d {
+  display: inline-block;
+  font-size: 48px;
+  transform: scale(0) rotateY(0deg);
+  animation: popIn 0.8s cubic-bezier(.18,1.2,.22,1) forwards,
+             spin 6s linear infinite,
+             shine 3s ease-in-out infinite;
+  background: radial-gradient(circle at 30% 30%, #ffd700, #c9a45c);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+@keyframes popIn {
+  0% { transform: scale(0) rotateY(0deg); filter: brightness(1.2); }
+  60% { transform: scale(1.2) rotateY(180deg); filter: brightness(1.8); }
+  100% { transform: scale(1) rotateY(360deg); filter: brightness(1); }
+}
+
+@keyframes spin {
+  from { transform: rotateY(0deg); }
+  to { transform: rotateY(360deg); }
+}
+
+@keyframes shine {
+  0%, 100% { filter: brightness(1); }
+  50% { filter: brightness(1.8); }
+}
+ 
 </style>
 
   <!-- ===== UPGRADE VISUAL — MÓDULO 0 PREMIUM ===== -->
@@ -437,13 +466,14 @@ const Game = {
     if (gbar) gbar.style.width = geral + '%';
     if (gtxt) gtxt.textContent = geral + '%';
 
-    // Dá o feedback visual
-    if (medal && !this.state.medals[medal]) {
-      this.state.medals[medal] = { when: Date.now(), mod };
-      UI.toast(`🏅 ${medal}! +${xp} XP`);
-    } else {
-      UI.toast(`+${xp} XP`);
-    }
+    // Dá o feedback visual (aciona confete direto)
+if (medal && !this.state.medals[medal]) {
+  this.state.medals[medal] = { when: Date.now(), mod };
+  confettiRain();
+  UI.toast(`🏅 ${medal}! +${xp} XP`);
+} else {
+  UI.toast(`+${xp} XP`);
+}
 
     // Salva e re-renderiza
     this.save();
@@ -508,29 +538,6 @@ const UI = {
 };
 $('#modal-ok').addEventListener('click',()=>$('#modal').classList.remove('open'));
 
-// === BLOCO NOVO: efeito XP flutuante ===
-function showXP(amount) {
-  const xp = document.createElement('div');
-  xp.className = 'xp-float';
-  xp.textContent = `+${amount} XP`;
-  xp.style.position = 'fixed';
-  xp.style.bottom = '80px';
-  xp.style.left = '50%';
-  xp.style.transform = 'translateX(-50%)';
-  xp.style.color = '#28a745';
-  xp.style.fontWeight = '900';
-  xp.style.fontSize = '1.2rem';
-  xp.style.textShadow = '0 2px 8px rgba(0,0,0,.3)';
-  xp.style.opacity = '1';
-  xp.style.transition = 'all 1.4s ease-out';
-  document.body.appendChild(xp);
-  requestAnimationFrame(()=>{
-    xp.style.transform = 'translate(-50%, -80px)';
-    xp.style.opacity = '0';
-  });
-  setTimeout(() => xp.remove(), 1400);
-}
-
 function confettiRain() {
   for (let i = 0; i < 25; i++) {
     const c = document.createElement("div");
@@ -548,6 +555,15 @@ UI.toast = (msg) => {
   const match = msg.match(/\+(\d+)\s*XP/);
   if (match) showXP(match[1]);
   if (msg.includes("🏅")) confettiRain();
+  // Efeito de medalha 3D no modal
+if (msg.includes("🏅")) {
+  const medal = document.getElementById('modal-emoji');
+  if (medal) {
+    medal.classList.remove('medal-3d'); // reset
+    void medal.offsetWidth; // força reflow
+    medal.classList.add('medal-3d');
+  }
+}
   oldToast(msg);
 };
 
@@ -581,9 +597,30 @@ document.addEventListener('DOMContentLoaded',()=>{
 </script>
 
 <script>
-// ===== CONFETE ANIMADO =====
+// === FEEDBACK VISUAL UNIFICADO: XP + Medalha + Confete ===
+function showXP(amount) {
+  const xp = document.createElement('div');
+  xp.className = 'xp-float';
+  xp.textContent = `+${amount} XP`;
+  xp.style.position = 'fixed';
+  xp.style.left = '50%';
+  xp.style.bottom = '80px';
+  xp.style.transform = 'translateX(-50%)';
+  xp.style.fontWeight = '900';
+  xp.style.color = '#28a745';
+  xp.style.fontSize = '1.2rem';
+  xp.style.textShadow = '0 2px 8px rgba(0,0,0,.3)';
+  xp.style.transition = 'all 1.2s ease-out';
+  document.body.appendChild(xp);
+  requestAnimationFrame(()=>{
+    xp.style.bottom = '120px';
+    xp.style.opacity = '0';
+  });
+  setTimeout(() => xp.remove(), 1200);
+}
+
 function confettiRain() {
-  for (let i = 0; i < 25; i++) {
+  for (let i = 0; i < 35; i++) {
     const c = document.createElement("div");
     c.className = "confetti";
     c.style.left = Math.random() * 100 + "vw";
@@ -594,14 +631,19 @@ function confettiRain() {
   }
 }
 
-// intercepta quando o aluno ganha uma medalha
 const oldToast = UI.toast;
 UI.toast = (msg) => {
+  // Efeito XP flutuante
+  const match = msg.match(/\+(\d+)\s*XP/);
+  if (match) showXP(match[1]);
+
+  // Confete se for medalha
   if (msg.includes("🏅")) confettiRain();
+
   oldToast(msg);
 };
 </script>
 
-  
+
 </body>
 </html>
