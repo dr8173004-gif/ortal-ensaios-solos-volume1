@@ -114,6 +114,11 @@ nav.bottom .grid{display:grid; grid-template-columns:repeat(5,1fr)}
     .quiz h4{margin:0 0 6px; font:800 1rem Montserrat, sans-serif}
     .quiz label{display:block; margin:4px 0}
 
+    /* Quiz feedback states */
+    .quiz label.correct{color:var(--green); font-weight:700}
+    .quiz label.wrong{color:#ff6b6b; font-weight:700}
+    .quiz label.selected{text-decoration:underline}
+
     /* Actions nav */
     .actions{display:flex; gap:8px; flex-wrap:wrap}
 
@@ -253,6 +258,14 @@ nav.bottom .grid{display:grid; grid-template-columns:repeat(5,1fr)}
           <div class="step"><div class="n">4</div><div><strong>Pesagem seca</strong> — Lata + solo seco (<em>m<sub>seca</sub></em>).</div><input type="checkbox" class="ck" data-key="m1_ck4"></div>
         </div>
 
+        <!-- Interpretação e boas práticas -->
+        <h4>Interpretação dos resultados</h4>
+        <p>O resultado médio (<em>w̄</em>) representa a umidade natural do solo. Valores elevados indicam solos mais plásticos e compressíveis;
+        valores baixos são típicos de solos arenosos. Para controle de qualidade, o desvio entre determinações não deve ultrapassar
+        <strong>1&nbsp;%</strong>.</p>
+        <div class="note">Boas práticas: Evite correntes de ar durante a pesagem; use luvas limpas e registre sempre a identificação da amostra,
+        do operador e a data do ensaio.</div>
+
         <div class="panel inset" style="padding:12px; margin:12px 0">
           <h4 style="margin:0 0 6px">Calculadora — Teor de Umidade (w)</h4>
           <form class="calc" onsubmit="return false;">
@@ -303,8 +316,30 @@ nav.bottom .grid{display:grid; grid-template-columns:repeat(5,1fr)}
     <details class="module" open>
       <summary>⛏️ <span> Módulo 2 — Granulometria (NBR 7181): Peneiramento + Sedimentação</span></summary>
       <div class="content">
-        <p><strong>Objetivo:</strong> determinar a distribuição granulométrica combinando peneiramento (≥ 2 mm) e sedimentação com densímetro (≤ 2 mm).</p>
+        <p><strong>Objetivo:</strong> determinar a distribuição granulométrica combinando peneiramento (≥ 2&nbsp;mm) e sedimentação com densímetro (≤ 2&nbsp;mm).</p>
         <div class="note">Dica: a boa divisão de amostras e o registro de perdas minimiza erros na curva granulométrica.</div>
+
+        <!-- Conteúdo técnico completo -->
+        <h4>Procedimento passo a passo</h4>
+        <h5>Parte&nbsp;A — Peneiramento (≥ 2&nbsp;mm)</h5>
+        <div class="steps">
+          <div class="step"><div class="n">A1</div><div><strong>Secagem</strong> — Secar 1&nbsp;kg de solo em estufa a 105–110 °C até massa constante; resfriar no dessecador.</div><input type="checkbox" class="ck" data-key="m2_ck1"></div>
+          <div class="step"><div class="n">A2</div><div><strong>Pesagem das peneiras</strong> — Pese cada peneira limpa e registre a tara.</div><input type="checkbox" class="ck" data-key="m2_ck2"></div>
+          <div class="step"><div class="n">A3</div><div><strong>Torre de peneiras</strong> — Monte a torre da peneira mais grossa até a de 2&nbsp;mm.</div><input type="checkbox" class="ck" data-key="m2_ck3"></div>
+          <div class="step"><div class="n">A4</div><div><strong>Peneiramento</strong> — Coloque o solo na torre e agite por 10&nbsp;min; pese o material retido em cada peneira.</div><input type="checkbox" class="ck" data-key="m2_ck4"></div>
+          <div class="step"><div class="n">A5</div><div><strong>Percentual retido</strong> — Calcule a massa e a porcentagem retida em cada peneira.</div><input type="checkbox" class="ck" data-key="m2_ck5"></div>
+          <div class="step"><div class="n">A6</div><div><strong>Curva semi‑log</strong> — Trace a curva acumulada em papel semi‑log ou planilha.</div><input type="checkbox" class="ck" data-key="m2_ck6"></div>
+        </div>
+        <h5>Parte&nbsp;B — Sedimentação (≤ 2&nbsp;mm)</h5>
+        <div class="steps">
+          <div class="step"><div class="n">B1</div><div><strong>Preparar suspensão</strong> — Disperse 1&nbsp;kg de solo em água com dispersante; retire partículas >2&nbsp;mm.</div><input type="checkbox" class="ck" data-key="m2_ck7"></div>
+          <div class="step"><div class="n">B2</div><div><strong>Misturar e agitar</strong> — Utilize agitador mecânico até completa dispersão.</div><input type="checkbox" class="ck" data-key="m2_ck8"></div>
+          <div class="step"><div class="n">B3</div><div><strong>Transferir</strong> — Coloque a suspensão em cilindro graduado até 1&nbsp;L.</div><input type="checkbox" class="ck" data-key="m2_ck9"></div>
+          <div class="step"><div class="n">B4</div><div><strong>Leituras do densímetro</strong> — Faça leituras em 0,25, 0,5, 1, 2, 4, 8 e 24&nbsp;h.</div><input type="checkbox" class="ck" data-key="m2_ck10"></div>
+          <div class="step"><div class="n">B5</div><div><strong>Cálculo do diâmetro</strong> — Calcule os diâmetros das partículas pelo método de Stokes.</div><input type="checkbox" class="ck" data-key="m2_ck11"></div>
+          <div class="step"><div class="n">B6</div><div><strong>Junção de dados</strong> — Combine os resultados das Partes&nbsp;A e&nbsp;B para obter a curva completa.</div><input type="checkbox" class="ck" data-key="m2_ck12"></div>
+        </div>
+        <div class="note">Dica profissional: registre todas as massas e perdas para garantir a soma de 100&nbsp;% na curva e facilitar a identificação de erros.</div>
 
         <div class="panel inset" style="padding:12px; margin:12px 0">
           <h4 style="margin:0 0 8px">🎥 Aula de Granulometria</h4>
@@ -348,6 +383,15 @@ nav.bottom .grid{display:grid; grid-template-columns:repeat(5,1fr)}
           </label>
           <button class="btn btn-primary" style="margin-top:10px" onclick="generateCertPDF()">Gerar Certificado (PDF)</button>
           <p id="cert_feedback" style="font-weight:700; margin-top:8px"></p>
+        </div>
+        <!-- CTA para Volume 2 -->
+        <div class="panel inset" style="padding:12px; margin:12px 0">
+          <h4 style="margin-top:0">🚀 Próximo Passo: Volume&nbsp;2</h4>
+          <p style="margin:0 0 8px"><strong>Volume 2 — Massa Específica Real + Limites de Atterberg</strong><br>
+            Continue avançando na sua carreira com nosso próximo curso. Conteúdos avançados, exemplos práticos e materiais exclusivos para dominar a caracterização de solos.</p>
+          <div class="actions">
+            <button class="btn btn-primary" onclick="alert('Em breve! Cadastre-se na lista de espera para o Volume 2.');">Quero ser avisado</button>
+          </div>
         </div>
         <div class="actions">
           <a class="btn btn-primary" href="#index">Ver meu progresso</a>
@@ -429,6 +473,8 @@ nav.bottom .grid{display:grid; grid-template-columns:repeat(5,1fr)}
     }
     bindChecks(['m0_ck_1','m0_ck_2','m0_ck_3'], 'bar0', 'm0_progress_pct');
     bindChecks(['m1_ck1','m1_ck2','m1_ck3','m1_ck4'], 'bar1', 'm1_progress_pct');
+    // checklist do módulo 2 (A1–A6 + B1–B6)
+    bindChecks(['m2_ck1','m2_ck2','m2_ck3','m2_ck4','m2_ck5','m2_ck6','m2_ck7','m2_ck8','m2_ck9','m2_ck10','m2_ck11','m2_ck12'], 'bar2', 'm2_progress_pct');
 
     // ===== Calculadora Umidade =====
     function calcUmidade(){
@@ -452,14 +498,35 @@ nav.bottom .grid{display:grid; grid-template-columns:repeat(5,1fr)}
 
     // ===== Quiz =====
     function corrigir(mod){
-      const radios = document.querySelectorAll(`.quiz input[name^="q"][name*="_${mod==='mod1'?1:2}"]`);
-      let certo=0, total=0; const names = new Set();
-      radios.forEach(r=>names.add(r.name));
-      names.forEach(n=>{ total++; const c = document.querySelector(`input[name="${n}"][data-correct="true"]`); if(c && c.checked) certo++; });
-      document.getElementById(`score_${mod}`).textContent = `Acertos: ${certo}/${total}`;
-      const hit = Math.round((certo/total)*100);
+      // Encontra todos os grupos de perguntas do módulo (1 ou 2)
+      const modIndex = (mod==='mod1'? '1':'2');
+      const radios = document.querySelectorAll(`.quiz input[name^="q"][name*="_${modIndex}"]`);
+      const qNames = new Set(); radios.forEach(r=> qNames.add(r.name));
+      let correctCount = 0; const total = qNames.size;
+      qNames.forEach(name => {
+        // Limpa estados anteriores
+        document.querySelectorAll(`input[name="${name}"]`).forEach(inp => {
+          const lbl = inp.parentElement;
+          lbl.classList.remove('correct','wrong','selected');
+        });
+        const selected = document.querySelector(`input[name="${name}"]:checked`);
+        if(selected){ selected.parentElement.classList.add('selected'); }
+        const correct = document.querySelector(`input[name="${name}"][data-correct="true"]`);
+        if(correct){
+          correct.parentElement.classList.add('correct');
+          if(selected === correct){ correctCount++; } else if(selected){ selected.parentElement.classList.add('wrong'); }
+        }
+      });
+      let msg;
+      if(correctCount === total){ msg = 'Parabéns, você acertou 100%!'; } else {
+        msg = `Acertos: ${correctCount}/${total}. Respostas corretas estão destacadas em verde.`;
+      }
+      document.getElementById(`score_${mod}`).textContent = msg;
+      // Atualiza progresso: somente dá 100% se acertou tudo; senão mantém ou define progresso parcial
       const key = mod==='mod1' ? 'm1_progress_pct' : 'm2_progress_pct';
-      const prev = parseInt(getKV(key,'0'))||0; setKV(key, String(Math.max(prev, 100)));
+      const prev = parseInt(getKV(key,'0')) || 0;
+      if(correctCount === total){ setKV(key, '100'); }
+      else { const base = 60; setKV(key, String(Math.max(prev, base))); }
       updateXP(); mirrorIndex();
     }
     window.corrigir = corrigir;
