@@ -1,666 +1,458 @@
 <!DOCTYPE html>
-<!--
-  Esta versão combinada foi gerada a partir de três fontes: a estrutura leve e responsiva de
-  `portal‑mobile (5).html`, o conteúdo técnico completo do portal desktop (`portal (4).html`)
-  e os elementos de gamificação/vídeo propostos anteriormente. O objetivo é entregar um
-  portal mobile com tudo o que o usuário solicitou: aulas interativas de umidade e
-  granulometria, simulador de laboratório, calculadoras, quizzes, certificação e
-  gamificação (XP, medalhas, progresso e confetes), mas mantendo um carregamento
-  rápido e experiência fluida em dispositivos móveis.
-
-  Esta página utiliza apenas HTML, CSS e JavaScript nativos. As bibliotecas externas
-  carregadas via CDN são: jsPDF (para geração de certificado PDF) e QRCode.js (opcional).
-  Todo o CSS específico dos novos módulos foi embutido para evitar dependências
-  adicionais. Os scripts de gamificação se integram ao motor já presente no arquivo
-  base (`Game.completeActivity`, `UI.toast` e `confettiRain`).
--->
 <html lang="pt-BR">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Ensaios de Solos — Mobile (Premium)</title>
-  <meta name="description" content="Portal Interativo — Versão Mobile premium com gamificação." />
-  <!-- Paleta de cores herdada do projeto -->
+  <title>Ensaios de Solos — Volume 1 (Mobile Premium)</title>
+  <meta name="description" content="Portal Interativo (mobile) com design premium e gamificação: Umidade Natural, Granulometria, vídeo‑aulas, simuladores e certificado." />
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-iHn2v5sM3hXQw6cM6sE4u2WkQmUeJr0uX8nQbwM5NqH0x8v6Gm8l6EJ9ZC8UQ3x3nQXoES9nH9v2M5b2o3dB0w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
   <style>
     :root{
-      --blue:#013C5A; --gray:#666666; --green:#28a745; --white:#FFFFFF;
-      --bg:#f6f8fb; --radius:16px; --shadow: 0 6px 12px rgba(0,0,0,.1);
+      --blue:#013C5A; --blue-900:#0a2f3f; --blue-800:#0f4057; --green:#28a745; --green-2:#25d366;
+      --text:#eaf2f7; --muted:#b7c7d1; --panel:rgba(255,255,255,0.06); --glass:rgba(255,255,255,0.08);
+      --radius:18px; --radius-lg:22px; --shadow:0 10px 28px rgba(0,0,0,.25);
     }
-    *{box-sizing:border-box;margin:0;padding:0}
-    body{font-family:'Open Sans',sans-serif;color:var(--blue);background:var(--bg);line-height:1.6;margin:0;padding-bottom:80px;}
-    a{text-decoration:none;color:inherit}
-    header.site{position:sticky;top:0;z-index:100;background:#fff;border-bottom:1px solid rgba(0,0,0,.05);}
-    .topbar{display:flex;align-items:center;gap:12px;padding:10px 16px;}
-    .brand{font-weight:800;font-size:1rem;display:flex;align-items:center;gap:8px;color:var(--blue)}
-    nav{margin-left:auto;display:flex;gap:8px;}
-    nav a{padding:6px 10px;border-radius:12px;font-weight:700;font-size:.9rem;color:var(--blue)}
-    nav a.active,nav a:hover{background:var(--blue);color:#fff}
-    main{max-width:720px;margin:0 auto;padding:16px;}
-    section.card{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:24px;padding:16px;position:relative;}
-    section.card[hidden]{display:none;}
-    header.module-head{display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap;}
-    header.module-head h2{margin:0;font-family:'Montserrat',sans-serif;color:var(--blue);font-size:1.3rem;}
-    .tag{background:rgba(1,60,90,.06);color:var(--blue);padding:4px 8px;border-radius:8px;font-weight:700;font-size:.75rem;display:flex;align-items:center;gap:4px;}
-    .progress-wrap{margin-top:12px;display:flex;align-items:center;gap:8px;}
-    .progress{flex:1;height:10px;background:#eef4f7;border-radius:999px;overflow:hidden;}
-    .progress i{display:block;height:100%;width:0%;background:var(--green);}
-    .actions{display:flex;justify-content:space-between;gap:10px;margin-top:18px;flex-wrap:wrap;}
-    .btn{border:none;padding:8px 12px;border-radius:12px;font-weight:700;cursor:pointer;box-shadow:0 3px 6px rgba(0,0,0,.05);}
-    .btn.primary{background:var(--green);color:#fff;}
-    .btn.secondary{background:#eef4f7;color:var(--blue);}
-    .btn.ghost{background:transparent;color:var(--blue);border:1px solid rgba(1,60,90,.15);}
-    /* Step styling */
-    .steps{display:flex;flex-direction:column;gap:12px;}
-    .step{display:flex;align-items:flex-start;gap:12px;border:1px dashed rgba(1,60,90,.15);border-radius:12px;padding:12px;position:relative;}
-    .step .num{min-width:24px;height:24px;border-radius:50%;background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;}
-    .step input.ck{margin-left:auto;width:20px;height:20px;cursor:pointer;}
-    /* Lab simulation */
-    .lab-icons{display:flex;justify-content:space-around;gap:8px;margin-bottom:12px;flex-wrap:wrap;}
-    .lab-icons button{font-size:1.8rem;background:none;border:none;cursor:pointer;}
-    .lab-icons button:focus{outline:none;}
-    .calc-section{background:#f9fbfd;border:1px solid rgba(1,60,90,.1);border-radius:12px;padding:12px;margin-top:16px;}
-    .calc-section input{width:100%;padding:8px;border:1px solid rgba(1,60,90,.25);border-radius:8px;margin:4px 0;}
-    .calc-section button{margin-top:8px;width:100%;}
-    .video-section{margin-top:20px;}
-    .video-wrapper{position:relative;width:100%;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:12px;}
-    .video-wrapper iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:0;border-radius:12px;}
-    .quiz{margin-top:20px;}
-    .quiz .question{margin-bottom:12px;}
-    .quiz button{margin-top:8px;}
-    .certificate{background:#f9fbfd;border:1px solid rgba(1,60,90,.1);border-radius:12px;padding:12px;margin-top:16px;}
-    .certificate input{width:100%;padding:8px;border:1px solid rgba(1,60,90,.25);border-radius:8px;margin:4px 0;}
-    .certificate button{margin-top:8px;width:100%;}
-    /* Bottom navigation for mobile */
-    .bottom-nav{position:fixed;bottom:0;left:0;right:0;height:56px;background:#fff;border-top:1px solid rgba(0,0,0,.1);display:flex;justify-content:space-around;align-items:center;z-index:1000;box-shadow:0 -2px 8px rgba(0,0,0,.05);}
-    .bottom-nav a{flex:1;text-align:center;font-size:1.2rem;color:var(--blue);}
-    .bottom-nav a:hover{color:var(--green);} 
-    @media(min-width:768px){ .bottom-nav{display:none;} }
-    /* XP float animation */
-    .xp-float{position:fixed;left:50%;transform:translateX(-50%);bottom:100px;font-weight:800;color:var(--green);font-size:1.2rem;pointer-events:none;transition:all 1.4s ease;}
-    .xp-float.show{bottom:160px;opacity:0;}
-    /* Confetti pieces reused from base script via confettiRain() */
-    .confetti{position:fixed;width:12px;height:12px;border-radius:50%;pointer-events:none;opacity:0.9;animation:fall 2s linear forwards;}
-    @keyframes fall{to{transform:translateY(100vh);}}
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0; color:var(--text); font-family:'Open Sans',system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial,sans-serif; line-height:1.6;
+      background: radial-gradient(1200px 480px at 50% -160px, rgba(40,167,69,.22), transparent 70%),
+                  linear-gradient(180deg, #022A3E 0%, #012637 26%, #022A3E 100%);
+      background-attachment: fixed; overflow-x:hidden; -webkit-font-smoothing:antialiased; -webkit-tap-highlight-color:transparent;
+    }
+    /* Cinematic vignette */
+    body::after{content:""; position:fixed; inset:0; pointer-events:none; background:radial-gradient(130vw 120vh at 50% -10vh, transparent 54%, rgba(0,0,0,.45) 100%);}  
 
-    /* Toast visibility */
-    #toast.show{display:block !important;}
+    /* Top progress */
+    .top-progress{position:fixed; top:0; left:0; width:100%; height:6px; background:rgba(255,255,255,.12); z-index:60}
+    .top-progress i{display:block; width:0%; height:100%; background:linear-gradient(90deg, var(--green), var(--green-2)); transition:width .3s ease}
+
+    /* Header */
+    header.site{position:sticky; top:0; z-index:50; backdrop-filter:saturate(150%) blur(10px); background:rgba(1,60,90,.6); border-bottom:1px solid rgba(255,255,255,.08)}
+    .bar{display:flex; align-items:center; gap:10px; padding:10px 14px; max-width:920px; margin:0 auto}
+    .brand{display:flex; align-items:center; gap:10px; font-weight:800; letter-spacing:.3px; font-family:Montserrat, sans-serif}
+    .brand i{display:inline-grid; place-items:center; width:34px; height:34px; border-radius:12px; background:linear-gradient(120deg, rgba(255,255,255,.18), rgba(255,255,255,.06)); box-shadow:inset 0 1px 1px rgba(255,255,255,.25)}
+    .brand span{font-size:1.02rem}
+    .user-pill{margin-left:auto; display:flex; align-items:center; gap:8px; background:linear-gradient(120deg, rgba(255,255,255,.14), rgba(255,255,255,.06)); padding:6px 10px; border-radius:999px; box-shadow:inset 0 1px 1px rgba(255,255,255,.2)}
+    .user-pill b{font-weight:700}
+    .user-pill .logout{background:linear-gradient(135deg, #ff7a59, #ff9d42); color:#111; font-weight:800; border:none; border-radius:999px; padding:6px 10px}
+
+    /* Bottom nav (mobile) */
+    nav.bottom{position:sticky; bottom:0; z-index:40; background:rgba(1,60,90,.9); border-top:1px solid rgba(255,255,255,.08)}
+    nav.bottom .grid{display:grid; grid-template-columns:repeat(4,1fr)}
+    nav.bottom a{display:flex; flex-direction:column; align-items:center; justify-content:center; color:#fff; text-decoration:none; padding:10px 0; font-size:.78rem}
+    nav.bottom i{font-size:20px; margin-bottom:2px}
+
+    /* Hero */
+    .hero{max-width:920px; margin:10px auto 0; padding:14px;}
+    .card-hero{position:relative; overflow:hidden; border-radius:var(--radius-lg); box-shadow:var(--shadow); isolation:isolate}
+    .card-hero .bg{position:absolute; inset:0; background:linear-gradient(180deg, rgba(1,60,90,.82), rgba(1,60,90,.78)), url('assets/background_portal.png') center/cover no-repeat; filter:saturate(120%) contrast(105%)}
+    .card-hero .inner{position:relative; padding:26px 18px 22px}
+    .card-hero h1{margin:0 0 6px; font-family:Montserrat, sans-serif; font-weight:800; font-size:1.48rem; letter-spacing:.2px}
+    .card-hero p{margin:0 0 12px; color:#d3e2ea}
+    .cta-row{display:flex; gap:10px; flex-wrap:wrap}
+    .btn{appearance:none; border:none; cursor:pointer; font-weight:800; color:#fff; padding:10px 16px; border-radius:999px; box-shadow:0 8px 20px rgba(0,0,0,.28); transition:transform .15s ease}
+    .btn:hover{transform:translateY(-1px)}
+    .btn-primary{background:linear-gradient(135deg, var(--green), var(--green-2))}
+    .btn-ghost{background:linear-gradient(120deg, rgba(255,255,255,.18), rgba(255,255,255,.06))}
+
+    /* Section */
+    section{max-width:920px; margin:14px auto; padding:0 14px}
+
+    /* Index / progresso */
+    .panel{background:var(--panel); border:1px solid rgba(255,255,255,.08); border-radius:var(--radius); box-shadow:var(--shadow)}
+    .panel.inset{box-shadow:inset 0 0 0 1px rgba(255,255,255,.06)}
+    .panel .head{display:flex; align-items:center; gap:10px; padding:12px 14px; border-bottom:1px solid rgba(255,255,255,.06)}
+    .panel .head h2{margin:0; font:800 1.06rem Montserrat, sans-serif}
+
+    .modules{display:grid; gap:12px; padding:12px}
+    .mod-card{background:var(--glass); border:1px solid rgba(255,255,255,.09); border-radius:16px; padding:12px; display:grid; grid-template-columns:auto 1fr; gap:10px; align-items:center}
+    .mod-card .ico{width:42px; height:42px; border-radius:12px; display:grid; place-items:center; background:linear-gradient(140deg, rgba(255,255,255,.22), rgba(255,255,255,.08))}
+    .mod-card h3{margin:0; font:800 1rem Montserrat, sans-serif}
+    .muted{color:var(--muted)}
+    .meter{height:10px; background:rgba(255,255,255,.12); border-radius:999px; overflow:hidden}
+    .meter i{display:block; height:100%; width:0%; background:linear-gradient(90deg, var(--green), var(--green-2))}
+
+    .open{display:flex; gap:8px; margin-top:8px}
+
+    /* Accordion (conteúdo do módulo) */
+    details.module{background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08); border-radius:16px; padding:12px}
+    details.module summary{list-style:none; cursor:pointer; display:flex; align-items:center; gap:10px; font-weight:800}
+    details.module[open]{background:rgba(255,255,255,.06)}
+    details.module .content{padding-top:10px}
+
+    /* Video embed */
+    .video{position:relative; width:100%; border-radius:14px; overflow:hidden; background:#0b2230}
+    .video::before{content:""; display:block; padding-top:56.25%}
+    .video iframe{position:absolute; inset:0; width:100%; height:100%; border:0}
+
+    /* Simulador / Lab grid */
+    .lab-grid{display:grid; grid-template-columns:repeat(5,1fr); gap:10px}
+    .lab-item{background:linear-gradient(120deg, rgba(255,255,255,.2), rgba(255,255,255,.06)); border:1px solid rgba(255,255,255,.12); border-radius:12px; padding:8px 6px; text-align:center}
+    .lab-item i{font-size:22px}
+    .lab-item span{display:block; font-size:.8rem; margin-top:4px}
+
+    /* Lista de passos */
+    .steps{display:grid; gap:10px}
+    .step{display:grid; grid-template-columns:auto 1fr auto; gap:10px; align-items:flex-start; background:rgba(255,255,255,.05); border:1px dashed rgba(255,255,255,.14); border-radius:14px; padding:10px}
+    .step .n{display:grid; place-items:center; width:26px; height:26px; border-radius:8px; font-weight:800; background:linear-gradient(135deg, var(--green), var(--green-2)); color:#0b1b24}
+
+    /* Notes */
+    .note{background:rgba(255,243,205,.12); border:1px solid rgba(255,243,205,.45); color:#fff7d2; border-radius:12px; padding:10px}
+
+    /* Forms / calc */
+    .calc label{display:block; font-weight:700; margin:8px 0 4px}
+    .calc input{width:100%; padding:10px 12px; border-radius:12px; border:1px solid rgba(255,255,255,.18); background:rgba(255,255,255,.06); color:#fff}
+
+    /* Quiz */
+    .quiz{background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.1); border-radius:14px; padding:12px}
+    .quiz h4{margin:0 0 6px; font:800 1rem Montserrat, sans-serif}
+    .quiz label{display:block; margin:4px 0}
+
+    /* Actions nav */
+    .actions{display:flex; gap:8px; flex-wrap:wrap}
+
+    /* Reveal */
+    .reveal{opacity:0; transform:translateY(10px); transition:opacity .5s ease, transform .5s ease}
+    .reveal.in{opacity:1; transform:none}
+
+    @media (max-width:480px){
+      .lab-grid{grid-template-columns:repeat(3,1fr)}
+    }
   </style>
 </head>
 <body>
-  <!-- ===== HEADER ===== -->
-  <header class="site">
-    <div class="topbar">
-      <div class="brand">Ensaios de Solos — Mobile</div>
-      <nav>
-        <a href="#home" id="nav-home" class="active">Início</a>
-        <a href="#index" id="nav-index">Índice</a>
-        <a href="#achievements" id="nav-ach">Conquistas</a>
-      </nav>
+  <!-- XP / progresso topo -->
+  <div class="top-progress" aria-hidden="true"><i id="xpBar"></i></div>
+
+  <!-- HEADER -->
+  <header class="site" role="banner">
+    <div class="bar">
+      <div class="brand"><i>🧪</i><span>Ensaios de Solos — Vol. 1</span></div>
+      <div class="user-pill" aria-live="polite"><span>👋 Olá, <b id="uName">aluno</b></span><button class="logout" id="logoutBtn" type="button">Sair</button></div>
     </div>
   </header>
 
-  <main>
-    <!-- ===== HOME ===== -->
-    <section id="home" class="card" data-animate aria-labelledby="home-title">
-      <h2 id="home-title">Bem-vindo ao Curso Interativo — Volume 1</h2>
-      <p>Aprenda <strong>Umidade Natural</strong> e <strong>Granulometria</strong> com experiência imersiva, gamificação e calculadoras de ensaio. Acompanhe seu progresso, desbloqueie medalhas e conquiste seu certificado.</p>
-      <div class="progress-wrap" aria-label="Progresso geral">
-        <span class="tag">Progresso geral</span>
-        <div class="progress"><i id="bar"></i></div>
-        <strong id="pct">0%</strong>
-      </div>
-      <div class="actions">
-        <a class="btn primary" href="#index">Ir para o Índice</a>
-      </div>
-    </section>
-
-    <!-- ===== ÍNDICE ===== -->
-    <section id="index" class="card" data-animate aria-labelledby="index-title">
-      <h2 id="index-title">Índice do Curso</h2>
-      <p>Escolha o módulo para iniciar ou retomar seus estudos.</p>
-      <div class="steps">
-        <div class="step" style="cursor:pointer" onclick="location.hash='mod0'">
-          <span class="num">0</span>
-          <div>
-            <strong>Módulo 0 – Introdução</strong><br/>
-            Panorama da profissão, mercado e curiosidades.
-          </div>
-          <i id="m0_bar"></i>
-        </div>
-        <div class="step" style="cursor:pointer" onclick="location.hash='mod1'">
-          <span class="num">1</span>
-          <div>
-            <strong>Módulo 1 – Umidade Natural</strong><br/>
-            Procedimento de pesagem, estufa e cálculo de w.
-          </div>
-          <i id="m1_bar"></i>
-        </div>
-        <div class="step" style="cursor:pointer" onclick="location.hash='mod2'">
-          <span class="num">2</span>
-          <div>
-            <strong>Módulo 2 – Granulometria</strong><br/>
-            Divisão da amostra, peneiramento, sedimentação e curva.
-          </div>
-          <i id="m2_bar"></i>
-        </div>
-        <div class="step" style="cursor:pointer" onclick="location.hash='mod3'">
-          <span class="num">3</span>
-          <div>
-            <strong>Módulo 3 – Mentoria</strong><br/>
-            Dúvidas e revisão ao vivo com o instrutor.
-          </div>
-          <i id="m3_bar"></i>
-        </div>
-        <div class="step" style="cursor:pointer" onclick="location.hash='mod4'">
-          <span class="num">4</span>
-          <div>
-            <strong>Módulo 4 – Certificação</strong><br/>
-            Gere seu certificado e continue para o Volume 2.
-          </div>
-          <i id="m4_bar"></i>
+  <!-- HERO -->
+  <div class="hero">
+    <div class="card-hero">
+      <div class="bg" aria-hidden="true"></div>
+      <div class="inner">
+        <h1>Curso Interativo – Ensaios de Solos (Vol. 1)</h1>
+        <p>Aprenda na prática Umidade Natural e Granulometria (peneiramento + sedimentação) com vídeos, simuladores, checklists e certificado.</p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="#index">Continuar de onde parei</a>
+          <a class="btn btn-ghost" href="#mod1">Ir para o Módulo 1</a>
         </div>
       </div>
-    </section>
-
-    <!-- ===== MÓDULO 0 ===== -->
-    <section id="mod0" class="card" data-animate aria-labelledby="mod0-title">
-      <header class="module-head">
-        <span class="tag">🏠 Módulo 0</span>
-        <h2 id="mod0-title">Panorama da Profissão & Oportunidades</h2>
-      </header>
-      <div class="steps" id="mod0-steps">
-        <div class="step">
-          <span class="num">1</span>
-          <div>
-            <strong>Objetivo deste módulo</strong><br/>Conheça o papel do laboratorista de solos e como este curso vai impulsionar sua carreira.
-          </div>
-          <input type="checkbox" class="ck" onchange="Game.completeActivity('m0','intro',{xp:10})">
-        </div>
-        <div class="step">
-          <span class="num">2</span>
-          <div>
-            <strong>O que faz um laboratorista?</strong><br/>Executa e registra ensaios, prepara amostras, confere equipamentos e interpreta resultados.
-          </div>
-          <input type="checkbox" class="ck" onchange="Game.completeActivity('m0','job',{xp:10})">
-        </div>
-        <div class="step">
-          <span class="num">3</span>
-          <div>
-            <strong>Mercado & salário</strong><br/>Salários variam de R$ 2,8k a R$ 5,3k/mês. Há escassez de profissionais qualificados no país.
-          </div>
-          <input type="checkbox" class="ck" onchange="Game.completeActivity('m0','market',{xp:10})">
-        </div>
-      </div>
-      <div class="note" style="background:#fff9e6;border:1px solid #ffe5a3;border-radius:12px;padding:12px;margin-top:12px">
-        <strong>Curiosidade:</strong> Um ensaio mal executado pode atrasar uma obra inteira e gerar prejuízos enormes. Cada pesagem conta!
-      </div>
-      <div class="progress-wrap">
-        <span class="tag">Progresso — Módulo 0</span>
-        <div class="progress"><i id="m0_bar"></i></div>
-        <strong id="m0_txt">0%</strong>
-      </div>
-      <div class="actions">
-        <a class="btn primary" href="#mod1">Começar Módulo 1</a>
-      </div>
-    </section>
-
-    <!-- ===== MÓDULO 1 ===== -->
-    <section id="mod1" class="card" data-animate aria-labelledby="mod1-title">
-      <header class="module-head">
-        <span class="tag">🧪 Módulo 1</span>
-        <h2 id="mod1-title">Teor de Umidade Natural</h2>
-      </header>
-      <!-- Simulador de laboratório -->
-      <div class="lab-icons">
-        <button onclick="Game.completeActivity('m1','lab_balanca',{xp:5}); UI.toast('⚖️ Balança: utilizada para pesagens de precisão.');">⚖️</button>
-        <button onclick="Game.completeActivity('m1','lab_capsula',{xp:5}); UI.toast('🥣 Cápsula: recipiente onde colocamos a amostra.');">🥣</button>
-        <button onclick="Game.completeActivity('m1','lab_estufa',{xp:5}); UI.toast('🔥 Estufa: seca a amostra a 105‑110°C.');">🔥</button>
-        <button onclick="Game.completeActivity('m1','lab_solo',{xp:5}); UI.toast('🌱 Solo: material coletado em campo.');">🌱</button>
-        <button onclick="Game.completeActivity('m1','lab_agua',{xp:5}); UI.toast('💧 Água: mantemos a amostra úmida até a pesagem.');">💧</button>
-      </div>
-      <p style="font-size:.9rem;color:#013C5A;margin-bottom:12px"><em>Clique nos ícones para aprender sobre o laboratório e ganhar XP extra.</em></p>
-      <div class="steps" id="mod1-steps">
-        <!-- Passo 1 -->
-        <div class="step">
-          <span class="num">1</span>
-          <div>
-            <strong>Identificação da amostra</strong><br/>Numere a lata, registre o código da amostra e pese a lata vazia (<em>m<sub>lata</sub></em>).
-          </div>
-        <input type="checkbox" class="ck" onchange="Game.completeActivity('m1','m1_step1',{xp:10})">
-        </div>
-        <!-- Passo 2 -->
-        <div class="step">
-          <span class="num">2</span>
-          <div>
-            <strong>Pesagem úmida</strong><br/>Coloque o solo natural na lata e pese o conjunto (<em>m<sub>úmida</sub></em> = lata + solo úmido).
-          </div>
-          <input type="checkbox" class="ck" onchange="Game.completeActivity('m1','m1_step2',{xp:10})">
-        </div>
-        <!-- Passo 3 -->
-        <div class="step">
-          <span class="num">3</span>
-          <div>
-            <strong>Secagem</strong><br/>Leve a amostra à estufa (105–110 °C) por 24 h para remover a água.
-          </div>
-          <input type="checkbox" class="ck" onchange="Game.completeActivity('m1','m1_step3',{xp:10})">
-        </div>
-        <!-- Passo 4 -->
-        <div class="step">
-          <span class="num">4</span>
-          <div>
-            <strong>Pesagem seca</strong><br/>Após resfriar em dessecador, pese novamente a lata com o solo seco (<em>m<sub>seca</sub></em>).
-          </div>
-          <input type="checkbox" class="ck" onchange="Game.completeActivity('m1','m1_step4',{xp:10})">
-        </div>
-      </div>
-      <!-- Calculadora de Umidade -->
-      <div class="calc-section">
-        <h3>🧮 Calculadora de Teor de Umidade</h3>
-        <label for="m_lata">m<sub>lata</sub> (g):</label>
-        <input id="m_lata" type="number" step="0.01" placeholder="Ex.: 50">
-        <label for="m_umida">m<sub>úmida</sub> (g):</label>
-        <input id="m_umida" type="number" step="0.01" placeholder="Ex.: 120">
-        <label for="m_seca">m<sub>seca</sub> (g):</label>
-        <input id="m_seca" type="number" step="0.01" placeholder="Ex.: 90">
-        <button class="btn primary" onclick="calcUmidade()">Calcular w (%)</button>
-        <p style="margin-top:8px">Resultado: <strong id="w_result">–</strong></p>
-      </div>
-      <!-- Vídeo aula Módulo 1 -->
-      <div class="video-section">
-        <h3>🎬 Aula de Umidade Natural</h3>
-        <div class="video-wrapper">
-          <iframe src="https://www.youtube.com/embed/kvlK_IazloQ" allowfullscreen title="Aula de Umidade Natural"></iframe>
-        </div>
-      </div>
-      <!-- Quiz Módulo 1 -->
-      <div class="quiz">
-        <h3>🧠 Quiz – Revisão Módulo 1</h3>
-        <div class="question">
-          <p><strong>1. O que representa o teor de umidade natural?</strong></p>
-          <label><input type="radio" name="q1" value="0"> A razão entre a massa de água e a massa seca do solo.</label><br/>
-          <label><input type="radio" name="q1" value="1"> A diferença entre a massa úmida e a massa seca.</label><br/>
-          <label><input type="radio" name="q1" value="2"> A soma da massa da lata com o solo.</label>
-        </div>
-        <div class="question">
-          <p><strong>2. Qual a temperatura padrão da estufa para este ensaio?</strong></p>
-          <label><input type="radio" name="q2" value="0"> 80–90 °C por 1 h.</label><br/>
-          <label><input type="radio" name="q2" value="1"> 105–110 °C por 24 h.</label><br/>
-          <label><input type="radio" name="q2" value="2"> 200 °C até secar completamente.</label>
-        </div>
-        <div class="question">
-          <p><strong>3. Ao calcular w, usamos as massas:</strong></p>
-          <label><input type="radio" name="q3" value="0"> m<sub>úmida</sub>, m<sub>seca</sub> e m<sub>lata</sub>.</label><br/>
-          <label><input type="radio" name="q3" value="1"> Apenas m<sub>úmida</sub> e m<sub>seca</sub>.</label><br/>
-          <label><input type="radio" name="q3" value="2"> A massa da água evaporada.</label>
-        </div>
-        <button class="btn primary" onclick="checkQuizM1()">Enviar respostas</button>
-        <p id="quiz1-result" style="margin-top:6px;font-weight:600"></p>
-      </div>
-      <div class="progress-wrap">
-        <span class="tag">Progresso — Módulo 1</span>
-        <div class="progress"><i id="m1_bar"></i></div>
-        <strong id="m1_txt">0%</strong>
-      </div>
-      <div class="actions">
-        <a class="btn ghost" href="#mod0">Voltar</a>
-        <a class="btn secondary" href="#index">Índice</a>
-        <a class="btn primary" href="#mod2">Avançar</a>
-      </div>
-    </section>
-
-    <!-- ===== MÓDULO 2 ===== -->
-    <section id="mod2" class="card" data-animate aria-labelledby="mod2-title">
-      <header class="module-head">
-        <span class="tag">📊 Módulo 2</span>
-        <h2 id="mod2-title">Granulometria (Peneiramento + Sedimentação)</h2>
-      </header>
-      <div class="steps" id="mod2-steps">
-        <!-- Passo 1 -->
-        <div class="step">
-          <span class="num">1</span>
-          <div>
-            <strong>Divisão da amostra</strong><br/>Separe 2 kg de solo: 1 kg para peneiramento (≥ 2 mm) e 1 kg para sedimentação (&lt; 2 mm).
-          </div>
-        <input type="checkbox" class="ck" onchange="Game.completeActivity('m2','m2_step1',{xp:10})">
-        </div>
-        <!-- Passo 2 -->
-        <div class="step">
-          <span class="num">2</span>
-          <div>
-            <strong>Peneiramento</strong><br/>Passe a fração grossa por peneiras sucessivas e pese cada fração retida para calcular a porcentagem acumulada.
-          </div>
-          <input type="checkbox" class="ck" onchange="Game.completeActivity('m2','m2_step2',{xp:10})">
-        </div>
-        <!-- Passo 3 -->
-        <div class="step">
-          <span class="num">3</span>
-          <div>
-            <strong>Sedimentação</strong><br/>Prepare a suspensão, agite vigorosamente e faça leituras no densímetro em tempos determinados para obter a fração fina.
-          </div>
-          <input type="checkbox" class="ck" onchange="Game.completeActivity('m2','m2_step3',{xp:10})">
-        </div>
-        <!-- Passo 4 -->
-        <div class="step">
-          <span class="num">4</span>
-          <div>
-            <strong>Curva granulométrica</strong><br/>Consolide os resultados em uma curva semilog (diâmetro vs. % passante) e classifique o solo conforme a norma.
-          </div>
-          <input type="checkbox" class="ck" onchange="Game.completeActivity('m2','m2_step4',{xp:10})">
-        </div>
-      </div>
-      <!-- Vídeo aula Módulo 2 -->
-      <div class="video-section">
-        <h3>🎬 Aula de Granulometria</h3>
-        <div class="video-wrapper">
-          <iframe src="https://www.youtube.com/embed/QaWTg-baLDc" allowfullscreen title="Aula de Granulometria"></iframe>
-        </div>
-      </div>
-      <!-- Quiz Módulo 2 -->
-      <div class="quiz">
-        <h3>🧠 Quiz – Revisão Módulo 2</h3>
-        <div class="question">
-          <p><strong>1. Qual a principal finalidade do peneiramento?</strong></p>
-          <label><input type="radio" name="p1" value="0"> Separar a fração fina do solo para análise química.</label><br/>
-          <label><input type="radio" name="p1" value="1"> Determinar a distribuição granulométrica da fração grossa.</label><br/>
-          <label><input type="radio" name="p1" value="2"> Secar o solo rapidamente.</label>
-        </div>
-        <div class="question">
-          <p><strong>2. Na sedimentação, o que indica a leitura do densímetro?</strong></p>
-          <label><input type="radio" name="p2" value="0"> A densidade do solo seco.</label><br/>
-          <label><input type="radio" name="p2" value="1"> A concentração de partículas em suspensão ao longo do tempo.</label><br/>
-          <label><input type="radio" name="p2" value="2"> A temperatura da água.</label>
-        </div>
-        <div class="question">
-          <p><strong>3. A curva granulométrica é traçada em escala:</strong></p>
-          <label><input type="radio" name="p3" value="0"> Linear-linear.</label><br/>
-          <label><input type="radio" name="p3" value="1"> Logarítmica para diâmetro e linear para porcentagem.</label><br/>
-          <label><input type="radio" name="p3" value="2"> Logarítmica para ambas as variáveis.</label>
-        </div>
-        <button class="btn primary" onclick="checkQuizM2()">Enviar respostas</button>
-        <p id="quiz2-result" style="margin-top:6px;font-weight:600"></p>
-      </div>
-      <div class="progress-wrap">
-        <span class="tag">Progresso — Módulo 2</span>
-        <div class="progress"><i id="m2_bar"></i></div>
-        <strong id="m2_txt">0%</strong>
-      </div>
-      <div class="actions">
-        <a class="btn ghost" href="#mod1">Voltar</a>
-        <a class="btn secondary" href="#index">Índice</a>
-        <a class="btn primary" href="#mod3">Avançar</a>
-      </div>
-    </section>
-
-    <!-- ===== MÓDULO 3 ===== -->
-    <section id="mod3" class="card" data-animate aria-labelledby="mod3-title">
-      <header class="module-head">
-        <span class="tag">🧭 Módulo 3</span>
-        <h2 id="mod3-title">Mentoria Técnica</h2>
-      </header>
-      <div class="steps" id="mod3-steps">
-        <div class="step">
-          <span class="num">1</span>
-          <div>
-            <strong>Dúvidas e revisão</strong><br/>Se ficou com alguma dúvida nos módulos anteriores, prepare suas perguntas para a mentoria ao vivo.
-          </div>
-        <input type="checkbox" class="ck" onchange="Game.completeActivity('m3','m3_step1',{xp:10})">
-        </div>
-        <div class="step">
-          <span class="num">2</span>
-          <div>
-            <strong>Agendamento</strong><br/>Para marcar sua mentoria, use o ícone de WhatsApp na barra inferior ou acesse o link fornecido pelo instrutor.
-          </div>
-          <input type="checkbox" class="ck" onchange="Game.completeActivity('m3','m3_step2',{xp:10})">
-        </div>
-        <div class="step">
-          <span class="num">3</span>
-          <div>
-            <strong>Aplicação prática</strong><br/>Traga para a sessão seus resultados de umidade e granulometria. O instrutor te ajudará a interpretar e a corrigir eventuais falhas.
-          </div>
-          <input type="checkbox" class="ck" onchange="Game.completeActivity('m3','m3_step3',{xp:10})">
-        </div>
-      </div>
-      <div class="progress-wrap">
-        <span class="tag">Progresso — Módulo 3</span>
-        <div class="progress"><i id="m3_bar"></i></div>
-        <strong id="m3_txt">0%</strong>
-      </div>
-      <div class="actions">
-        <a class="btn ghost" href="#mod2">Voltar</a>
-        <a class="btn secondary" href="#index">Índice</a>
-        <a class="btn primary" href="#mod4">Avançar</a>
-      </div>
-    </section>
-
-    <!-- ===== MÓDULO 4 ===== -->
-    <section id="mod4" class="card" data-animate aria-labelledby="mod4-title">
-      <header class="module-head">
-        <span class="tag">🏅 Módulo 4</span>
-        <h2 id="mod4-title">Certificação & Próxima Etapa</h2>
-      </header>
-      <div class="steps" id="mod4-steps">
-        <div class="step">
-          <span class="num">1</span>
-          <div>
-            <strong>Preparar certificado</strong><br/>Preencha seu nome completo no campo abaixo. Ele aparecerá no certificado.
-          </div>
-          <input type="checkbox" class="ck" onchange="Game.completeActivity('m4','m4_step1',{xp:10})">
-        </div>
-      </div>
-      <div class="certificate">
-        <label for="cert_name">Nome completo:</label>
-        <input id="cert_name" type="text" placeholder="Digite seu nome" />
-        <button class="btn primary" onclick="generateCert()">Gerar certificado</button>
-        <p id="cert_result" style="margin-top:8px;font-weight:600"></p>
-      </div>
-      <div class="progress-wrap">
-        <span class="tag">Progresso — Módulo 4</span>
-        <div class="progress"><i id="m4_bar"></i></div>
-        <strong id="m4_txt">0%</strong>
-      </div>
-      <div class="actions">
-        <a class="btn ghost" href="#mod3">Voltar</a>
-        <a class="btn secondary" href="#index">Índice</a>
-        <a class="btn primary" href="#home">Concluir Curso</a>
-      </div>
-    </section>
-
-    <!-- ===== CONQUISTAS ===== -->
-    <section id="achievements" class="card" data-animate aria-labelledby="ach-title">
-      <h2 id="ach-title">Conquistas & Medalhas</h2>
-      <p>Complete atividades dos módulos para ganhar XP e desbloquear medalhas.</p>
-      <div id="ach-list" class="steps"></div>
-    </section>
-  </main>
-
-  <!-- ===== BOTTOM NAVIGATION (somente mobile) ===== -->
-  <div class="bottom-nav">
-    <a href="#home" aria-label="Home">🏠</a>
-    <a href="#index" aria-label="Índice">📑</a>
-    <a href="#achievements" aria-label="Conquistas">🏅</a>
-    <a href="https://wa.me/" target="_blank" aria-label="Mentoria no WhatsApp">💬</a>
+    </div>
   </div>
 
-  <!-- ===== GAMIFICAÇÃO SCRIPTS (portados da versão mobile original) ===== -->
+  <!-- ÍNDICE / PROGRESSO -->
+  <section id="index" class="panel reveal" aria-labelledby="idxTitle">
+    <div class="head"><i class="fa-solid fa-list-check"></i><h2 id="idxTitle">Seu Progresso no Curso</h2></div>
+    <div class="modules" id="mods">
+      <!-- M0 -->
+      <div class="mod-card">
+        <div class="ico">🔬</div>
+        <div>
+          <h3>Módulo 0 — Introdução & Contexto</h3>
+          <div class="muted">Carreira, mercado e trilha do curso.</div>
+          <div class="meter" aria-label="Progresso módulo 0"><i id="bar0"></i></div>
+        </div>
+        <div class="open"><a class="btn btn-primary" href="#mod0">Abrir</a></div>
+      </div>
+      <!-- M1 -->
+      <div class="mod-card">
+        <div class="ico">💧</div>
+        <div>
+          <h3>Módulo 1 — Teor de Umidade Natural</h3>
+          <div class="muted">Execução e cálculo automatizado.</div>
+          <div class="meter" aria-label="Progresso módulo 1"><i id="bar1"></i></div>
+        </div>
+        <div class="open"><a class="btn btn-primary" href="#mod1">Abrir</a></div>
+      </div>
+      <!-- M2 -->
+      <div class="mod-card">
+        <div class="ico">⛏️</div>
+        <div>
+          <h3>Módulo 2 — Granulometria (P+S)</h3>
+          <div class="muted">Distribuição de partículas e curva.</div>
+          <div class="meter" aria-label="Progresso módulo 2"><i id="bar2"></i></div>
+        </div>
+        <div class="open"><a class="btn btn-primary" href="#mod2">Abrir</a></div>
+      </div>
+      <!-- M3/M4 -->
+      <div class="mod-card">
+        <div class="ico">🎥</div>
+        <div>
+          <h3>Módulo 3 — Mentoria Técnica</h3>
+          <div class="muted">Agende uma sessão ao vivo.</div>
+          <div class="meter"><i id="bar3"></i></div>
+        </div>
+        <div class="open"><a class="btn btn-primary" href="#mod3">Abrir</a></div>
+      </div>
+      <div class="mod-card">
+        <div class="ico">🏅</div>
+        <div>
+          <h3>Módulo 4 — Certificação & Volume 2</h3>
+          <div class="muted">Gere seu certificado nominal.</div>
+          <div class="meter"><i id="bar4"></i></div>
+        </div>
+        <div class="open"><a class="btn btn-primary" href="#mod4">Abrir</a></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MÓDULO 0 -->
+  <section id="mod0" class="reveal">
+    <details class="module" open>
+      <summary>🔬 <span> Módulo 0 — Introdução & Contexto</span></summary>
+      <div class="content">
+        <div class="panel inset" style="padding:12px; margin-bottom:10px">
+          <p><strong>Objetivo:</strong> apresentar o cenário do laboratorista de solos, funções, áreas de atuação e a trilha de aprendizagem do curso.</p>
+          <div class="note">Curiosidade: um ensaio mal executado pode atrasar uma obra e custar caro. Treinar bem evita retrabalho.</div>
+        </div>
+        <div class="steps">
+          <div class="step"><div class="n">1</div><div><strong>Por que essa profissão?</strong><br>Demanda alta em obras e laboratórios. Ótimo ponto de entrada para geotecnia.</div><input type="checkbox" class="ck" data-key="m0_ck_1"></div>
+          <div class="step"><div class="n">2</div><div><strong>Onde você atua?</strong><br>Terraplenagem, controle tecnológico, usinas de solos, empreiteiras e consultorias.</div><input type="checkbox" class="ck" data-key="m0_ck_2"></div>
+          <div class="step"><div class="n">3</div><div><strong>Como vamos aprender?</strong><br>Módulos curtos, vídeo‑aulas, simuladores e testes rápidos.</div><input type="checkbox" class="ck" data-key="m0_ck_3"></div>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <!-- MÓDULO 1 -->
+  <section id="mod1" class="reveal">
+    <details class="module" open>
+      <summary>💧 <span> Módulo 1 — Teor de Umidade Natural (NBR 6457/6458)</span></summary>
+      <div class="content">
+        <p><strong>Objetivo:</strong> determinar a quantidade de água presente no solo natural. Essencial para consistência, compactação e comportamento mecânico.</p>
+        <div class="note">Conceito: <em>w</em> = m<sub>água</sub> / m<sub>solo seco</sub> × 100%. Onde m<sub>água</sub> = m<sub>úmida</sub> − m<sub>seca</sub>; m<sub>solo seco</sub> = m<sub>seca</sub> − m<sub>lata</sub>.</div>
+
+        <h4>🧪 Simulador de Laboratório</h4>
+        <div class="lab-grid" aria-label="Equipamentos">
+          <div class="lab-item"><i class="fa-solid fa-weight-hanging"></i><span>Balança</span></div>
+          <div class="lab-item"><i class="fa-solid fa-box-open"></i><span>Cápsula</span></div>
+          <div class="lab-item"><i class="fa-solid fa-temperature-three-quarters"></i><span>Estufa</span></div>
+          <div class="lab-item"><i class="fa-solid fa-droplet"></i><span>Água</span></div>
+          <div class="lab-item"><i class="fa-solid fa-seedling"></i><span>Solo</span></div>
+        </div>
+
+        <h4>Procedimento passo a passo</h4>
+        <div class="steps">
+          <div class="step"><div class="n">1</div><div><strong>Identificação</strong> — Numere a lata e registre amostra e data. Pese a tara (<em>m<sub>lata</sub></em>).</div><input type="checkbox" class="ck" data-key="m1_ck1"></div>
+          <div class="step"><div class="n">2</div><div><strong>Pesagem úmida</strong> — Lata + solo úmido (<em>m<sub>úmida</sub></em>).</div><input type="checkbox" class="ck" data-key="m1_ck2"></div>
+          <div class="step"><div class="n">3</div><div><strong>Secagem</strong> — Estufa a 105–110 °C até massa constante (≥ 12 h).</div><input type="checkbox" class="ck" data-key="m1_ck3"></div>
+          <div class="step"><div class="n">4</div><div><strong>Pesagem seca</strong> — Lata + solo seco (<em>m<sub>seca</sub></em>).</div><input type="checkbox" class="ck" data-key="m1_ck4"></div>
+        </div>
+
+        <div class="panel inset" style="padding:12px; margin:12px 0">
+          <h4 style="margin:0 0 6px">Calculadora — Teor de Umidade (w)</h4>
+          <form class="calc" onsubmit="return false;">
+            <label>Tara (lata vazia) — m<sub>lata</sub><input type="number" step="0.01" id="m_lata" placeholder="g"></label>
+            <label>Lata + solo úmido — m<sub>úmida</sub><input type="number" step="0.01" id="m_umida" placeholder="g"></label>
+            <label>Lata + solo seco — m<sub>seca</sub><input type="number" step="0.01" id="m_seca" placeholder="g"></label>
+            <button class="btn btn-primary" onclick="calcUmidade()">Calcular w</button>
+            <p id="w_result" style="font-weight:800"></p>
+          </form>
+          <hr style="border:none; border-top:1px solid rgba(255,255,255,.1)">
+          <h4 style="margin:6px 0">Tripla determinação (opcional)</h4>
+          <form class="calc" onsubmit="return false;" style="display:grid; grid-template-columns:repeat(3,1fr); gap:8px">
+            <input type="number" step="0.01" id="w1" placeholder="w1 %">
+            <input type="number" step="0.01" id="w2" placeholder="w2 %">
+            <input type="number" step="0.01" id="w3" placeholder="w3 %">
+            <button class="btn btn-ghost" style="grid-column:1/4" onclick="calcTripla()">Calcular média</button>
+          </form>
+          <p id="w_stats" style="font-weight:800"></p>
+        </div>
+
+        <div class="panel inset" style="padding:12px; margin:12px 0">
+          <h4 style="margin:0 0 8px">🎥 Aula de Teor de Umidade</h4>
+          <div class="video"><iframe src="https://www.youtube.com/embed/kvlK_IazloQ" title="Teor de Umidade Natural" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen referrerpolicy="no-referrer"></iframe></div>
+          <div class="quiz" style="margin-top:10px">
+            <h4>Teste seus conhecimentos</h4>
+            <p>1. Qual o tempo mínimo de estufa?</p>
+            <label><input type="radio" name="q1_mod1" data-correct="true"> 12 horas</label>
+            <label><input type="radio" name="q1_mod1"> 2 horas</label>
+            <label><input type="radio" name="q1_mod1"> 1 dia</label>
+            <p>2. O que fazer se a amostra tiver pedregulhos?</p>
+            <label><input type="radio" name="q2_mod1" data-correct="true"> Retirar antes de pesar</label>
+            <label><input type="radio" name="q2_mod1"> Deixar e quebrar</label>
+            <label><input type="radio" name="q2_mod1"> Não faz diferença</label>
+            <p>3. Qual a principal causa de erro?</p>
+            <label><input type="radio" name="q3_mod1" data-correct="true"> Amostra não totalmente seca</label>
+            <label><input type="radio" name="q3_mod1"> Estufa muito quente</label>
+            <label><input type="radio" name="q3_mod1"> Uso de balança digital</label>
+            <button class="btn btn-primary" onclick="corrigir('mod1')">Conferir Respostas</button>
+            <p id="score_mod1" style="font-weight:800; margin-top:6px"></p>
+          </div>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <!-- MÓDULO 2 (resumo e vídeo + quiz; conteúdo técnico pode ser plugado depois) -->
+  <section id="mod2" class="reveal">
+    <details class="module" open>
+      <summary>⛏️ <span> Módulo 2 — Granulometria (NBR 7181): Peneiramento + Sedimentação</span></summary>
+      <div class="content">
+        <p><strong>Objetivo:</strong> determinar a distribuição granulométrica combinando peneiramento (≥ 2 mm) e sedimentação com densímetro (≤ 2 mm).</p>
+        <div class="note">Dica: a boa divisão de amostras e o registro de perdas minimiza erros na curva granulométrica.</div>
+
+        <div class="panel inset" style="padding:12px; margin:12px 0">
+          <h4 style="margin:0 0 8px">🎥 Aula de Granulometria</h4>
+          <div class="video"><iframe src="https://www.youtube.com/embed/1ZkT8nK5KjM" title="Granulometria por Sedimentação" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen referrerpolicy="no-referrer"></iframe></div>
+          <div class="quiz" style="margin-top:10px">
+            <h4>Teste seus conhecimentos</h4>
+            <p>1. O que representa a curva granulométrica?</p>
+            <label><input type="radio" name="q1_mod2" data-correct="true"> Distribuição de tamanhos de partículas</label>
+            <label><input type="radio" name="q1_mod2"> A densidade do solo</label>
+            <label><input type="radio" name="q1_mod2"> A cor do solo</label>
+            <p>2. O que é peneiramento?</p>
+            <label><input type="radio" name="q2_mod2" data-correct="true"> Separação por tamanhos em peneiras</label>
+            <label><input type="radio" name="q2_mod2"> Medição do teor de água</label>
+            <label><input type="radio" name="q2_mod2"> Compactação do solo</label>
+            <button class="btn btn-primary" onclick="corrigir('mod2')">Conferir Respostas</button>
+            <p id="score_mod2" style="font-weight:800; margin-top:6px"></p>
+          </div>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <!-- MÓDULOS 3 e 4 (placeholders premium, prontos para conteúdo real) -->
+  <section id="mod3" class="reveal">
+    <details class="module"><summary>🎥 <span> Módulo 3 — Mentoria Técnica (bônus)</span></summary>
+      <div class="content"><p>Agende sua sessão ao vivo para tirar dúvidas práticas dos ensaios. Clique no botão abaixo:</p>
+        <div class="actions"><a class="btn btn-primary" href="https://wa.me/5531999999999" target="_blank" rel="noopener">Agendar no WhatsApp</a></div>
+      </div>
+    </details>
+  </section>
+
+  <section id="mod4" class="reveal" style="margin-bottom:80px">
+    <details class="module"><summary>🏅 <span> Módulo 4 — Certificação & Próximo Volume</span></summary>
+      <div class="content">
+        <p>Ao concluir os módulos, gere seu certificado nominal em PDF e conheça o Volume 2 (Massa Específica Real + Limites de Atterberg).</p>
+        <div class="actions">
+          <a class="btn btn-primary" href="#index">Ver meu progresso</a>
+          <a class="btn btn-ghost" href="https://dr8173004-gif.github.io/ortal-ensaios-solos-volume1/" target="_blank">Portal Desktop</a>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <!-- NAV INFERIOR -->
+  <nav class="bottom" aria-label="Navegação inferior">
+    <div class="grid">
+      <a href="#index"><i class="fa-solid fa-house"></i>Início</a>
+      <a href="#mod1"><i class="fa-solid fa-droplet"></i>Módulo 1</a>
+      <a href="#mod2"><i class="fa-solid fa-sitemap"></i>Módulo 2</a>
+      <a href="#mod4"><i class="fa-solid fa-award"></i>Certificado</a>
+    </div>
+  </nav>
+
   <script>
-  /* Helpers */
-  const $ = sel => document.querySelector(sel);
-  const $$ = sel => Array.from(document.querySelectorAll(sel));
-  const safeGet = (k, d) => { try{ return JSON.parse(localStorage.getItem(k)) ?? d; } catch(e){ return d; } };
-  const safeSet = (k, v) => { try{ localStorage.setItem(k, JSON.stringify(v)); } catch(e){} };
-  const clamp = (n, a, b) => Math.max(a, Math.min(b, n));
-  /* Game state */
-  const Game = {
-    state: safeGet('es_mobile_state', {
-      xp: 0,
-      modules: { m0:{xp:0,pct:0,activities:{}}, m1:{xp:0,pct:0,activities:{}}, m2:{xp:0,pct:0,activities:{}}, m3:{xp:0,pct:0,activities:{}}, m4:{xp:0,pct:0,activities:{}} },
-      medals: {}
-    }),
-    save(){ safeSet('es_mobile_state', this.state); this.render(); },
-    completeActivity(mod,id,{xp=10,medal=null}={}){
-      const module = this.state.modules[mod];
-      if(!module.activities[id]){
-        module.activities[id] = true;
-        module.xp += xp;
-        this.state.xp += xp;
-        const steps = document.querySelectorAll(`#${mod}-steps .step`);
-        const done = Object.keys(module.activities).length;
-        const pct = Math.min(Math.round((done / steps.length) * 100),100);
-        module.pct = pct;
-        // update bars
-        document.getElementById(`${mod}_bar`).style.width = pct + '%';
-        document.getElementById(`${mod}_txt`).textContent = pct + '%';
-        // overall progress (m0–m4)
-        const mods = ['m0','m1','m2','m3','m4'];
-        const total = mods.reduce((sum,m)=> sum + (this.state.modules[m]?.pct || 0), 0);
-        const geral = Math.round(total / mods.length);
-        $('#bar').style.width = geral + '%'; $('#pct').textContent = geral + '%';
-        // medal / xp feedback
-        if(medal && !this.state.medals[medal]){
-          this.state.medals[medal] = { when: Date.now(), mod };
-          confettiRain();
-          UI.toast(`🏅 ${medal}! +${xp} XP`);
-        } else {
-          UI.toast(`+${xp} XP`);
-        }
-        this.save();
+    // ===== Helpers LocalStorage seguros =====
+    function getKV(k, d='0'){try{return localStorage.getItem(k) ?? d}catch(e){return d}}
+    function setKV(k, v){try{localStorage.setItem(k, v)}catch(e){}}
+
+    // ===== Saudar usuário se houver nome armazenado =====
+    const uName = getKV('user_name','aluno');
+    document.getElementById('uName').textContent = uName;
+    document.getElementById('logoutBtn').addEventListener('click', ()=>{
+      // Apenas limpa um token fictício e volta ao topo
+      setKV('auth_token','');
+      window.scrollTo({top:0, behavior:'smooth'});
+      alert('Sessão encerrada com sucesso.');
+    });
+
+    // ===== Reveal com IntersectionObserver =====
+    const io = new IntersectionObserver((entries)=>{
+      for(const e of entries){ if(e.isIntersecting) e.target.classList.add('in'); }
+    }, { threshold:.12 });
+    document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+    // ===== Barra de progresso geral =====
+    const xpBar = document.getElementById('xpBar');
+    function updateXP(){
+      const sum = ['m0_progress_pct','m1_progress_pct','m2_progress_pct','m3_progress_pct','m4_progress_pct']
+        .map(k => parseInt(getKV(k,'0'))||0)
+        .reduce((a,b)=>a+b,0);
+      const pct = Math.round(sum/5);
+      xpBar.style.width = pct + '%';
+    }
+
+    // ===== Progresso por módulo (espelha nos cards do índice) =====
+    function mirrorIndex(){
+      [0,1,2,3,4].forEach(i=>{
+        const p = parseInt(getKV(`m${i}_progress_pct`,'0'))||0;
+        const bar = document.getElementById(`bar${i}`);
+        if(bar) bar.style.width = p + '%';
+      })
+    }
+
+    // ===== Checklists M0/M1 incrementam progresso =====
+    function bindChecks(keys, barId, pctKey){
+      const bar = document.getElementById(barId);
+      function calc(){
+        const done = keys.map(k=> getKV(k,'0')==='1' || document.querySelector(`[data-key="${k}"]`)?.checked).filter(Boolean).length;
+        const pct = Math.round((done/keys.length)*100);
+        if(bar) bar.style.width = pct + '%';
+        setKV(pctKey, String(pct)); updateXP(); mirrorIndex();
       }
-    },
-    progress(){ const ms = Object.values(this.state.modules).map(m=>m.pct||0); return clamp(Math.round(ms.reduce((a,b)=>a+b,0)/ms.length),0,100); },
-    render(){
-      const g = this.progress(); $('#bar').style.width = g+'%'; $('#pct').textContent = g+'%';
-      for(let i=0;i<=4;i++){
-        const m = this.state.modules['m'+i];
-        const bar = document.getElementById('m'+i+'_bar');
-        const txt = document.getElementById('m'+i+'_txt');
-        if(bar) bar.style.width = (m?.pct||0) + '%';
-        if(txt) txt.textContent = (m?.pct||0) + '%';
-      }
-      const list = $('#ach-list');
-      if(list){
-        list.innerHTML = '';
-        const medals = Object.entries(this.state.medals);
-        if(medals.length === 0){
-          list.innerHTML = '<div class="step">Nenhuma medalha ainda. Complete atividades para desbloquear 🏅</div>';
-        } else {
-          medals.forEach(([name,info])=>{
-            const el = document.createElement('div'); el.className = 'step';
-            el.innerHTML = `<strong>🏅 ${name}</strong><br/><small>Desbloqueada em ${new Date(info.when).toLocaleDateString()}</small>`;
-            list.appendChild(el);
-          });
-        }
-      }
+      setTimeout(()=>{
+        keys.forEach(k=>{
+          const el = document.querySelector(`[data-key="${k}"]`);
+          if(el){ el.checked = getKV(k,'0')==='1'; el.addEventListener('change',()=>{ setKV(k, el.checked?'1':'0'); calc(); }); }
+        });
+        calc();
+      }, 200);
     }
-  };
-  /* UI helpers */
-  const UI = {
-    toast(msg){
-      const toast = document.getElementById('toast');
-      const text = document.getElementById('toast-text');
-      text.textContent = msg;
-      toast.classList.add('show');
-      setTimeout(()=> toast.classList.remove('show'),2000);
+    bindChecks(['m0_ck_1','m0_ck_2','m0_ck_3'], 'bar0', 'm0_progress_pct');
+    bindChecks(['m1_ck1','m1_ck2','m1_ck3','m1_ck4'], 'bar1', 'm1_progress_pct');
+
+    // ===== Calculadora Umidade =====
+    function calcUmidade(){
+      const ml = parseFloat(document.getElementById('m_lata').value||'0');
+      const mu = parseFloat(document.getElementById('m_umida').value||'0');
+      const ms = parseFloat(document.getElementById('m_seca').value||'0');
+      const magua = mu - ms; const msolo = ms - ml; const w = (magua/msolo)*100;
+      const ok = isFinite(w) && w>0; document.getElementById('w_result').textContent = ok ? `w = ${w.toFixed(2)} %` : 'Preencha os campos corretamente.';
+      if(ok){ setKV('m1_progress_pct','60'); updateXP(); mirrorIndex(); }
     }
-  };
-  /* Confetti animation */
-  function confettiRain(){
-    for(let i=0;i<20;i++){
-      const c = document.createElement('div');
-      c.className = 'confetti';
-      c.style.left = Math.random()*100 + 'vw';
-      c.style.backgroundColor = `hsl(${Math.random()*360}, 80%, 60%)`;
-      c.style.animationDuration = 1.5 + Math.random() + 's';
-      document.body.appendChild(c);
-      setTimeout(() => c.remove(), 2000);
+    window.calcUmidade = calcUmidade;
+
+    function calcTripla(){
+      const a=["w1","w2","w3"].map(id=>parseFloat(document.getElementById(id).value||'0')).filter(x=>x>0);
+      if(a.length<2){ document.getElementById('w_stats').textContent='Informe ao menos dois valores.'; return; }
+      const m=a.reduce((s,x)=>s+x,0)/a.length; const d=Math.sqrt(a.reduce((s,x)=>s+(x-m)**2,0)/a.length);
+      document.getElementById('w_stats').textContent = `média = ${m.toFixed(2)} % | desvio = ${d.toFixed(2)} %`;
+      setKV('m1_progress_pct','80'); updateXP(); mirrorIndex();
     }
-  }
-  /* Router */
-  function route(){
-    const id = (location.hash || '#home').replace('#','');
-    $$('main > section').forEach(s => s.hidden = s.id !== id);
-    const el = document.getElementById(id);
-    if(el){ requestAnimationFrame(() => el.setAttribute('data-animate','show')); }
-    // active nav link
-    $$('nav a').forEach(a => a.classList.remove('active'));
-    const navLink = document.getElementById('nav-'+id);
-    if(navLink) navLink.classList.add('active');
-  }
-  window.addEventListener('hashchange', route);
-  document.addEventListener('DOMContentLoaded',()=>{
-    const obs = new IntersectionObserver(es => es.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('show'); }), {threshold:.2});
-    $$('[data-animate]').forEach(el => obs.observe(el));
-    $$('.step').forEach(el => el.setAttribute('data-animate',''));
-    Game.render();
-    route();
-  });
-  </script>
-  <!-- Toast & Modal -->
-  <div id="toast" class="toast" style="position:fixed;bottom:80px;left:50%;transform:translateX(-50%);z-index:1001;display:none">
-    <div class="card" id="toast-text" style="background:#013C5A;color:#fff;padding:8px 14px;border-radius:12px;font-size:.9rem;box-shadow:0 4px 8px rgba(0,0,0,.2)">Concluído!</div>
-  </div>
-  <!-- Certificado PDF + Quiz scripts -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-  <script>
-  function calcUmidade(){
-    const m_lata = parseFloat(document.getElementById('m_lata').value);
-    const m_umida = parseFloat(document.getElementById('m_umida').value);
-    const m_seca = parseFloat(document.getElementById('m_seca').value);
-    if(isNaN(m_lata) || isNaN(m_umida) || isNaN(m_seca)){
-      UI.toast('Preencha todos os valores');
-      return;
+    window.calcTripla = calcTripla;
+
+    // ===== Quiz =====
+    function corrigir(mod){
+      const radios = document.querySelectorAll(`.quiz input[name^="q"][name*="_${mod==='mod1'?1:2}"]`);
+      let certo=0, total=0; const names = new Set();
+      radios.forEach(r=>names.add(r.name));
+      names.forEach(n=>{ total++; const c = document.querySelector(`input[name="${n}"][data-correct="true"]`); if(c && c.checked) certo++; });
+      document.getElementById(`score_${mod}`).textContent = `Acertos: ${certo}/${total}`;
+      const hit = Math.round((certo/total)*100);
+      const key = mod==='mod1' ? 'm1_progress_pct' : 'm2_progress_pct';
+      const prev = parseInt(getKV(key,'0'))||0; setKV(key, String(Math.max(prev, 100)));
+      updateXP(); mirrorIndex();
     }
-    const agua = m_umida - m_seca;
-    const seco = m_seca - m_lata;
-    if(seco <= 0){ UI.toast('Valores inválidos'); return; }
-    const w = (agua / seco) * 100;
-    document.getElementById('w_result').textContent = w.toFixed(1) + '%';
-    Game.completeActivity('m1','calc',{xp:20});
-  }
-  function checkQuizM1(){
-    let score = 0;
-    if(document.querySelector('input[name="q1"]:checked')?.value === '0') score++;
-    if(document.querySelector('input[name="q2"]:checked')?.value === '1') score++;
-    if(document.querySelector('input[name="q3"]:checked')?.value === '0') score++;
-    document.getElementById('quiz1-result').textContent = `Você acertou ${score}/3 questões.`;
-    Game.completeActivity('m1','quiz',{xp:score*10});
-  }
-  function checkQuizM2(){
-    let score = 0;
-    if(document.querySelector('input[name="p1"]:checked')?.value === '1') score++;
-    if(document.querySelector('input[name="p2"]:checked')?.value === '1') score++;
-    if(document.querySelector('input[name="p3"]:checked')?.value === '1') score++;
-    document.getElementById('quiz2-result').textContent = `Você acertou ${score}/3 questões.`;
-    Game.completeActivity('m2','quiz',{xp:score*10});
-  }
-  async function generateCert(){
-    const name = document.getElementById('cert_name').value.trim();
-    if(!name){ UI.toast('Informe seu nome completo'); return; }
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF({orientation:'landscape'});
-    doc.setFontSize(22);
-    doc.text('Certificado de Conclusão', 148, 30, { align:'center' });
-    doc.setFontSize(14);
-    doc.text('Certificamos que', 148, 48, { align:'center' });
-    doc.setFontSize(18);
-    doc.text(name, 148, 60, { align:'center' });
-    doc.setFontSize(14);
-    const date = new Date().toLocaleDateString('pt-BR');
-    doc.text(`Concluiu com sucesso o Volume 1 em ${date}.`, 148, 72, { align:'center' });
-    doc.setFontSize(12);
-    doc.text('Curso Interativo de Ensaios de Solos — Umidade e Granulometria', 148, 84, { align:'center' });
-    // opcional: adicionar QR code como imagem
-    const qrDiv = document.createElement('div');
-    new QRCode(qrDiv, { text: 'Parabéns pelo seu certificado!', width: 100, height: 100 });
-    const qrImg = qrDiv.querySelector('img');
-    if(qrImg){
-      const imgData = qrImg.src;
-      doc.addImage(imgData, 'PNG', 260, 60, 30, 30);
-    }
-    doc.save('certificado_volume1.pdf');
-    document.getElementById('cert_result').textContent = 'Certificado gerado e baixado.';
-    Game.completeActivity('m4','cert',{xp:50,medal:'Certificado Volume 1'});
-  }
+    window.corrigir = corrigir;
+
+    // Init
+    mirrorIndex(); updateXP();
   </script>
 </body>
 </html>
