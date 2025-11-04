@@ -187,61 +187,51 @@ body::after {
     .chart-legend{display:flex;gap:12px;align-items:center;margin-top:8px;font-size:.9rem}
     .chip{display:inline-flex;align-items:center;gap:6px;padding:4px 8px;border-radius:999px;background:#eef4f7;color:var(--blue);font-weight:700}
 
+  /* Indicador de nível/medalha de cada módulo */
+  .nivel {
+    margin-left: 8px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--green);
+    display: inline-flex;
+    align-items: center;
+  }
+
   /* ==========================================================================
-     MOBILE-OPTIMIZED STYLES E GAMIFICAÇÃO
-     Estas regras tornam o portal totalmente responsivo em dispositivos
-     móveis e adicionam elementos inspirados em apps gamificados como Duolingo.
+     ESTILOS MOBILE & GAMIFICAÇÃO (portal_mobile_final.html)
+     Estas regras tornam o portal totalmente responsivo em telas de 360px
+     e adicionam elementos de gamificação inspirados em aplicativos de idiomas.
   ========================================================================== */
+  /* Layout responsivo para telas estreitas */
   @media (max-width: 768px) {
-    /* Garante que colunas e cartões se ajustem verticalmente */
     .grid { grid-template-columns: 1fr !important; }
     .hero .card { flex-direction: column; align-items: flex-start; }
     nav { display: none; }
     header.site { position: static; }
+    .panel { padding: 18px; margin: 8px 0; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
     .steps .step { flex-direction: column; align-items: flex-start; }
     .step .num { margin-bottom: 6px; }
     .step .illus svg { width: 60px; height: 60px; }
     .actions { flex-direction: column; gap: 8px; }
     .btn { width: 100%; justify-content: center; }
-    .panel { padding: 18px; margin: 8px 0; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-    /* Simplifica o background pesado para reduzir consumo de dados */
-    body { background: #f6f8fb; color: #0f2532; }
+    body { background:#f6f8fb; color:#0f2532; }
   }
 
-  /* Barra de progresso para gamificação */
-  .progress-container {
+  /* Barra de progresso fixa no topo */
+  .progress-wrapper {
     position: fixed;
-    display: block;
     top: 0;
     left: 0;
     right: 0;
-    height: 5px;
-    background: rgba(1,60,90,0.1);
+    height: 6px;
+    background: rgba(1,60,90,0.08);
     z-index: 2000;
   }
-  .progress-bar {
+  #progress-bar {
     height: 100%;
     width: 0;
     background: linear-gradient(90deg, #ffc107, #28a745);
-    transition: width 0.3s ease;
-  }
-
-  /* Caixa de vídeo responsiva (16:9) */
-  .video-container {
-    position: relative;
-    width: 100%;
-    padding-bottom: 56.25%;
-    height: 0;
-    margin: 16px 0;
-  }
-  .video-container iframe {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border: 0;
-    border-radius: 12px;
+    transition: width .3s ease;
   }
 
   /* Navegação inferior fixa */
@@ -251,7 +241,7 @@ body::after {
     left: 0;
     right: 0;
     background: #ffffff;
-    border-top: 1px solid rgba(1,60,90,0.08);
+    border-top:1px solid rgba(1,60,90,0.1);
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -260,27 +250,26 @@ body::after {
     z-index: 2000;
   }
   .bottom-nav a {
-    flex: 1;
+    flex:1;
     text-align: center;
-    text-decoration: none;
+    text-decoration:none;
     color: var(--blue);
-    font-size: 0.75rem;
-    font-weight: 700;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 2px;
-    padding: 4px 0;
+    font-size:.75rem;
+    font-weight:700;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:2px;
+    padding:4px 0;
+    transition:color .2s ease;
   }
   .bottom-nav a svg {
-    width: 22px;
-    height: 22px;
+    width:22px;
+    height:22px;
   }
-  .bottom-nav a.active {
-    color: var(--green);
-  }
+  .bottom-nav a.active { color: var(--green); }
   @media (min-width: 768px) {
-    .bottom-nav { display: none; }
+    .bottom-nav { display:none; }
   }
 
   /* Tabelas roláveis em telas pequenas */
@@ -289,14 +278,57 @@ body::after {
     overflow-x: auto;
     white-space: nowrap;
   }
+
+  /* Vídeos responsivos (16:9) */
+  .video-container {
+    position: relative;
+    width: 100%;
+    padding-bottom: 56.25%;
+    height: 0;
+    margin: 16px 0;
+  }
+  .video-container iframe {
+    position: absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    border:0;
+    border-radius:12px;
+  }
+
+  /* Efeito XP flutuante */
+  .xp-float {
+    position: absolute;
+    color: #28a745;
+    font-weight: 700;
+    animation: floatUp 1s ease forwards;
+    pointer-events: none;
+  }
+  @keyframes floatUp {
+    from { opacity:1; transform: translateY(0); }
+    to { opacity:0; transform: translateY(-30px); }
+  }
+
+  /* Microtransições nos botões */
+  .btn { transition: transform 0.15s ease; }
+  .btn:active { transform: scale(0.96); }
+
+  /* Animação de vibração para painéis completos */
+  @keyframes vibrate {
+    0% { transform: translate(0); }
+    20% { transform: translate(-2px, 1px); }
+    40% { transform: translate(3px, -1px); }
+    60% { transform: translate(-3px, 2px); }
+    80% { transform: translate(2px, -2px); }
+    100% { transform: translate(0); }
+  }
+  .panel.complete {
+    animation: vibrate .4s linear 1;
+  }
   </style>
 </head>
 <body>
-  <!-- Barra de progresso fixa para gamificação -->
-  <div class="progress-container">
-    <div id="progress-bar" class="progress-bar"></div>
-    <!-- Exibe nível atual de aprendizagem -->
-  </div>
   <!-- SVG sprite -->
   <svg class="sr-only" xmlns="http://www.w3.org/2000/svg">
     <symbol id="ico-lab" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -325,6 +357,11 @@ body::after {
       <path d="M20.5 3.4A10.4 10.4 0 0 0 3.6 20.3L2 22l1.9-.5A10.4 10.4 0 1 0 20.5 3.4Zm-4.1 12.2c-.2.6-1.1 1-1.6 1-1.3.1-2.4-.5-3.8-1.6-1.3-1-2.2-2.3-2.4-3.8 0-.5.2-1 .6-1.3.2-.1.4-.3.6-.3h.4l.4.9c.2.5.4.9.4 1 0 .3-.3.6-.4.7l-.2.3c-.1.1-.1.2 0 .3.3.5.8 1.1 1.4 1.6.6.5 1.3.9 1.8 1.1.1.1.2 0 .3 0l.5-.5c.3-.3.6-.4.9-.3l1.4.4c.2 0 .4.1.5.2.1.1.1.3 0 .5Z"/>
     </symbol>
   </svg>
+
+  <!-- Barra de progresso de rolagem (scroll) -->
+  <div class="progress-wrapper">
+    <div id="progress-bar"></div>
+  </div>
 
   <header class="site">
     <div class="topbar" role="navigation" aria-label="Navegação principal">
@@ -521,6 +558,7 @@ body::after {
       <header class="module-head" style="margin-bottom:8px">
         <span class="tag"><svg width="16" height="16" aria-hidden="true"><use href="#ico-home"/></svg> Módulo 0</span>
         <h2 id="mod0-title" style="margin:0">Panorama da profissão & oportunidades</h2>
+        <span class="nivel" id="nivel-m0">🌱 Iniciante</span>
       </header>
 
       <div class="steps" style="margin-top:8px">
@@ -657,18 +695,13 @@ body::after {
   <header class="module-head">
     <span class="tag"><svg width="16" height="16" aria-hidden="true"><use href="#ico-droplet"/></svg> Módulo 1</span>
     <h2 id="mod1-title">Ensaio de Teor de Umidade Natural (NBR 6457 / NBR 6458)</h2>
+    <span class="nivel" id="nivel-m1">🌱 Iniciante</span>
   </header>
 
   <div class="grid">
     <div>
       <!-- INTRODUÇÃO -->
       <p><strong>Objetivo:</strong> Determinar a quantidade de água presente no solo em seu estado natural. Essa informação é essencial para avaliar a consistência, a compactação e o comportamento mecânico do solo em campo e laboratório.</p>
-
-      <!-- Vídeo aula: Teor de Umidade Natural -->
-      <div class="video-container">
-        <!-- Substitua VIDEO_ID_UMIDADE pelo ID do vídeo selecionado do YouTube -->
-        <iframe src="https://www.youtube.com/embed/VIDEO_ID_UMIDADE?rel=0" title="Aula sobre Teor de Umidade Natural" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-      </div>
 
       <div class="note">Conceito: O teor de umidade (<em>w</em>) é a razão entre a massa da água e a massa dos sólidos secos do solo, expressa em porcentagem.</div>
 
@@ -855,6 +888,11 @@ body::after {
           <button class="btn btn-prev" style="grid-column:1/4" onclick="calcTripla()">Calcular média</button>
         </form>
         <p id="w_stats" style="font-weight:800;margin-top:6px"></p>
+        <!-- Vídeo aula do Módulo 1 – Teor de Umidade Natural -->
+        <h3 class="video-title">🎥 Módulo 1 – Teor de Umidade Natural</h3>
+        <div class="video-container">
+          <iframe src="https://www.youtube.com/embed/kvlK_IazloQ" title="Módulo 1 – Teor de Umidade Natural" allowfullscreen></iframe>
+        </div>
       </div>
     </div>
   </div>
@@ -883,18 +921,13 @@ body::after {
   <header class="module-head">
     <span class="tag"><svg width="16" height="16" aria-hidden="true"><use href="#ico-sieve"/></svg> Módulo 2</span>
     <h2 id="mod2-title">Granulometria (NBR 7181) — Peneiramento + Sedimentação</h2>
+    <span class="nivel" id="nivel-m2">🌱 Iniciante</span>
   </header>
 
   <div class="grid">
     <div>
       <!-- Intro + resumo visual -->
       <p class="sub"><strong>Objetivo:</strong> Determinar a distribuição granulométrica combinando <em>peneiramento</em> (≥ 2 mm) e <em>sedimentação com densímetro</em> (≤ 2 mm), seguindo a NBR 7181, em linguagem simples e visual.</p>
-
-      <!-- Vídeo aula: Granulometria por Peneiramento e Sedimentação -->
-      <div class="video-container">
-        <!-- Substitua VIDEO_ID_GRANULOMETRIA pelo ID do vídeo selecionado do YouTube (até 45-47 min) -->
-        <iframe src="https://www.youtube.com/embed/VIDEO_ID_GRANULOMETRIA?rel=0" title="Aula sobre Granulometria (Peneiramento + Sedimentação)" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-      </div>
 
       <div class="panel split-visual" style="padding:12px; margin-bottom:12px">
         <h3 style="margin:6px 0 8px">Resumo visual — Divisão da amostra (2 kg)</h3>
@@ -1221,6 +1254,11 @@ body::after {
       </div>
     </div>
 
+    <!-- Vídeo aula do Módulo 2 – Granulometria -->
+    <h3 class="video-title">🎥 Módulo 2 – Granulometria (Peneiramento + Sedimentação)</h3>
+    <div class="video-container">
+      <iframe src="https://www.youtube.com/embed/QaWTg-baLDc" title="Módulo 2 – Granulometria (Peneiramento + Sedimentação)" allowfullscreen></iframe>
+    </div>
     <h3 style="margin-top:16px">Interatividade e anotações</h3>
     <div class="fields">
       <label>Tipo de solo e massa utilizada (70 g/120 g):</label>
@@ -1607,6 +1645,28 @@ function updateModuleProgress(mod, doneOpt, totalOpt){
   if(txt) txt.textContent = pct + '%';
 
   saveKV(`${mod}_progress_pct`, pct);
+  // Atualiza medalha/nivel visual
+  const medal = document.getElementById(`nivel-${mod}`);
+  if (medal) {
+    if (pct >= 100) {
+      medal.textContent = '🏅 Concluído';
+    } else if (pct > 0) {
+      medal.textContent = '🔬 Prático';
+    } else {
+      medal.textContent = '🌱 Iniciante';
+    }
+  }
+  // Atualiza medalha/nivel visual
+  const medal = document.getElementById(`nivel-${mod}`);
+  if (medal) {
+    if (pct >= 100) {
+      medal.textContent = '🏅 Concluído';
+    } else if (pct > 0) {
+      medal.textContent = '🔬 Prático';
+    } else {
+      medal.textContent = '🌱 Iniciante';
+    }
+  }
 }
 
 function updateOverallProgress(){
@@ -1693,72 +1753,6 @@ document.addEventListener('DOMContentLoaded',()=>{
   initPeneiras();
 });
 </script>
-
-  <!-- Navegação inferior (estilo aplicativo) -->
-  <nav class="bottom-nav">
-    <a href="#home" class="nav-item" id="nav-home">
-      <svg width="20" height="20" aria-hidden="true"><use href="#ico-home"/></svg>
-      <span>Início</span>
-    </a>
-    <a href="#mod1" class="nav-item" id="nav-mod1">
-      <svg width="20" height="20" aria-hidden="true"><use href="#ico-droplet"/></svg>
-      <span>Umidade</span>
-    </a>
-    <a href="#mod2" class="nav-item" id="nav-mod2">
-      <svg width="20" height="20" aria-hidden="true"><use href="#ico-sieve"/></svg>
-      <span>Granul.</span>
-    </a>
-    <a href="#mod3" class="nav-item" id="nav-mod3">
-      <svg width="20" height="20" aria-hidden="true"><use href="#ico-whatsapp"/></svg>
-      <span>Mentoria</span>
-    </a>
-    <a href="#mod4" class="nav-item" id="nav-mod4">
-      <svg width="20" height="20" aria-hidden="true"><use href="#ico-index"/></svg>
-      <span>Certif.</span>
-    </a>
-  </nav>
-
-  <!-- Script de gamificação: atualiza barra e navegação, e exibe níveis -->
-  <script>
-  (function(){
-    function updateProgressBar(){
-      const steps=document.querySelectorAll('input.ck');
-      let completed=0;
-      steps.forEach(ch=>{ if(ch.checked) completed++; });
-      const pct=steps.length>0? (completed/steps.length)*100 : 0;
-      const bar=document.getElementById('progress-bar');
-      if(bar) bar.style.width=pct+'%';
-      // Feedback de nível removido nesta versão mobile
-    }
-    function bindCheckboxes(){
-      const steps=document.querySelectorAll('input.ck');
-      steps.forEach(ch=>{ ch.addEventListener('change', updateProgressBar); });
-    }
-    function updateNav(){
-      const sections=['home','mod1','mod2','mod3','mod4'];
-      const scrollPos=window.scrollY + (window.innerHeight*0.3);
-      sections.forEach(id=>{
-        const el=document.getElementById(id) || document.querySelector(`[aria-labelledby='${id}-title']`);
-        const nav=document.getElementById('nav-'+id);
-        if(el && nav){
-          const offset=el.offsetTop;
-          const height=el.offsetHeight;
-          if(scrollPos >= offset && scrollPos < offset+height){
-            nav.classList.add('active');
-          } else {
-            nav.classList.remove('active');
-          }
-        }
-      });
-    }
-    document.addEventListener('DOMContentLoaded', ()=>{
-      updateProgressBar();
-      bindCheckboxes();
-      updateNav();
-      window.addEventListener('scroll', updateNav);
-    });
-  })();
-  </script>
 
 <!-- =================== CABEÇALHO DO USUÁRIO (botão Sair) =================== -->
 <header id="userHeader" class="user-header" style="display:none">
@@ -2086,19 +2080,56 @@ function startSyncWithFirestore(){
 }
 
 /* ==========================================================
-   🔓 Ajuste para versão mobile offline
+   🔓 Versão mobile: desativa redirecionamento por login
    ========================================================== */
-// Desativa verificação de autenticação nesta versão mobile offline
-// e inicializa o portal imediatamente.
-document.addEventListener('DOMContentLoaded', ()=>{
-  try {
-    initPortal && initPortal();
-  } catch(e) {
-    console.log('InitPortal não encontrado ou já inicializado.');
-  }
+// Inicia o portal diretamente, sem exigir autenticação
+document.addEventListener('DOMContentLoaded', () => {
+  try { initPortal && initPortal(); } catch(e) {}
+});
+
+/* ==========================================================
+   🎮 EFEITOS MOBILE: Barra de rolagem e XP flutuante
+   ========================================================== */
+// Atualiza barra de progresso ao rolar
+window.addEventListener('scroll', () => {
+  const progress = document.getElementById('progress-bar');
+  if (!progress) return;
+  const scrollTop = window.scrollY;
+  const docHeight = document.body.scrollHeight - window.innerHeight;
+  const percent = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+  progress.style.width = percent + '%';
+});
+
+// Efeito "+XP" flutuante e vibração de painéis ao completar passos
+document.querySelectorAll('input[type="checkbox"]').forEach(ck => {
+  ck.addEventListener('change', e => {
+    if (e.target.checked) {
+      const xp = document.createElement('span');
+      xp.textContent = '+10XP';
+      xp.className = 'xp-float';
+      const parent = e.target.parentElement;
+      if (getComputedStyle(parent).position === 'static') {
+        parent.style.position = 'relative';
+      }
+      parent.appendChild(xp);
+      setTimeout(() => xp.remove(), 1000);
+      const panel = e.target.closest('.panel');
+      if (panel) {
+        panel.classList.add('complete');
+        setTimeout(() => panel.classList.remove('complete'), 400);
+      }
+    }
+  });
 });
 </script>
 
-    
+    <!-- Navegação fixa inferior para mobile -->
+    <nav class="bottom-nav">
+      <a href="#home"><svg aria-hidden="true"><use href="#ico-home"/></svg><span>Início</span></a>
+      <a href="#index"><svg aria-hidden="true"><use href="#ico-index"/></svg><span>Índice</span></a>
+      <a href="#mod1"><svg aria-hidden="true"><use href="#ico-droplet"/></svg><span>Módulos</span></a>
+      <a href="https://wa.me/" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#ico-whatsapp"/></svg><span>WhatsApp</span></a>
+    </nav>
+
 </body>
 </html>
