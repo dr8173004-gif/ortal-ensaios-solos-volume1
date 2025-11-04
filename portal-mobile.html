@@ -125,28 +125,6 @@ nav.bottom .grid{display:grid; grid-template-columns:repeat(5,1fr)}
       .lab-grid{grid-template-columns:repeat(3,1fr)}
     }
 
-    /* Floating logout button */
-    .logout-floating{
-      position:fixed;
-      right:16px;
-      bottom:90px;
-      z-index:95;
-      width:50px;
-      height:50px;
-      border-radius:50%;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      background:rgba(255,255,255,0.08);
-      border:1px solid rgba(255,255,255,0.18);
-      color:#fff;
-      backdrop-filter:blur(8px);
-      text-decoration:none;
-      font-size:22px;
-    }
-    .logout-floating:hover{
-      background:rgba(255,255,255,0.16);
-    }
   </style>
 </head>
 <body>
@@ -297,7 +275,7 @@ nav.bottom .grid{display:grid; grid-template-columns:repeat(5,1fr)}
 
         <div class="panel inset" style="padding:12px; margin:12px 0">
           <h4 style="margin:0 0 8px">🎥 Aula de Teor de Umidade</h4>
-          <div class="video"><iframe src="https://www.youtube.com/embed/kvlK_IazloQ" title="Teor de Umidade Natural" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen referrerpolicy="no-referrer"></iframe></div>
+          <div class="video"><iframe src="https://www.youtube.com/embed/kvlK_IazloQ?si=whUkvVGdBEc_aEHE" title="Teor de Umidade Natural" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>
           <div class="quiz" style="margin-top:10px">
             <h4>Teste seus conhecimentos</h4>
             <p>1. Qual o tempo mínimo de estufa?</p>
@@ -330,7 +308,7 @@ nav.bottom .grid{display:grid; grid-template-columns:repeat(5,1fr)}
 
         <div class="panel inset" style="padding:12px; margin:12px 0">
           <h4 style="margin:0 0 8px">🎥 Aula de Granulometria</h4>
-          <div class="video"><iframe src="https://www.youtube.com/embed/QaWTg-baLDc" title="Granulometria por Peneiramento e Sedimentação" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen referrerpolicy="no-referrer"></iframe></div>
+          <div class="video"><iframe src="https://www.youtube.com/embed/QaWTg-baLDc?si=H5GUZ9xvkHkMiuXk" title="Granulometria por Peneiramento e Sedimentação" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>
           <div class="quiz" style="margin-top:10px">
             <h4>Teste seus conhecimentos</h4>
             <p>1. O que representa a curva granulométrica?</p>
@@ -391,9 +369,7 @@ nav.bottom .grid{display:grid; grid-template-columns:repeat(5,1fr)}
   </nav>
 
   <!-- Floating Logout Button -->
-  <a href="https://dr8173004-gif.github.io/ortal-ensaios-solos-volume1/" class="logout-floating" title="Voltar ao portal de login">
-    <i class="fa-solid fa-right-from-bracket"></i>
-  </a>
+  <!-- Floating logout button removed: using header "Sair" button for logout -->
 
   <script>
     // ===== Helpers LocalStorage seguros =====
@@ -404,10 +380,9 @@ nav.bottom .grid{display:grid; grid-template-columns:repeat(5,1fr)}
     const uName = getKV('user_name','aluno');
     document.getElementById('uName').textContent = uName;
     document.getElementById('logoutBtn').addEventListener('click', ()=>{
-      // Apenas limpa um token fictício e volta ao topo
+      // Limpa token e redireciona para o portal de login
       setKV('auth_token','');
-      window.scrollTo({top:0, behavior:'smooth'});
-      alert('Sessão encerrada com sucesso.');
+      window.location.href = 'https://dr8173004-gif.github.io/ortal-ensaios-solos-volume1/';
     });
 
     // ===== Reveal com IntersectionObserver =====
