@@ -435,37 +435,52 @@ function showXP(amount) {
   xp.style.transform = 'translateX(-50%)';
   xp.style.fontWeight = '900';
   xp.style.color = '#28a745';
-  xp.style.fontSize = '1.2rem';
+  xp.style.fontSize = '1.3rem';
   xp.style.textShadow = '0 2px 8px rgba(0,0,0,.3)';
-  xp.style.transition = 'all 1.2s ease-out';
+  xp.style.transition = 'all 1.4s ease-out';
+  xp.style.zIndex = '9999';
   document.body.appendChild(xp);
   requestAnimationFrame(()=>{
-    xp.style.bottom = '120px';
+    xp.style.bottom = '130px';
     xp.style.opacity = '0';
   });
-  setTimeout(() => xp.remove(), 1200);
+  setTimeout(() => xp.remove(), 1400);
 }
 
 function confettiRain() {
-  for (let i = 0; i < 35; i++) {
+  for (let i = 0; i < 40; i++) {
     const c = document.createElement("div");
     c.className = "confetti";
     c.style.left = Math.random() * 100 + "vw";
     c.style.backgroundColor = `hsl(${Math.random() * 360}, 80%, 60%)`;
     c.style.animationDuration = 1.5 + Math.random() + "s";
+    c.style.width = Math.random() * 8 + 6 + "px";
+    c.style.height = c.style.width;
+    c.style.borderRadius = "50%";
+    c.style.opacity = "0.9";
     document.body.appendChild(c);
     setTimeout(() => c.remove(), 2000);
   }
 }
 
+// UNIFICAÇÃO — XP, Confete e Medalha 3D
 const oldToast = UI.toast;
 UI.toast = (msg) => {
-  // Efeito XP flutuante
   const match = msg.match(/\+(\d+)\s*XP/);
   if (match) showXP(match[1]);
 
-  // Confete se for medalha
-  if (msg.includes("🏅")) confettiRain();
+  if (msg.includes("🏅")) {
+    confettiRain();
+
+    // Animação 3D da medalha
+    const medal = document.getElementById('modal-emoji');
+    if (medal) {
+      medal.classList.remove('medal-3d'); // reset
+      void medal.offsetWidth; // força reflow
+      medal.classList.add('medal-3d');
+      UI.modal("🏅", "Medalha desbloqueada!", "Você conquistou uma nova medalha!");
+    }
+  }
 
   oldToast(msg);
 };
