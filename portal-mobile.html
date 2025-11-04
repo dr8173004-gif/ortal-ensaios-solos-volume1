@@ -395,21 +395,14 @@ document.addEventListener('DOMContentLoaded',()=>{
 </script>
 
 <script>
-// === FEEDBACK VISUAL UNIFICADO: XP + Medalha + Confete ===
+
+</script>
+
+  // === FEEDBACK VISUAL UNIFICADO: XP + Medalha + Confete ===
 function showXP(amount) {
   const xp = document.createElement('div');
   xp.className = 'xp-float';
   xp.textContent = `+${amount} XP`;
-  xp.style.position = 'fixed';
-  xp.style.left = '50%';
-  xp.style.bottom = '80px';
-  xp.style.transform = 'translateX(-50%)';
-  xp.style.fontWeight = '900';
-  xp.style.color = '#28a745';
-  xp.style.fontSize = '1.3rem';
-  xp.style.textShadow = '0 2px 8px rgba(0,0,0,.3)';
-  xp.style.transition = 'all 1.4s ease-out';
-  xp.style.zIndex = '9999';
   document.body.appendChild(xp);
   requestAnimationFrame(()=>{
     xp.style.bottom = '130px';
@@ -419,7 +412,7 @@ function showXP(amount) {
 }
 
 function confettiRain() {
-  for (let i = 0; i < 40; i++) {
+  for (let i = 0; i < 35; i++) {
     const c = document.createElement("div");
     c.className = "confetti";
     c.style.left = Math.random() * 100 + "vw";
@@ -427,35 +420,28 @@ function confettiRain() {
     c.style.animationDuration = 1.5 + Math.random() + "s";
     c.style.width = Math.random() * 8 + 6 + "px";
     c.style.height = c.style.width;
-    c.style.borderRadius = "50%";
     c.style.opacity = "0.9";
     document.body.appendChild(c);
     setTimeout(() => c.remove(), 2000);
   }
 }
 
-// UNIFICAÇÃO — XP, Confete e Medalha 3D
 const oldToast = UI.toast;
 UI.toast = (msg) => {
   const match = msg.match(/\+(\d+)\s*XP/);
   if (match) showXP(match[1]);
 
   if (msg.includes("🏅")) {
-    confettiRain();
-
-    // Animação 3D da medalha
-    const medal = document.getElementById('modal-emoji');
-    if (medal) {
-      medal.classList.remove('medal-3d'); // reset
-      void medal.offsetWidth; // força reflow
-      medal.classList.add('medal-3d');
+    setTimeout(() => {
+      confettiRain();
       UI.modal("🏅", "Medalha desbloqueada!", "Você conquistou uma nova medalha!");
-    }
+      const medal = document.getElementById('modal-emoji');
+      if (medal) medal.classList.add('medal-3d');
+    }, 150);
   }
 
   oldToast(msg);
 };
-</script>
 
 
 </body>
