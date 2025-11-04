@@ -44,7 +44,7 @@
 
     /* Bottom nav (mobile) */
     nav.bottom{position:sticky; bottom:0; z-index:40; background:rgba(1,60,90,.9); border-top:1px solid rgba(255,255,255,.08)}
-    nav.bottom .grid{display:grid; grid-template-columns:repeat(4,1fr)}
+nav.bottom .grid{display:grid; grid-template-columns:repeat(5,1fr)}
     nav.bottom a{display:flex; flex-direction:column; align-items:center; justify-content:center; color:#fff; text-decoration:none; padding:10px 0; font-size:.78rem}
     nav.bottom i{font-size:20px; margin-bottom:2px}
 
@@ -123,6 +123,29 @@
 
     @media (max-width:480px){
       .lab-grid{grid-template-columns:repeat(3,1fr)}
+    }
+
+    /* Floating logout button */
+    .logout-floating{
+      position:fixed;
+      right:16px;
+      bottom:90px;
+      z-index:95;
+      width:50px;
+      height:50px;
+      border-radius:50%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:rgba(255,255,255,0.08);
+      border:1px solid rgba(255,255,255,0.18);
+      color:#fff;
+      backdrop-filter:blur(8px);
+      text-decoration:none;
+      font-size:22px;
+    }
+    .logout-floating:hover{
+      background:rgba(255,255,255,0.16);
     }
   </style>
 </head>
@@ -307,7 +330,7 @@
 
         <div class="panel inset" style="padding:12px; margin:12px 0">
           <h4 style="margin:0 0 8px">🎥 Aula de Granulometria</h4>
-          <div class="video"><iframe src="https://www.youtube.com/embed/1ZkT8nK5KjM" title="Granulometria por Sedimentação" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen referrerpolicy="no-referrer"></iframe></div>
+          <div class="video"><iframe src="https://www.youtube.com/embed/QaWTg-baLDc" title="Granulometria por Peneiramento e Sedimentação" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen referrerpolicy="no-referrer"></iframe></div>
           <div class="quiz" style="margin-top:10px">
             <h4>Teste seus conhecimentos</h4>
             <p>1. O que representa a curva granulométrica?</p>
@@ -330,7 +353,7 @@
   <section id="mod3" class="reveal">
     <details class="module"><summary>🎥 <span> Módulo 3 — Mentoria Técnica (bônus)</span></summary>
       <div class="content"><p>Agende sua sessão ao vivo para tirar dúvidas práticas dos ensaios. Clique no botão abaixo:</p>
-        <div class="actions"><a class="btn btn-primary" href="https://wa.me/5531999999999" target="_blank" rel="noopener">Agendar no WhatsApp</a></div>
+        <div class="actions"><a class="btn btn-primary" href="https://wa.me/5531987670863" target="_blank" rel="noopener">Agendar no WhatsApp</a></div>
       </div>
     </details>
   </section>
@@ -338,7 +361,16 @@
   <section id="mod4" class="reveal" style="margin-bottom:80px">
     <details class="module"><summary>🏅 <span> Módulo 4 — Certificação & Próximo Volume</span></summary>
       <div class="content">
-        <p>Ao concluir os módulos, gere seu certificado nominal em PDF e conheça o Volume 2 (Massa Específica Real + Limites de Atterberg).</p>
+        <p>Ao concluir os módulos, você poderá gerar seu certificado nominal em PDF e conhecer o Volume 2 (Massa Específica Real + Limites de Atterberg).</p>
+        <div class="panel inset" style="padding:12px; margin:12px 0">
+          <h4 style="margin-top:0">🎓 Gerar Certificado</h4>
+          <p style="margin:0 0 8px">Insira seu nome completo para constar no certificado:</p>
+          <label>Nome Completo
+            <input type="text" id="cert_nome" placeholder="Seu nome" style="margin-top:4px">
+          </label>
+          <button class="btn btn-primary" style="margin-top:10px" onclick="generateCertPDF()">Gerar Certificado (PDF)</button>
+          <p id="cert_feedback" style="font-weight:700; margin-top:8px"></p>
+        </div>
         <div class="actions">
           <a class="btn btn-primary" href="#index">Ver meu progresso</a>
           <a class="btn btn-ghost" href="https://dr8173004-gif.github.io/ortal-ensaios-solos-volume1/" target="_blank">Portal Desktop</a>
@@ -353,9 +385,15 @@
       <a href="#index"><i class="fa-solid fa-house"></i>Início</a>
       <a href="#mod1"><i class="fa-solid fa-droplet"></i>Módulo 1</a>
       <a href="#mod2"><i class="fa-solid fa-sitemap"></i>Módulo 2</a>
+      <a href="#mod3"><i class="fa-solid fa-comments"></i>Mentoria</a>
       <a href="#mod4"><i class="fa-solid fa-award"></i>Certificado</a>
     </div>
   </nav>
+
+  <!-- Floating Logout Button -->
+  <a href="https://dr8173004-gif.github.io/ortal-ensaios-solos-volume1/" class="logout-floating" title="Voltar ao portal de login">
+    <i class="fa-solid fa-right-from-bracket"></i>
+  </a>
 
   <script>
     // ===== Helpers LocalStorage seguros =====
@@ -453,6 +491,65 @@
 
     // Init
     mirrorIndex(); updateXP();
+  </script>
+  <script>
+    // ===== Certificado PDF =====
+    // Carrega jsPDF sob demanda
+    async function ensureJSPDF(){
+      if(window.jspdf){ return window.jspdf; }
+      return new Promise((resolve, reject) => {
+        const s=document.createElement('script');
+        s.src='https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+        s.onload=()=>{ resolve(window.jspdf); };
+        s.onerror=()=>reject(new Error('Falha ao carregar jsPDF'));
+        document.head.appendChild(s);
+      });
+    }
+
+    async function generateCertPDF(){
+      const nomeField=document.getElementById('cert_nome');
+      if(!nomeField){ return; }
+      const nome=(nomeField.value||'').trim();
+      if(!nome){ document.getElementById('cert_feedback').textContent = 'Por favor, informe seu nome.'; return; }
+      document.getElementById('cert_feedback').textContent = 'Gerando certificado...';
+      try{
+        const jspdf=await ensureJSPDF();
+        // jsPDF export uses a UMD build: jspdf.jsPDF
+        const { jsPDF: JSPDF } = jspdf;
+        const doc=new JSPDF({orientation:'landscape', unit:'pt', format:'a4'});
+        const W=doc.internal.pageSize.getWidth();
+        const H=doc.internal.pageSize.getHeight();
+        // Moldura
+        doc.setDrawColor(200,200,200); doc.setLineWidth(2);
+        doc.roundedRect(30,30,W-60,H-60,12,12,'S');
+        // Título
+        doc.setFont('helvetica','bold'); doc.setFontSize(28); doc.setTextColor(1,60,90);
+        doc.text('Certificado de Conclusão', W/2, 100, {align:'center'});
+        // Nome do aluno
+        doc.setFontSize(36); doc.setTextColor(0,0,0);
+        doc.text(nome, W/2, 170, {align:'center'});
+        // Mensagem
+        doc.setFont('helvetica','normal'); doc.setFontSize(14); doc.setTextColor(80,80,80);
+        const mensagem='Concluiu o Curso Interativo – Ensaios de Solos (Volume 1), abordando Teor de Umidade Natural e Granulometria (peneiramento + sedimentação), demonstrando competência técnica essencial em laboratório.';
+        doc.text(doc.splitTextToSize(mensagem, W-200), W/2, 220, {align:'center'});
+        // Data
+        const d=new Date();
+        const data=`${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`;
+        doc.setFont('helvetica','italic'); doc.setFontSize(12); doc.setTextColor(80,80,80);
+        doc.text(`Emitido em: ${data}`, W-180, H-80);
+        // Rodapé
+        doc.setFont('helvetica','bold'); doc.setFontSize(12); doc.setTextColor(1,60,90);
+        doc.text('Diego R. Jesus — Instrutor Responsável', 60, H-60);
+        doc.setFont('helvetica','normal'); doc.setFontSize(10); doc.text('Portal Interativo de Ensaios de Solos – Volume 1', 60, H-44);
+        doc.save(`Certificado - ${nome}.pdf`);
+        // Atualiza progresso do módulo 4
+        setKV('m4_progress_pct','100'); updateXP(); mirrorIndex();
+        document.getElementById('cert_feedback').textContent = 'Certificado gerado com sucesso!';
+      }catch(err){
+        document.getElementById('cert_feedback').textContent = 'Erro ao gerar certificado: ' + err.message;
+      }
+    }
+    window.generateCertPDF = generateCertPDF;
   </script>
 </body>
 </html>
