@@ -186,44 +186,65 @@ body::after {
     .chart-svg{width:100%;height:360px;display:block;border:1px solid rgba(1,60,90,.15);border-radius:12px;background:linear-gradient(180deg,#fff,#f9fbff)}
     .chart-legend{display:flex;gap:12px;align-items:center;margin-top:8px;font-size:.9rem}
     .chip{display:inline-flex;align-items:center;gap:6px;padding:4px 8px;border-radius:999px;background:#eef4f7;color:var(--blue);font-weight:700}
+
   /* ==========================================================================
-     MOBILE-OPTIMIZED STYLES
-     ----------------------------------------------------------------------
-     Estas regras complementares deixam a interface responsiva e lembram
-     a experiência de aplicativos educacionais gamificados como o Duolingo.
-     As configurações são aplicadas apenas em telas menores que 768px.
+     MOBILE-OPTIMIZED STYLES E GAMIFICAÇÃO
+     Estas regras tornam o portal totalmente responsivo em dispositivos
+     móveis e adicionam elementos inspirados em apps gamificados como Duolingo.
   ========================================================================== */
   @media (max-width: 768px) {
-    /* Ajusta painéis para uso em telas estreitas */
+    /* Garante que colunas e cartões se ajustem verticalmente */
     .grid { grid-template-columns: 1fr !important; }
     .hero .card { flex-direction: column; align-items: flex-start; }
-    nav { display: none; } /* Oculta navegação desktop */
-    header.site { position: static; } /* Remove sticky header para não conflitar com barra de progresso */
+    nav { display: none; }
+    header.site { position: static; }
     .steps .step { flex-direction: column; align-items: flex-start; }
     .step .num { margin-bottom: 6px; }
     .step .illus svg { width: 60px; height: 60px; }
     .actions { flex-direction: column; gap: 8px; }
     .btn { width: 100%; justify-content: center; }
+    .panel { padding: 18px; margin: 8px 0; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+    /* Simplifica o background pesado para reduzir consumo de dados */
+    body { background: #f6f8fb; color: #0f2532; }
   }
 
-  /* Barra de progresso no topo da tela */
+  /* Barra de progresso para gamificação */
   .progress-container {
     position: fixed;
+    display: block;
     top: 0;
     left: 0;
     right: 0;
-    height: 4px;
+    height: 5px;
     background: rgba(1,60,90,0.1);
     z-index: 2000;
   }
   .progress-bar {
     height: 100%;
     width: 0;
-    background: var(--green);
+    background: linear-gradient(90deg, #ffc107, #28a745);
     transition: width 0.3s ease;
   }
 
-  /* Navegação inferior fixa (estilo app) */
+  /* Caixa de vídeo responsiva (16:9) */
+  .video-container {
+    position: relative;
+    width: 100%;
+    padding-bottom: 56.25%;
+    height: 0;
+    margin: 16px 0;
+  }
+  .video-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    border-radius: 12px;
+  }
+
+  /* Navegação inferior fixa */
   .bottom-nav {
     position: fixed;
     bottom: 0;
@@ -259,15 +280,22 @@ body::after {
     color: var(--green);
   }
   @media (min-width: 768px) {
-    /* Oculta apenas a navegação inferior em telas maiores. A barra de progresso continua visível. */
     .bottom-nav { display: none; }
+  }
+
+  /* Tabelas roláveis em telas pequenas */
+  table.data {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
   }
   </style>
 </head>
 <body>
-  <!-- Barra de progresso fixa para exibir seu avanço total -->
+  <!-- Barra de progresso fixa para gamificação -->
   <div class="progress-container">
     <div id="progress-bar" class="progress-bar"></div>
+    <!-- Exibe nível atual de aprendizagem -->
   </div>
   <!-- SVG sprite -->
   <svg class="sr-only" xmlns="http://www.w3.org/2000/svg">
@@ -636,6 +664,12 @@ body::after {
       <!-- INTRODUÇÃO -->
       <p><strong>Objetivo:</strong> Determinar a quantidade de água presente no solo em seu estado natural. Essa informação é essencial para avaliar a consistência, a compactação e o comportamento mecânico do solo em campo e laboratório.</p>
 
+      <!-- Vídeo aula: Teor de Umidade Natural -->
+      <div class="video-container">
+        <!-- Substitua VIDEO_ID_UMIDADE pelo ID do vídeo selecionado do YouTube -->
+        <iframe src="https://www.youtube.com/embed/VIDEO_ID_UMIDADE?rel=0" title="Aula sobre Teor de Umidade Natural" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+
       <div class="note">Conceito: O teor de umidade (<em>w</em>) é a razão entre a massa da água e a massa dos sólidos secos do solo, expressa em porcentagem.</div>
 
       <!-- EXECUÇÃO PASSO A PASSO COM ÍCONES 3D FLAT -->
@@ -855,6 +889,12 @@ body::after {
     <div>
       <!-- Intro + resumo visual -->
       <p class="sub"><strong>Objetivo:</strong> Determinar a distribuição granulométrica combinando <em>peneiramento</em> (≥ 2 mm) e <em>sedimentação com densímetro</em> (≤ 2 mm), seguindo a NBR 7181, em linguagem simples e visual.</p>
+
+      <!-- Vídeo aula: Granulometria por Peneiramento e Sedimentação -->
+      <div class="video-container">
+        <!-- Substitua VIDEO_ID_GRANULOMETRIA pelo ID do vídeo selecionado do YouTube (até 45-47 min) -->
+        <iframe src="https://www.youtube.com/embed/VIDEO_ID_GRANULOMETRIA?rel=0" title="Aula sobre Granulometria (Peneiramento + Sedimentação)" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
 
       <div class="panel split-visual" style="padding:12px; margin-bottom:12px">
         <h3 style="margin:6px 0 8px">Resumo visual — Divisão da amostra (2 kg)</h3>
@@ -1654,6 +1694,72 @@ document.addEventListener('DOMContentLoaded',()=>{
 });
 </script>
 
+  <!-- Navegação inferior (estilo aplicativo) -->
+  <nav class="bottom-nav">
+    <a href="#home" class="nav-item" id="nav-home">
+      <svg width="20" height="20" aria-hidden="true"><use href="#ico-home"/></svg>
+      <span>Início</span>
+    </a>
+    <a href="#mod1" class="nav-item" id="nav-mod1">
+      <svg width="20" height="20" aria-hidden="true"><use href="#ico-droplet"/></svg>
+      <span>Umidade</span>
+    </a>
+    <a href="#mod2" class="nav-item" id="nav-mod2">
+      <svg width="20" height="20" aria-hidden="true"><use href="#ico-sieve"/></svg>
+      <span>Granul.</span>
+    </a>
+    <a href="#mod3" class="nav-item" id="nav-mod3">
+      <svg width="20" height="20" aria-hidden="true"><use href="#ico-whatsapp"/></svg>
+      <span>Mentoria</span>
+    </a>
+    <a href="#mod4" class="nav-item" id="nav-mod4">
+      <svg width="20" height="20" aria-hidden="true"><use href="#ico-index"/></svg>
+      <span>Certif.</span>
+    </a>
+  </nav>
+
+  <!-- Script de gamificação: atualiza barra e navegação, e exibe níveis -->
+  <script>
+  (function(){
+    function updateProgressBar(){
+      const steps=document.querySelectorAll('input.ck');
+      let completed=0;
+      steps.forEach(ch=>{ if(ch.checked) completed++; });
+      const pct=steps.length>0? (completed/steps.length)*100 : 0;
+      const bar=document.getElementById('progress-bar');
+      if(bar) bar.style.width=pct+'%';
+      // Feedback de nível removido nesta versão mobile
+    }
+    function bindCheckboxes(){
+      const steps=document.querySelectorAll('input.ck');
+      steps.forEach(ch=>{ ch.addEventListener('change', updateProgressBar); });
+    }
+    function updateNav(){
+      const sections=['home','mod1','mod2','mod3','mod4'];
+      const scrollPos=window.scrollY + (window.innerHeight*0.3);
+      sections.forEach(id=>{
+        const el=document.getElementById(id) || document.querySelector(`[aria-labelledby='${id}-title']`);
+        const nav=document.getElementById('nav-'+id);
+        if(el && nav){
+          const offset=el.offsetTop;
+          const height=el.offsetHeight;
+          if(scrollPos >= offset && scrollPos < offset+height){
+            nav.classList.add('active');
+          } else {
+            nav.classList.remove('active');
+          }
+        }
+      });
+    }
+    document.addEventListener('DOMContentLoaded', ()=>{
+      updateProgressBar();
+      bindCheckboxes();
+      updateNav();
+      window.addEventListener('scroll', updateNav);
+    });
+  })();
+  </script>
+
 <!-- =================== CABEÇALHO DO USUÁRIO (botão Sair) =================== -->
 <header id="userHeader" class="user-header" style="display:none">
   <span id="userName">👋 Olá, aluno</span>
@@ -1980,97 +2086,19 @@ function startSyncWithFirestore(){
 }
 
 /* ==========================================================
-   ⏱️ ESPERA LOGIN PARA INICIALIZAR PORTAL
+   🔓 Ajuste para versão mobile offline
    ========================================================== */
-onAuthStateChanged(auth, (user)=>{
-  if(user){
-    setCurrentUID(user.uid);
-    const nome=user.displayName||(user.email?user.email.split("@")[0]:"aluno");
-    if(nameEl) nameEl.textContent=`👋 Olá, ${nome}`;
-    if(headerEl) headerEl.style.display="flex";
-    console.log("✅ Usuário autenticado:", user.email);
-    initPortal();
-  }else{
-    if(headerEl) headerEl.style.display="none";
-    alert("⚠️ Faça login para acessar o portal.");
-    window.location.href="./index.html";
+// Desativa verificação de autenticação nesta versão mobile offline
+// e inicializa o portal imediatamente.
+document.addEventListener('DOMContentLoaded', ()=>{
+  try {
+    initPortal && initPortal();
+  } catch(e) {
+    console.log('InitPortal não encontrado ou já inicializado.');
   }
 });
 </script>
 
     
-<!-- Closing tags moved below after inserting nav inside body -->
-  <!-- Navegação inferior ao estilo de aplicativos (mobile) -->
-  <nav class="bottom-nav">
-    <a href="#home" class="nav-item" id="nav-home">
-      <svg width="20" height="20" aria-hidden="true"><use href="#ico-home"/></svg>
-      <span>Início</span>
-    </a>
-    <a href="#mod1" class="nav-item" id="nav-mod1">
-      <svg width="20" height="20" aria-hidden="true"><use href="#ico-droplet"/></svg>
-      <span>Umidade</span>
-    </a>
-    <a href="#mod2" class="nav-item" id="nav-mod2">
-      <svg width="20" height="20" aria-hidden="true"><use href="#ico-sieve"/></svg>
-      <span>Granul.</span>
-    </a>
-    <a href="#mod3" class="nav-item" id="nav-mod3">
-      <svg width="20" height="20" aria-hidden="true"><use href="#ico-whatsapp"/></svg>
-      <span>Mentoria</span>
-    </a>
-    <a href="#mod4" class="nav-item" id="nav-mod4">
-      <svg width="20" height="20" aria-hidden="true"><use href="#ico-index"/></svg>
-      <span>Certif.</span>
-    </a>
-  </nav>
-
-  <!-- Script para atualizar barra de progresso e estado da navegação -->
-  <script>
-  (function(){
-    // Atualiza a largura da barra de progresso conforme checkboxes marcadas
-    function updateProgressBar(){
-      const steps = document.querySelectorAll('input.ck');
-      let completed = 0;
-      steps.forEach(ch => {
-        if(ch.checked) completed++;
-      });
-      const pct = steps.length > 0 ? (completed / steps.length) * 100 : 0;
-      const bar = document.getElementById('progress-bar');
-      if(bar) bar.style.width = pct + '%';
-    }
-    // Vincula o evento change em cada checkbox para atualização imediata
-    function bindCheckboxes(){
-      const steps = document.querySelectorAll('input.ck');
-      steps.forEach(ch => {
-        ch.addEventListener('change', updateProgressBar);
-      });
-    }
-    // Atualiza a navegação inferior com base na seção visível
-    function updateNav(){
-      const sections = ['home','mod1','mod2','mod3','mod4'];
-      const scrollPos = window.scrollY + (window.innerHeight * 0.3);
-      sections.forEach(id => {
-        const el = document.getElementById(id) || document.querySelector(`[aria-labelledby='${id}-title']`);
-        const nav = document.getElementById('nav-' + id);
-        if(el && nav){
-          const offset = el.offsetTop;
-          const height = el.offsetHeight;
-          if(scrollPos >= offset && scrollPos < offset + height){
-            nav.classList.add('active');
-          } else {
-            nav.classList.remove('active');
-          }
-        }
-      });
-    }
-    document.addEventListener('DOMContentLoaded', () => {
-      updateProgressBar();
-      bindCheckboxes();
-      updateNav();
-      window.addEventListener('scroll', updateNav);
-    });
-  })();
-  </script>
-
-  </body>
+</body>
 </html>
