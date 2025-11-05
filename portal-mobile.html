@@ -92,64 +92,12 @@ nav.bottom .grid{display:grid; grid-template-columns:repeat(5,1fr)}
     .video iframe{position:absolute; inset:0; width:100%; height:100%; border:0}
 
     /* Simulador / Lab grid */
-    .lab-grid{
-      display:grid;
-      gap:12px;
-      grid-template-columns:repeat(auto-fit, minmax(140px, 1fr));
-    }
-    /* New lab card style for an immersive and interactive lab simulator */
-    .lab-card{
-      position:relative;
-      background:rgba(255,255,255,.06);
-      border:1px solid rgba(255,255,255,.1);
-      border-radius:16px;
-      padding:20px 12px;
-      text-align:center;
-      color:#fff;
-      overflow:hidden;
-      cursor:pointer;
-      box-shadow:0 4px 12px rgba(0,0,0,.25);
-      transition:transform .3s ease, box-shadow .3s ease;
-    }
-    .lab-card:hover{
-      transform:translateY(-6px);
-      box-shadow:0 8px 16px rgba(0,0,0,.35);
-    }
-    .lab-card .icon{
-      font-size:36px;
-      margin-bottom:8px;
-      animation:float 4s ease-in-out infinite;
-      display:inline-block;
-    }
-    .lab-card .icon i{
-      /* color contrast for icons so they appear clearly */
-      color: var(--green);
-    }
-    .lab-card .title{
-      font-weight:700;
-      font-size:1rem;
-      margin-bottom:4px;
-    }
-    .lab-card .desc{
-      max-height:0;
-      opacity:0;
-      overflow:hidden;
-      transition:max-height .5s ease, opacity .5s ease;
-      font-size:.86rem;
-      line-height:1.3;
-      text-align:left;
-    }
-    .lab-card.expanded .desc{
-      max-height:200px;
-      opacity:1;
-      margin-top:8px;
-    }
-    /* Floating animation for icons */
-    @keyframes float{
-      0%{ transform:translateY(0px); }
-      50%{ transform:translateY(-8px); }
-      100%{ transform:translateY(0px); }
-    }
+    /*
+      A grade do laboratório exibe cartões com ícones e descrições. A versão antiga usava .lab-item,
+      mas foi substituída por .lab-card; por isso removemos estilos da classe antiga para evitar
+      conflitos.  A nova grade usa auto-fill para ajustar o número de colunas conforme a largura
+      da tela.
+    */
 
     /* Lista de passos */
     .steps{display:grid; gap:10px}
@@ -172,6 +120,80 @@ nav.bottom .grid{display:grid; grid-template-columns:repeat(5,1fr)}
     .quiz label.correct{color:var(--green); font-weight:700}
     .quiz label.wrong{color:#ff6b6b; font-weight:700}
     .quiz label.selected{text-decoration:underline}
+
+    /* Circular progress for modules index */
+    .progress-circle{
+      --p:0%;
+      width:46px; height:46px;
+      border-radius:50%;
+      background:conic-gradient(var(--green) 0 var(--p), rgba(255,255,255,.1) var(--p) 100%);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight:700;
+      font-size:.75rem;
+      color:var(--text);
+      position:relative;
+      border:1px solid rgba(255,255,255,.15);
+    }
+    .progress-circle span{
+      position:absolute;
+    }
+
+    /* Virtual lab cards */
+    .lab-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fill, minmax(120px,1fr));
+      gap:14px;
+      margin-bottom:10px;
+    }
+    .lab-card{
+      position:relative;
+      background:rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:16px;
+      padding:14px 12px;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:8px;
+      text-align:center;
+      cursor:pointer;
+      box-shadow:0 4px 10px rgba(0,0,0,.25);
+    }
+    .lab-card:hover{
+      background:rgba(255,255,255,.08);
+      transform:translateY(-4px);
+      box-shadow:0 6px 14px rgba(0,0,0,.3);
+    }
+    .lab-card .icon{
+      font-size:36px;
+      line-height:1;
+      margin-top:2px;
+      animation:float 4s ease-in-out infinite;
+    }
+    .lab-card .icon i{
+      color: var(--green);
+    }
+    .lab-card .lab-info span{
+      font-weight:700;
+      font-size:.85rem;
+      display:block;
+      margin-bottom:4px;
+      color: var(--text);
+    }
+    .lab-card .lab-info p{
+      margin:0;
+      font-size:.72rem;
+      line-height:1.35;
+      color:var(--muted);
+    }
+    /* Floating animation for lab icons */
+    @keyframes float{
+      0%{ transform: translateY(0px); }
+      50%{ transform: translateY(-6px); }
+      100%{ transform: translateY(0px); }
+    }
     /* Quiz result message */
     .quiz p[id^="score_"]{margin-top:6px; font-weight:700; color:#fff}
 
@@ -196,7 +218,14 @@ nav.bottom .grid{display:grid; grid-template-columns:repeat(5,1fr)}
   <header class="site" role="banner">
     <div class="bar">
       <div class="brand"><i>🧪</i><span>Ensaios de Solos — Vol. 1</span></div>
-      <div class="user-pill" aria-live="polite"><span>👋 Olá, <b id="uName">aluno</b></span><button class="logout" id="logoutBtn" type="button">Sair</button></div>
+      <div class="user-pill" aria-live="polite">
+        <span>👋 Olá, <b id="uName">aluno</b></span>
+        <!-- Círculo de progresso geral (mostra porcentagem concluída do curso) -->
+        <div class="progress-circle" id="generalCircle" style="--p:0%">
+          <span id="generalPerc">0%</span>
+        </div>
+        <button class="logout" id="logoutBtn" type="button">Sair</button>
+      </div>
     </div>
   </header>
 
@@ -217,7 +246,10 @@ nav.bottom .grid{display:grid; grid-template-columns:repeat(5,1fr)}
 
   <!-- ÍNDICE / PROGRESSO -->
   <section id="index" class="panel reveal" aria-labelledby="idxTitle">
-    <div class="head"><i class="fa-solid fa-list-check"></i><h2 id="idxTitle">Seu Progresso no Curso</h2></div>
+    <div class="head">
+      <i class="fa-solid fa-list-check"></i>
+      <h2 id="idxTitle">Seu Progresso no Curso</h2>
+    </div>
     <div class="modules" id="mods">
       <!-- M0 -->
       <div class="mod-card">
@@ -225,7 +257,8 @@ nav.bottom .grid{display:grid; grid-template-columns:repeat(5,1fr)}
         <div>
           <h3>Módulo 0 — Introdução & Contexto</h3>
           <div class="muted">Carreira, mercado e trilha do curso.</div>
-          <div class="meter" aria-label="Progresso módulo 0"><i id="bar0"></i></div>
+          <!-- Círculo de progresso para o módulo 0 -->
+          <div class="progress-circle" id="circle0" style="--p:0%"><span id="perc0">0%</span></div>
         </div>
         <div class="open"><a class="btn btn-primary" href="#mod0">Abrir</a></div>
       </div>
@@ -235,7 +268,8 @@ nav.bottom .grid{display:grid; grid-template-columns:repeat(5,1fr)}
         <div>
           <h3>Módulo 1 — Teor de Umidade Natural</h3>
           <div class="muted">Execução e cálculo automatizado.</div>
-          <div class="meter" aria-label="Progresso módulo 1"><i id="bar1"></i></div>
+          <!-- Círculo de progresso para o módulo 1 -->
+          <div class="progress-circle" id="circle1" style="--p:0%"><span id="perc1">0%</span></div>
         </div>
         <div class="open"><a class="btn btn-primary" href="#mod1">Abrir</a></div>
       </div>
@@ -245,17 +279,17 @@ nav.bottom .grid{display:grid; grid-template-columns:repeat(5,1fr)}
         <div>
           <h3>Módulo 2 — Granulometria (P+S)</h3>
           <div class="muted">Distribuição de partículas e curva.</div>
-          <div class="meter" aria-label="Progresso módulo 2"><i id="bar2"></i></div>
+          <!-- Círculo de progresso para o módulo 2 -->
+          <div class="progress-circle" id="circle2" style="--p:0%"><span id="perc2">0%</span></div>
         </div>
         <div class="open"><a class="btn btn-primary" href="#mod2">Abrir</a></div>
       </div>
-      <!-- M3/M4 -->
+      <!-- M3/M4 sem barras de progresso -->
       <div class="mod-card">
         <div class="ico">🎥</div>
         <div>
           <h3>Módulo 3 — Mentoria Técnica</h3>
-          <div class="muted">Agende uma sessão ao vivo.</div>
-          <div class="meter"><i id="bar3"></i></div>
+          <div class="muted">Sessões ao vivo de dúvidas e revisões.</div>
         </div>
         <div class="open"><a class="btn btn-primary" href="#mod3">Abrir</a></div>
       </div>
@@ -263,8 +297,7 @@ nav.bottom .grid{display:grid; grid-template-columns:repeat(5,1fr)}
         <div class="ico">🏅</div>
         <div>
           <h3>Módulo 4 — Certificação & Volume 2</h3>
-          <div class="muted">Gere seu certificado nominal.</div>
-          <div class="meter"><i id="bar4"></i></div>
+          <div class="muted">Gere seu certificado e saiba mais.</div>
         </div>
         <div class="open"><a class="btn btn-primary" href="#mod4">Abrir</a></div>
       </div>
@@ -298,32 +331,36 @@ nav.bottom .grid{display:grid; grid-template-columns:repeat(5,1fr)}
         <div class="note">Conceito: o teor de umidade (<em>w</em>) mostra a relação entre a água presente e o solo seco. Para calcular, subtraia a massa seca da úmida para encontrar <em>m<sub>água</sub></em>, subtraia a tara (lata) da massa seca para encontrar <em>m<sub>solo seco</sub></em>, divida uma pela outra e multiplique por 100 para obter o valor em&nbsp;%.</div>
 
         <h4>🧪 Simulador de Laboratório</h4>
-        <div class="lab-grid" aria-label="Equipamentos">
-          <!-- Each lab-card represents an instrumento. It floats gently and expands on click to reveal details. -->
-          <div class="lab-card" onclick="toggleLabCard(this)">
-            <div class="icon"><i class="fa-solid fa-weight-hanging"></i></div>
-            <div class="title">Balança</div>
-            <div class="desc">Instrumento usado para medir a massa da amostra úmida e seca com precisão. Deve estar calibrada e nivelada.</div>
+        <div class="lab-grid" aria-label="Equipamentos do laboratório">
+          <div class="lab-card">
+            <div class="icon" style="font-size:32px; line-height:1; color:#28a745; animation: float 4s ease-in-out infinite;">⚖️</div>
+            <div class="lab-info"><span>Balança</span>
+              <p>Instrumento usado para medir a massa da amostra úmida e seca com precisão. Deve estar calibrada e nivelada.</p>
+            </div>
           </div>
-          <div class="lab-card" onclick="toggleLabCard(this)">
-            <div class="icon"><i class="fa-solid fa-box-open"></i></div>
-            <div class="title">Cápsula</div>
-            <div class="desc">Recipiente (tara) onde a amostra é pesada. Mantenha-o limpo, seco e identificado.</div>
+          <div class="lab-card">
+            <div class="icon" style="font-size:32px; line-height:1; color:#28a745; animation: float 4s ease-in-out infinite;">🧴</div>
+            <div class="lab-info"><span>Cápsula</span>
+              <p>Recipiente (tara) onde a amostra é pesada. Mantenha-o limpo, seco e identificado.</p>
+            </div>
           </div>
-          <div class="lab-card" onclick="toggleLabCard(this)">
-            <div class="icon"><i class="fa-solid fa-temperature-three-quarters"></i></div>
-            <div class="title">Estufa</div>
-            <div class="desc">Equipamento que fornece calor constante para secar a amostra à temperatura recomendada.</div>
+          <div class="lab-card">
+            <div class="icon" style="font-size:32px; line-height:1; color:#28a745; animation: float 4s ease-in-out infinite;">🔥</div>
+            <div class="lab-info"><span>Estufa</span>
+              <p>Equipamento que fornece calor constante (105–110 °C) para remover a umidade do solo. Não feche totalmente a porta.</p>
+            </div>
           </div>
-          <div class="lab-card" onclick="toggleLabCard(this)">
-            <div class="icon"><i class="fa-solid fa-droplet"></i></div>
-            <div class="title">Água</div>
-            <div class="desc">Usada para preparar suspensões e limpar utensílios; deve ser destilada ou filtrada para evitar contaminações.</div>
+          <div class="lab-card">
+            <div class="icon" style="font-size:32px; line-height:1; color:#28a745; animation: float 4s ease-in-out infinite;">💧</div>
+            <div class="lab-info"><span>Água</span>
+              <p>Usada para preparar suspensões e limpar utensílios; deve ser destilada ou filtrada para evitar contaminações.</p>
+            </div>
           </div>
-          <div class="lab-card" onclick="toggleLabCard(this)">
-            <div class="icon"><i class="fa-solid fa-seedling"></i></div>
-            <div class="title">Solo</div>
-            <div class="desc">Matéria‑prima dos ensaios: a amostra deve ser representativa e preparada conforme as normas técnicas.</div>
+          <div class="lab-card">
+            <div class="icon" style="font-size:32px; line-height:1; color:#28a745; animation: float 4s ease-in-out infinite;">🌱</div>
+            <div class="lab-info"><span>Solo</span>
+              <p>Matéria‑prima dos ensaios: a amostra deve ser representativa e preparada conforme as normas técnicas.</p>
+            </div>
           </div>
         </div>
 
@@ -449,8 +486,16 @@ do operador e a data do ensaio.</div>
   <!-- MÓDULOS 3 e 4 (placeholders premium, prontos para conteúdo real) -->
   <section id="mod3" class="reveal">
     <details class="module"><summary>🎥 <span> Módulo 3 — Mentoria Técnica (bônus)</span></summary>
-      <div class="content"><p>Agende sua sessão ao vivo para tirar dúvidas práticas dos ensaios. Clique no botão abaixo:</p>
-        <div class="actions"><a class="btn btn-primary" href="https://wa.me/5531987670863" target="_blank" rel="noopener">Agendar no WhatsApp</a></div>
+      <div class="content">
+        <p>Antes de agendar sua sessão ao vivo, siga este checklist para aproveitar melhor a mentoria:</p>
+        <div class="steps">
+          <div class="step"><div class="n">1</div><div><strong>Revisar aulas</strong> — Assista às vídeo‑aulas dos Módulos 1 e 2 e faça anotações das principais dúvidas.</div><input type="checkbox"></div>
+          <div class="step"><div class="n">2</div><div><strong>Praticar ensaios</strong> — Execute o procedimento em laboratório (ou simule) e registre pesos, cálculos e observações.</div><input type="checkbox"></div>
+          <div class="step"><div class="n">3</div><div><strong>Listar perguntas</strong> — Escreva suas dúvidas e tópicos que deseja discutir na mentoria.</div><input type="checkbox"></div>
+          <div class="step"><div class="n">4</div><div><strong>Organizar resultados</strong> — Tenha em mãos suas planilhas, curvas e certificados para referência.</div><input type="checkbox"></div>
+        </div>
+        <p class="muted" style="margin-top:8px">Completar esses itens garante que sua sessão ao vivo seja focada e eficiente.</p>
+        <div class="actions" style="margin-top:12px"><a class="btn btn-primary" href="https://wa.me/5531987670863" target="_blank" rel="noopener">Agendar no WhatsApp</a></div>
       </div>
     </details>
   </section>
@@ -520,47 +565,66 @@ do operador e a data do ensaio.</div>
     // ===== Barra de progresso geral =====
     const xpBar = document.getElementById('xpBar');
     function updateXP(){
-      // Consider only modules 0–2 for overall progress, since modules 3 and 4 não têm conteúdo didático.
-      const mods = ['m0_progress_pct','m1_progress_pct','m2_progress_pct'];
-      const total = mods.length;
-      const sum = mods.map(k => parseInt(getKV(k,'0')) || 0).reduce((a,b)=> a+b, 0);
-      const pct = Math.round(sum / total);
+      // Considera apenas os módulos com conteúdo didático (0, 1 e 2)
+      const keys = ['m0_progress_pct','m1_progress_pct','m2_progress_pct'];
+      const sum = keys.map(k => parseInt(getKV(k,'0'))||0).reduce((a,b)=>a+b,0);
+      const pct = Math.round(sum / keys.length);
       xpBar.style.width = pct + '%';
+      // Atualiza círculo geral (se existir) com o mesmo percentual
+      const g = document.getElementById('generalCircle');
+      const gp = document.getElementById('generalPerc');
+      if(g){ g.style.setProperty('--p', pct + '%'); }
+      if(gp){ gp.textContent = pct + '%'; }
     }
 
     // ===== Progresso por módulo (espelha nos cards do índice) =====
     function mirrorIndex(){
-      [0,1,2,3,4].forEach(i=>{
+      // Atualiza apenas os círculos de progresso para m0, m1 e m2
+      [0,1,2].forEach(i=>{
         const p = parseInt(getKV(`m${i}_progress_pct`,'0'))||0;
-        const bar = document.getElementById(`bar${i}`);
-        if(bar) bar.style.width = p + '%';
-      })
+        const circle = document.getElementById(`circle${i}`);
+        if(circle){ circle.style.setProperty('--p', p + '%'); const span = circle.querySelector('span'); if(span){ span.textContent = p + '%'; } }
+      });
     }
 
     // ===== Checklists M0/M1 incrementam progresso =====
-    function bindChecks(keys, barId, pctKey){
-      const bar = document.getElementById(barId);
+    function bindChecks(keys, elementId, pctKey){
+      const circle = document.getElementById(elementId);
       function calc(){
-        const done = keys.map(k=> getKV(k,'0')==='1' || document.querySelector(`[data-key="${k}"]`)?.checked).filter(Boolean).length;
-        const pct = Math.round((done/keys.length)*100);
-        if(bar) bar.style.width = pct + '%';
-        setKV(pctKey, String(pct)); updateXP(); mirrorIndex();
+        // Conta quantos itens foram concluídos (checked ou armazenados)
+        const done = keys.map(k => getKV(k,'0')==='1' || document.querySelector(`[data-key="${k}"]`)?.checked).filter(Boolean).length;
+        const pct = Math.round((done / keys.length) * 100);
+        // Atualiza círculo e texto
+        if(circle){
+          circle.style.setProperty('--p', pct + '%');
+          const span = circle.querySelector('span');
+          if(span){ span.textContent = pct + '%'; }
+        }
+        setKV(pctKey, String(pct));
+        updateXP();
+        mirrorIndex();
       }
-      setTimeout(()=>{
-        keys.forEach(k=>{
+      setTimeout(() => {
+        keys.forEach(k => {
           const el = document.querySelector(`[data-key="${k}"]`);
-          if(el){ el.checked = getKV(k,'0')==='1'; el.addEventListener('change',()=>{ setKV(k, el.checked?'1':'0'); calc(); }); }
+          if(el){
+            el.checked = getKV(k,'0') === '1';
+            el.addEventListener('change', () => {
+              setKV(k, el.checked ? '1' : '0');
+              calc();
+            });
+          }
         });
         calc();
       }, 200);
     }
-    bindChecks(['m0_ck_1','m0_ck_2','m0_ck_3'], 'bar0', 'm0_progress_pct');
-    bindChecks(['m1_ck1','m1_ck2','m1_ck3','m1_ck4'], 'bar1', 'm1_progress_pct');
+    bindChecks(['m0_ck_1','m0_ck_2','m0_ck_3'], 'circle0', 'm0_progress_pct');
+    bindChecks(['m1_ck1','m1_ck2','m1_ck3','m1_ck4'], 'circle1', 'm1_progress_pct');
     // Passos do Módulo 2 (divisão, peneiramento e sedimentação)
     bindChecks([
       'm2_ck1','m2_ck2','m2_ck3','m2_ck4','m2_ck5','m2_ck6','m2_ck7',
       'm2_ck8','m2_ck9','m2_ck10','m2_ck11','m2_ck12','m2_ck13','m2_ck14','m2_ck15'
-    ], 'bar2', 'm2_progress_pct');
+    ], 'circle2', 'm2_progress_pct');
 
     // ===== Calculadora Umidade =====
     function calcUmidade(){
@@ -624,13 +688,13 @@ do operador e a data do ensaio.</div>
     }
     window.corrigir = corrigir;
 
-    // ===== Lab Card Toggle =====
-    // Toggle expansion of lab cards to reveal or hide the description. Each card uses the .expanded class.
-    function toggleLabCard(el){
-      if(!el) return;
-      el.classList.toggle('expanded');
+    // ===== Laboratório virtual interativo =====
+    function toggleLabInfo(el){
+      // Fecha outras cartas se desejar isolamento
+      // Alterna classe open para exibir ou ocultar a descrição
+      el.classList.toggle('open');
     }
-    window.toggleLabCard = toggleLabCard;
+    window.toggleLabInfo = toggleLabInfo;
 // Init
     mirrorIndex(); updateXP();
   </script>
@@ -661,28 +725,39 @@ do operador e a data do ensaio.</div>
         const doc=new JSPDF({orientation:'landscape', unit:'pt', format:'a4'});
         const W=doc.internal.pageSize.getWidth();
         const H=doc.internal.pageSize.getHeight();
-        // Moldura
-        doc.setDrawColor(200,200,200); doc.setLineWidth(2);
-        doc.roundedRect(30,30,W-60,H-60,12,12,'S');
-        // Título
-        doc.setFont('helvetica','bold'); doc.setFontSize(28); doc.setTextColor(1,60,90);
-        doc.text('Certificado de Conclusão', W/2, 100, {align:'center'});
-        // Nome do aluno
-        doc.setFontSize(36); doc.setTextColor(0,0,0);
-        doc.text(nome, W/2, 170, {align:'center'});
-        // Mensagem
-        doc.setFont('helvetica','normal'); doc.setFontSize(14); doc.setTextColor(80,80,80);
-        const mensagem='Concluiu o Curso Interativo – Ensaios de Solos (Volume 1), abordando Teor de Umidade Natural e Granulometria (peneiramento + sedimentação), demonstrando competência técnica essencial em laboratório.';
-        doc.text(doc.splitTextToSize(mensagem, W-200), W/2, 220, {align:'center'});
+        // Moldura premium dourada
+        doc.setLineWidth(4);
+        doc.setDrawColor(212,175,55); // dourado
+        doc.roundedRect(24,24,W-48,H-48,14,14,'S');
+        // Cabeçalho
+        doc.setFont('helvetica','bold'); doc.setFontSize(36);
+        doc.setTextColor(212,175,55);
+        doc.text('CERTIFICADO', W/2, 96, {align:'center'});
+        doc.setFontSize(22);
+        doc.setTextColor(33,67,90);
+        doc.text('de Conclusão', W/2, 126, {align:'center'});
+        // Nome do formando
+        doc.setFont('helvetica','bold'); doc.setFontSize(34);
+        doc.setTextColor(0,0,0);
+        doc.text(nome.toUpperCase(), W/2, 186, {align:'center'});
+        // Curso e mensagem
+        doc.setFont('helvetica','normal'); doc.setFontSize(16);
+        doc.setTextColor(55,55,55);
+        const mensagem = 'Concluiu o Curso Interativo – Ensaios de Solos (Volume 1) com êxito, abordando Teor de Umidade Natural e Granulometria (peneiramento e sedimentação), demonstrando competência técnica essencial em laboratório.';
+        doc.text(doc.splitTextToSize(mensagem, W-220), W/2, 230, {align:'center'});
         // Data
         const d=new Date();
         const data=`${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`;
-        doc.setFont('helvetica','italic'); doc.setFontSize(12); doc.setTextColor(80,80,80);
-        doc.text(`Emitido em: ${data}`, W-180, H-80);
-        // Rodapé
-        doc.setFont('helvetica','bold'); doc.setFontSize(12); doc.setTextColor(1,60,90);
-        doc.text('Diego R. Jesus — Instrutor Responsável', 60, H-60);
-        doc.setFont('helvetica','normal'); doc.setFontSize(10); doc.text('Portal Interativo de Ensaios de Solos – Volume 1', 60, H-44);
+        doc.setFont('helvetica','italic'); doc.setFontSize(12);
+        doc.setTextColor(80,80,80);
+        doc.text(`Emitido em: ${data}`, W-180, H-70);
+        // Assinatura e rodapé
+        doc.setFont('helvetica','bold'); doc.setFontSize(12);
+        doc.setTextColor(1,60,90);
+        doc.text('Diego R. Jesus — Instrutor Responsável', 60, H-70);
+        doc.setFont('helvetica','normal'); doc.setFontSize(10);
+        doc.setTextColor(80,80,80);
+        doc.text('Portal Interativo de Ensaios de Solos – Volume 1', 60, H-52);
         doc.save(`Certificado - ${nome}.pdf`);
         // Atualiza progresso do módulo 4
         setKV('m4_progress_pct','100'); updateXP(); mirrorIndex();
