@@ -157,7 +157,14 @@
           }
         }
         alert("✔️ Login realizado com sucesso!");
-        location.href = "./portal.html";
+        // Após a autenticação, redirecione para a versão adequada (desktop ou mobile).
+        // Detecta dispositivo móvel pelo user agent ou largura da viewport.
+        const isMobileDevice = /Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
+        if (isMobileDevice) {
+          location.href = "./portal-mobile.html";
+        } else {
+          location.href = "./portal.html";
+        }
       } catch (er) {
         console.error("❌ Erro no login:", er);
         alert("❌ Erro ao fazer login: " + er.message);
