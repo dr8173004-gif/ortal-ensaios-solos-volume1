@@ -104,6 +104,88 @@ nav.bottom .grid{display:grid; grid-template-columns:repeat(5,1fr)}
     .step{display:grid; grid-template-columns:auto 1fr auto; gap:10px; align-items:flex-start; background:rgba(255,255,255,.05); border:1px dashed rgba(255,255,255,.14); border-radius:14px; padding:10px}
     .step .n{display:grid; place-items:center; width:26px; height:26px; border-radius:8px; font-weight:800; background:linear-gradient(135deg, var(--green), var(--green-2)); color:#0b1b24}
 
+    /*
+      Passos interativos: algumas etapas apresentam conteúdo extra que aparece ao tocar
+      em qualquer área do cartão (exceto na checkbox). A seta animada ao lado do texto
+      indica que o card esconde informações complementares. O script no final do arquivo
+      alterna a visibilidade das caixas extra-card.
+    */
+    .step.has-extra{
+      cursor:pointer;
+      position:relative;
+    }
+    /* seta animada para indicar conteúdo escondido */
+    .step.has-extra > div:nth-child(2)::after{
+      content:'➜'; /* seta simples indicando conteúdo oculto */
+      display:inline-block;
+      margin-left:6px;
+      font-size:.8rem;
+      /* destaca a seta sutilmente com a cor do tema para indicar interatividade */
+      color:var(--green-2);
+      opacity:.9;
+      animation:arrowPulse 1.5s ease-in-out infinite;
+    }
+    @keyframes arrowPulse{
+      0%{ transform:translateX(0); opacity:.8; }
+      50%{ transform:translateX(4px); opacity:1; }
+      100%{ transform:translateX(0); opacity:.8; }
+    }
+    .extra-card{
+      display:none;
+      margin-left:36px;
+      margin-top:8px;
+      padding:10px 12px;
+      border-left:4px solid var(--green);
+      border-radius:12px;
+      background:rgba(255,255,255,.05);
+      border:1px dashed rgba(255,255,255,.14);
+      box-shadow:0 4px 12px rgba(0,0,0,.25);
+    }
+    .extra-card.show{display:block;}
+    .extra-card .title{
+      display:flex;
+      align-items:center;
+      gap:6px;
+      margin-bottom:6px;
+      font-weight:700;
+      color:var(--text);
+    }
+    .extra-card .title .icon{
+      display:inline-grid;
+      place-items:center;
+      width:28px;
+      height:28px;
+      border-radius:8px;
+      background:linear-gradient(135deg, var(--green), var(--green-2));
+      font-size:16px;
+      color:#0b1b24;
+    }
+    .extra-card .key-phrase{
+      color:var(--green-2);
+      font-weight:700;
+    }
+
+    /* Ajustes de botões para estilo premium e remover sublinhados */
+    .btn{ text-decoration:none; }
+    /* Remove sublinhado especificamente para ancoras de botões e aplica prioridade */
+    a.btn{ text-decoration:none !important; }
+    .btn-primary, .btn-ghost{ text-decoration:none; }
+    .btn-primary{
+      /* gradiente ainda mais leve para aparência premium */
+      /* reduzimos a opacidade para transmitir leveza e sofisticação */
+      background:linear-gradient(135deg, rgba(40,167,69,.45), rgba(37,211,102,.45));
+    }
+    .btn-ghost{
+      /* botão fantasma extremamente sutil */
+      /* opacidade ainda mais baixa para um toque delicado */
+      background:linear-gradient(120deg, rgba(255,255,255,.07), rgba(255,255,255,.02));
+    }
+
+    /* Remove qualquer sublinhado nas ancoras dos botões, inclusive nos estados visitado e ativo */
+    a.btn:visited, a.btn:active{
+      text-decoration:none !important;
+    }
+
     /* Notes */
     .note{background:rgba(255,243,205,.12); border:1px solid rgba(255,243,205,.45); color:#fff7d2; border-radius:12px; padding:10px}
 
@@ -322,6 +404,9 @@ nav.bottom .grid{display:grid; grid-template-columns:repeat(5,1fr)}
     </details>
   </section>
 
+<!-- Imagem oculta para marca d'água do certificado -->
+<img id="watermarkImg" src="assets/watermark.png" alt="marca d'água" style="display:none" />
+
   <!-- MÓDULO 1 -->
   <section id="mod1" class="reveal">
     <details class="module" open>
@@ -451,11 +536,32 @@ do operador e a data do ensaio.</div>
 
         <h4>Passo a passo — Parte B (Sedimentação ≤ 2&nbsp;mm)</h4>
         <div class="steps">
-          <div class="step"><div class="n">B1</div><div>Preparar a suspensão — Misture 70&nbsp;g de solo fino(120&nbsp;g para Arenosos) em 125&nbsp;ML de água com dispersante e deixe repousar.</div><input type="checkbox" class="ck" data-key="m2_ck10"></div>
-          <div class="step"><div class="n">B2</div><div>Agitar bem — Agite a suspensão para homogeneizar.</div><input type="checkbox" class="ck" data-key="m2_ck11"></div>
+          <div class="step has-extra" data-extra="extra-b1"><div class="n">B1</div><div>Preparar a suspensão — Misture 70&nbsp;g de solo fino(120&nbsp;g para Arenosos) em 125&nbsp;ML de água com dispersante e deixe repousar.</div><input type="checkbox" class="ck" data-key="m2_ck10"></div>
+          <!-- Cartão extra para B1: preparação da suspensão -->
+          <div id="extra-b1" class="extra-card">
+            <div class="title"><span class="icon">💧</span> <span>Preparar Suspensão</span></div>
+            <p>💡 Para dispersar corretamente as partículas finas, prepara-se uma solução defloculante com 45,7&nbsp;g de hexametafosfato de sódio por 1&nbsp;L de água destilada.</p>
+            <p>Para cerca de 70&nbsp;g de solo, usa-se <strong>5&nbsp;g</strong> do sal em <strong>125&nbsp;mL</strong> de água, mantendo a mesma concentração padrão da norma.</p>
+            <p>Adiciona-se uma pequena quantidade de carbonato de sódio até o pH ficar entre 8 e 9, ajustando a solução sem precipitar.</p>
+          </div>
+          <div class="step has-extra" data-extra="extra-b2"><div class="n">B2</div><div>Agitar bem — Agite a suspensão para homogeneizar.</div><input type="checkbox" class="ck" data-key="m2_ck11"></div>
+          <!-- Cartão extra para B2: dispersão do solo -->
+          <div id="extra-b2" class="extra-card">
+            <div class="title"><span class="icon">🌀</span> <span>Dispersão do Solo</span></div>
+            <p>Após adicionar a solução defloculante, transfira o material para o dispersor mecânico e agite por <strong>15&nbsp;minutos</strong>.</p>
+            <p>A agitação deve garantir a completa separação das partículas finas, sem fragmentar os grãos maiores.</p>
+            <p>Concluído o tempo, a suspensão é imediatamente transferida para a proveta para iniciar a sedimentação.</p>
+          </div>
           <div class="step"><div class="n">B3</div><div>Transferir para o cilindro — Complete até 1000&nbsp;ml no cilindro de sedimentação.</div><input type="checkbox" class="ck" data-key="m2_ck12"></div>
           <div class="step"><div class="n">B4</div><div>Leituras de densidade — Insira o densímetro e anote a densidade nos tempos pré‑definidos.</div><input type="checkbox" class="ck" data-key="m2_ck13"></div>
-          <div class="step"><div class="n">B5</div><div>Calcular o diâmetro — Use a fórmula de Stokes para calcular o diâmetro das partículas.</div><input type="checkbox" class="ck" data-key="m2_ck14"></div>
+          <div class="step has-extra" data-extra="extra-b5"><div class="n">B5</div><div>Calcular o diâmetro — Use a fórmula de Stokes para calcular o diâmetro das partículas.</div><input type="checkbox" class="ck" data-key="m2_ck14"></div>
+          <!-- Cartão extra para B5: cálculo do diâmetro das partículas -->
+          <div id="extra-b5" class="extra-card">
+            <div class="title"><span class="icon">📏</span> <span>Cálculo do Diâmetro das Partículas</span></div>
+            <p>A norma usa a <strong>Lei de Stokes</strong> para relacionar o tempo de queda das partículas no líquido com o tamanho delas.</p>
+            <p><span class="key-phrase">Partículas maiores sedimentam mais rápido</span>, enquanto as menores demoram mais.</p>
+            <p>O densímetro registra essa variação para que o sistema calcule o diâmetro equivalente de cada fração.</p>
+          </div>
           <div class="step"><div class="n">B6</div><div>Combinar dados — Una os resultados de peneiramento e sedimentação.</div><input type="checkbox" class="ck" data-key="m2_ck15"></div>
         </div>
 
@@ -695,6 +801,20 @@ do operador e a data do ensaio.</div>
       el.classList.toggle('open');
     }
     window.toggleLabInfo = toggleLabInfo;
+    // ===== Passos com conteúdo extra =====
+    // Cada passo com classe has-extra tem um cartão associado (data-extra)
+    // que é exibido/ocultado quando o usuário clica no passo (exceto na checkbox).
+    // Liga o clique nos passos interativos imediatamente, pois este script é carregado
+    // após o DOM estar pronto. Se houver checkbox no alvo, ignoramos o clique.
+    document.querySelectorAll('.step.has-extra').forEach(step => {
+      step.addEventListener('click', ev => {
+        if(ev.target.tagName && ev.target.tagName.toLowerCase() === 'input'){ return; }
+        const id = step.getAttribute('data-extra');
+        if(!id){ return; }
+        const card = document.getElementById(id);
+        if(card){ card.classList.toggle('show'); }
+      });
+    });
 // Init
     mirrorIndex(); updateXP();
   </script>
@@ -725,6 +845,40 @@ do operador e a data do ensaio.</div>
         const doc=new JSPDF({orientation:'landscape', unit:'pt', format:'a4'});
         const W=doc.internal.pageSize.getWidth();
         const H=doc.internal.pageSize.getHeight();
+        // Fundo sutil tipo pergaminho
+        doc.setFillColor(248,246,239);
+        doc.rect(0,0,W,H,'F');
+        // Marca d'água: converte imagem oculta em Data URI via canvas para evitar problemas de origem.
+        // Se a imagem não carregar por algum motivo, simplesmente não desenhamos a marca d'água.
+        const wmEl = document.getElementById('watermarkImg');
+        let wmData = null;
+        if(wmEl){
+          // garante que a imagem esteja carregada antes de usá-la
+          if(!wmEl.complete){
+            await new Promise(res => { wmEl.onload = () => res(); });
+          }
+          try{
+            const canvas = document.createElement('canvas');
+            canvas.width = wmEl.naturalWidth;
+            canvas.height = wmEl.naturalHeight;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(wmEl, 0, 0);
+            wmData = canvas.toDataURL('image/png');
+          }catch(_err){
+            wmData = null;
+          }
+        }
+        // Tamanho e posição da marca d'água (centralizado grande)
+        const wmW = 280;
+        const wmH = 280;
+        const wmX = (W - wmW) / 2;
+        const wmY = 190;
+        if(wmData){
+          // logotipo grande como marca d'água centralizada (transparência inerente ao PNG)
+          doc.addImage(wmData, 'PNG', wmX, wmY, wmW, wmH);
+          // pequena insígnia no canto superior esquerdo, semelhante a um brasão universitário
+          doc.addImage(wmData, 'PNG', 48, 40, 60, 60);
+        }
         // Moldura premium dourada
         doc.setLineWidth(4);
         doc.setDrawColor(212,175,55); // dourado
@@ -745,19 +899,27 @@ do operador e a data do ensaio.</div>
         doc.setTextColor(55,55,55);
         const mensagem = 'Concluiu o Curso Interativo – Ensaios de Solos (Volume 1) com êxito, abordando Teor de Umidade Natural e Granulometria (peneiramento e sedimentação), demonstrando competência técnica essencial em laboratório.';
         doc.text(doc.splitTextToSize(mensagem, W-220), W/2, 230, {align:'center'});
+        // Linha de assinatura e identificação do instrutor
+        doc.setDrawColor(80,80,80);
+        doc.setLineWidth(1);
+        const signY = H - 90;
+        doc.line(60, signY, 260, signY);
+        doc.setFont('helvetica','italic'); doc.setFontSize(12);
+        doc.setTextColor(55,55,55);
+        doc.text('Assinatura do Instrutor', 60, signY - 6);
+        doc.setFont('helvetica','bold'); doc.setFontSize(12);
+        doc.setTextColor(33,67,90);
+        doc.text('Diego R. Jesus', 60, signY + 14);
+        // Rodapé com título do curso
+        doc.setFont('helvetica','normal'); doc.setFontSize(10);
+        doc.setTextColor(80,80,80);
+        doc.text('Portal Interativo de Ensaios de Solos – Volume 1', 60, H-50);
         // Data
         const d=new Date();
         const data=`${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`;
         doc.setFont('helvetica','italic'); doc.setFontSize(12);
         doc.setTextColor(80,80,80);
-        doc.text(`Emitido em: ${data}`, W-180, H-70);
-        // Assinatura e rodapé
-        doc.setFont('helvetica','bold'); doc.setFontSize(12);
-        doc.setTextColor(1,60,90);
-        doc.text('Diego R. Jesus — Instrutor Responsável', 60, H-70);
-        doc.setFont('helvetica','normal'); doc.setFontSize(10);
-        doc.setTextColor(80,80,80);
-        doc.text('Portal Interativo de Ensaios de Solos – Volume 1', 60, H-52);
+        doc.text(`Emitido em: ${data}`, W-180, H-50);
         doc.save(`Certificado - ${nome}.pdf`);
         // Atualiza progresso do módulo 4
         setKV('m4_progress_pct','100'); updateXP(); mirrorIndex();
