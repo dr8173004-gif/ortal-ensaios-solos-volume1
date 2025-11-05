@@ -848,37 +848,13 @@ do operador e a data do ensaio.</div>
         // Fundo sutil tipo pergaminho
         doc.setFillColor(248,246,239);
         doc.rect(0,0,W,H,'F');
-        // Marca d'água: converte imagem oculta em Data URI via canvas para evitar problemas de origem.
-        // Se a imagem não carregar por algum motivo, simplesmente não desenhamos a marca d'água.
-        const wmEl = document.getElementById('watermarkImg');
-        let wmData = null;
-        if(wmEl){
-          // garante que a imagem esteja carregada antes de usá-la
-          if(!wmEl.complete){
-            await new Promise(res => { wmEl.onload = () => res(); });
-          }
-          try{
-            const canvas = document.createElement('canvas');
-            canvas.width = wmEl.naturalWidth;
-            canvas.height = wmEl.naturalHeight;
-            const ctx = canvas.getContext('2d');
-            ctx.drawImage(wmEl, 0, 0);
-            wmData = canvas.toDataURL('image/png');
-          }catch(_err){
-            wmData = null;
-          }
-        }
-        // Tamanho e posição da marca d'água (centralizado grande)
-        const wmW = 280;
-        const wmH = 280;
-        const wmX = (W - wmW) / 2;
-        const wmY = 190;
-        if(wmData){
-          // logotipo grande como marca d'água centralizada (transparência inerente ao PNG)
-          doc.addImage(wmData, 'PNG', wmX, wmY, wmW, wmH);
-          // pequena insígnia no canto superior esquerdo, semelhante a um brasão universitário
-          doc.addImage(wmData, 'PNG', 48, 40, 60, 60);
-        }
+        /*
+         * Medidas decorativas: por solicitação do usuário, removemos a marca d'água
+         * baseada em imagem para evitar erros de PNG corrompido. Em vez disso,
+         * inserimos três estrelas douradas abaixo do cabeçalho como medalhas
+         * simbólicas. Essa abordagem utiliza apenas texto Unicode, garantindo que
+         * o PDF seja gerado de forma consistente em qualquer dispositivo.
+         */
         // Moldura premium dourada
         doc.setLineWidth(4);
         doc.setDrawColor(212,175,55); // dourado
@@ -890,6 +866,13 @@ do operador e a data do ensaio.</div>
         doc.setFontSize(22);
         doc.setTextColor(33,67,90);
         doc.text('de Conclusão', W/2, 126, {align:'center'});
+
+        // Medalhas decorativas (três estrelas douradas centradas)
+        doc.setFont('helvetica','bold');
+        doc.setFontSize(32);
+        doc.setTextColor(212,175,55);
+        // Use estrelas unicode "★" espaçadas; caracteres extras entre elas evitam colagem
+        doc.text('★   ★   ★', W/2, 160, {align:'center'});
         // Nome do formando
         doc.setFont('helvetica','bold'); doc.setFontSize(34);
         doc.setTextColor(0,0,0);
