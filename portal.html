@@ -5,6 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title> Formaçao de Laboratoristas de Solos – Volume 1</title>
   <meta name="description" content="Formação em Ensaios de Solos para iniciantes (ABNT). Volume 1: Umidade Natural e Granulometria (peneiramento + sedimentação).">
+
+  <!-- Script para direcionar automaticamente usuários de dispositivos móveis para a versão mobile do portal -->
+  <script>
+    (function(){
+      const isMobile = /Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
+      if (isMobile) {
+        // Se estiver em dispositivo móvel, redireciona para a versão mobile do portal
+        window.location.href = './portal-mobile.html';
+      }
+    })();
+  </script>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet" />
   <style>
     :root{
