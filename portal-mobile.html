@@ -6,6 +6,17 @@
   <title>Ensaios de Solos — Volume 1 (Mobile Premium)</title>
   <meta name="description" content="Portal Interativo (mobile) com design premium e gamificação: Umidade Natural, Granulometria, vídeo‑aulas, simuladores e certificado." />
 
+  <!-- Script para forçar redirecionamento para a versão desktop quando o usuário estiver em um dispositivo não móvel -->
+  <script>
+    (function() {
+      const isMobile = /Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
+      if (!isMobile) {
+        // redireciona para a versão desktop se não for mobile
+        window.location.href = "./portal.html";
+      }
+    })();
+  </script>
+
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
   <!-- Icons -->
@@ -141,6 +152,10 @@ nav.bottom .grid{display:grid; grid-template-columns:repeat(5,1fr)}
     #index.panel {
       /* Remove border entirely to avoid thin line under the hero section */
       border: none;
+    }
+    /* Remove bottom border of the index header to avoid line under the section title */
+    #index .head{
+      border-bottom: none;
     }
     .progress-circle span{
       position:absolute;
