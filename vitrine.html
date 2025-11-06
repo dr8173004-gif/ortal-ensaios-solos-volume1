@@ -93,6 +93,75 @@
       margin-bottom: 30px;
       font-size: 1rem;
     }
+    /* Novo selo de garantia substituindo os badges */
+    .trust-seal {
+      margin-top: 24px;
+      display: flex;
+      justify-content: center;
+    }
+    .trust-seal img {
+      max-width: 220px;
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 16px;
+      padding: 12px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.08);
+      box-shadow: 0 12px 36px rgba(0,0,0,.4);
+      backdrop-filter: blur(4px);
+    }
+    /* Ajuste cinematográfico nas imagens dos cards de portal */
+    .portal-card img {
+      filter: brightness(0.88);
+    }
+
+    /* ===== Melhorias de responsividade e estilo para a seção "Conheça o Portal" ===== */
+    /* Organiza os cards em grid responsivo que se adapta ao tamanho da tela.  */
+    #portal-explicacao .portal-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 24px;
+      margin-top: 24px;
+    }
+    /* Estilo cinematográfico para cada card: fundo semitransparente, borda e sombra suave. */
+    #portal-explicacao .portal-card {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+      overflow: hidden;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    /* Leve elevação ao passar o mouse para reforçar o destaque. */
+    #portal-explicacao .portal-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5);
+    }
+    /* Imagens ocupam toda a largura do card, mantendo proporção. */
+    #portal-explicacao .portal-card img {
+      width: 100%;
+      height: auto;
+      display: block;
+      filter: brightness(0.85);
+      transition: filter 0.4s ease;
+    }
+    /* Clareia a imagem levemente no hover para dar vida ao cartão. */
+    #portal-explicacao .portal-card:hover img {
+      filter: brightness(1);
+    }
+    /* Títulos e descrições harmonizados com a identidade visual. */
+    #portal-explicacao .portal-card h4 {
+      margin: 16px;
+      font-family: Montserrat;
+      font-size: 1.1rem;
+      color: var(--white);
+    }
+    #portal-explicacao .portal-card p {
+      margin: 0 16px 24px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
   </style>
 </head>
 <body>
@@ -141,11 +210,9 @@
       <a href="#beneficios" class="btn-ghost">Ver tudo que está incluso</a>
     </div>
 
-    <!-- Sinais de confiança para aumentar conversão -->
-    <div class="trust-badges">
-      <div class="trust-badge"><span class="emoji">🔒</span><span>Compra 100% segura</span></div>
-      <div class="trust-badge"><span class="emoji">💳</span><span>Pagamentos protegidos</span></div>
-      <div class="trust-badge"><span class="emoji">✅</span><span>7&nbsp;dias de garantia</span></div>
+    <!-- Selo de garantia Mercado Livre -->
+    <div class="trust-seal">
+      <img src="assets/selo.png" alt="Selo de Garantia">
     </div>
   </div>
 </section>
@@ -219,10 +286,12 @@
       <p>Veja como o curso funciona na prática — com módulos interativos, calculadoras e certificado automatizado.</p>
     </div>
     <div class="portal-grid">
-      <div class="portal-card revealUp"><img src="assets/1.png" alt="Login e Acesso Seguro"><h4>Login e Acesso Seguro</h4><p>Autenticação simples e protegida para começar seu estudo.</p></div>
-      <div class="portal-card revealUp"><img src="assets/2.png" alt="Progresso em Tempo Real"><h4>Progresso em Tempo Real</h4><p>Seu avanço fica salvo — volte exatamente de onde parou.</p></div>
-      <div class="portal-card revealUp"><img src="assets/3.png" alt="Calculadoras Inteligentes"><h4>Calculadoras Inteligentes</h4><p>Simuladores aplicados aos ensaios — sem dor de cabeça com fórmulas.</p></div>
-      <div class="portal-card revealUp"><img src="assets/5.png" alt="Certificado Digital"><h4>Certificado Digital</h4><p>Conclua e gere seu certificado nominal — pronto para o currículo.</p></div>
+      <div class="portal-card revealUp"><img src="assets/1.jpg" alt="Login e Acesso Seguro"><h4>Login e Acesso Seguro</h4><p>Autenticação simples e protegida para começar seu estudo.</p></div>
+      <div class="portal-card revealUp"><img src="assets/2.jpg" alt="Progresso em Tempo Real"><h4>Progresso em Tempo Real</h4><p>Seu avanço fica salvo — volte exatamente de onde parou.</p></div>
+      <div class="portal-card revealUp"><img src="assets/3.jpg" alt="Calculadoras Inteligentes"><h4>Calculadoras Inteligentes</h4><p>Simuladores aplicados aos ensaios — sem dor de cabeça com fórmulas.</p></div>
+      <div class="portal-card revealUp"><img src="assets/5.jpg" alt="Certificado Digital"><h4>Certificado Digital</h4><p>Conclua e gere seu certificado nominal — pronto para o currículo.</p></div>
+      <!-- Novo card de vídeos -->
+      <div class="portal-card revealUp"><img src="assets/6.jpg" alt="Aulas em Vídeo"><h4>Aulas em Vídeo</h4><p>Assista a aulas em vídeo diretamente no portal e aprenda de forma interativa.</p></div>
     </div>
   </section>
 
