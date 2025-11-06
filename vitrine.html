@@ -7,91 +7,72 @@
   <meta name="description" content="Curso interativo premium de ensaios de solos. Experiência Apple/Nike com certificação, simuladores e mentoria." />
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="style.css?v=2.1" />
-  <!-- Estilos adicionais para aprimorar o visual e a conversão -->
   <style>
-    /* Ajuste no fundo: adiciona um gradiente com tom petroléo para
-       quebrar o preto puro sem perder a identidade premium. */
-    body {
-      background: linear-gradient(180deg, #000 0%, #013C5A 60%, #0a0a0a 100%);
-    }
-    /* Badges de confiança que reforçam segurança e garantia de compra */
-    .trust-badges {
-      margin-top: 24px;
+    /* ==== Selo Premium ==== */
+    .trust-seal {
+      margin-top: 22px;
       display: flex;
-      flex-wrap: wrap;
       justify-content: center;
-      gap: 16px;
-      font-size: 0.9rem;
-      color: var(--muted);
-    }
-    .trust-badge {
-      display: flex;
       align-items: center;
-      gap: 6px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      padding: 10px 16px;
-      border-radius: 14px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     }
-    .trust-badge .emoji {
-      font-size: 1.3rem;
+    .trust-seal img {
+      max-width: 180px;
+      width: 40%;
+      min-width: 120px;
+      height: auto;
+      border-radius: 12px;
+      background: rgba(255,255,255,.05);
+      padding: 10px;
+      border: 1px solid rgba(255,255,255,.08);
+      box-shadow: 0 6px 25px rgba(0,0,0,.45);
+      transition: all .3s ease;
     }
-    /* Lista de benefícios intangíveis após os cards */
-    .intangibles {
-      margin-top: 50px;
-      max-width: 800px;
-      margin-left: auto;
-      margin-right: auto;
-      text-align: center;
-      color: var(--muted);
+    .trust-seal img:hover {
+      transform: scale(1.05);
+      box-shadow: 0 10px 40px rgba(0,113,227,.4);
     }
-    .intangibles h3 {
-      font-family: Montserrat;
-      font-size: 1.6rem;
-      margin-bottom: 14px;
-      color: var(--white);
+
+    /* ==== Cards do Portal (responsivos e cinematográficos) ==== */
+    #portal-explicacao .portal-grid {
+      display: grid;
+      gap: 22px;
+      justify-content: center;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      padding: 0 16px;
     }
-    .intangibles ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-    .intangibles li {
-      margin-bottom: 8px;
-      font-size: 1rem;
-    }
-    .intangibles li::before {
-      content: "✔️";
-      margin-right: 6px;
-      color: var(--blue-2);
-    }
-    /* Seção de chamada final para ação (CTA) */
-    #bottom-cta {
-      padding: 70px 18px;
-      text-align: center;
-      background: radial-gradient(circle at 50% 50%, rgba(0,113,227,.15), transparent 70%);
-    }
-    #bottom-cta .cta-inner {
+    .portal-card {
       background: rgba(255,255,255,.04);
       border: 1px solid rgba(255,255,255,.08);
-      border-radius: 24px;
-      box-shadow: 0 20px 60px rgba(0,0,0,.4);
-      max-width: 700px;
-      margin: auto;
-      padding: 50px 24px;
-      backdrop-filter: blur(8px);
+      border-radius: 18px;
+      box-shadow: 0 10px 40px rgba(0,0,0,.4);
+      backdrop-filter: blur(6px);
+      overflow: hidden;
+      transition: all .3s ease;
     }
-    #bottom-cta h2 {
+    .portal-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 18px 45px rgba(0,113,227,.3);
+    }
+    .portal-card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      filter: brightness(0.9);
+      transition: all .4s ease;
+    }
+    .portal-card:hover img {
+      filter: brightness(1.1);
+    }
+    .portal-card h4 {
+      color: #fff;
       font-family: Montserrat;
-      color: var(--white);
-      font-size: clamp(1.8rem, 2.5vw, 2.4rem);
-      margin-bottom: 20px;
+      font-size: 1.1rem;
+      margin: 14px 18px 8px;
     }
-    #bottom-cta p {
-      color: var(--muted);
-      margin-bottom: 30px;
-      font-size: 1rem;
+    .portal-card p {
+      color: #ccc;
+      font-size: .95rem;
+      margin: 0 18px 18px;
     }
   </style>
 </head>
@@ -117,8 +98,6 @@
     </div>
   </section>
 
-
-
   <section id="vitrine">
     <div class="vitrine-wrap reveal">
       <div class="mockup-3d">
@@ -128,6 +107,7 @@
       </div>
     </div>
   </section>
+
 <!-- SEÇÃO DE COMPRA / OFERTA -->
 <section id="oferta" class="reveal">
   <div class="oferta-inner">
@@ -141,11 +121,9 @@
       <a href="#beneficios" class="btn-ghost">Ver tudo que está incluso</a>
     </div>
 
-    <!-- Sinais de confiança para aumentar conversão -->
-    <div class="trust-badges">
-      <div class="trust-badge"><span class="emoji">🔒</span><span>Compra 100% segura</span></div>
-      <div class="trust-badge"><span class="emoji">💳</span><span>Pagamentos protegidos</span></div>
-      <div class="trust-badge"><span class="emoji">✅</span><span>7&nbsp;dias de garantia</span></div>
+    <!-- SELO PREMIUM -->
+    <div class="trust-seal">
+      <img src="assets/selo.png" alt="Selo de Garantia Mercado Livre">
     </div>
   </div>
 </section>
@@ -161,17 +139,8 @@
       <div class="benefit accent-3 glow reveal"><div class="icon">🧠</div><h3>Aprendizado Rápido</h3><p>Aulas diretas, aplicáveis e ilustradas para iniciantes.</p></div>
       <div class="benefit accent-4 glow reveal"><div class="icon">🎥</div><h3>Mentoria ao Vivo</h3><p>Sessão bônus de 45 minutos para tirar dúvidas e orientar sua prática.</p></div>
     </div>
-
-    <!-- Benefícios intangíveis adicionais para reforçar o valor do curso -->
-    <div class="intangibles reveal">
-      <h3>Por que se matricular agora?</h3>
-      <ul>
-        <li>Evite erros em obras e análises de solo</li>
-        <li>Destaque-se no mercado de engenharia geotécnica</li>
-        <li>Conquiste novas oportunidades profissionais</li>
-      </ul>
-    </div>
   </section>
+
 <!-- O QUE VOCÊ VAI APRENDER -->
 <section id="aprendizado" class="reveal">
   <div class="section-head">
@@ -183,34 +152,33 @@
    <div class="learn-card revealUp">
       <img src="https://cdn-icons-png.flaticon.com/512/4573/4573643.png" alt="Umidade Natural">
       <h3>💧 Teor de Umidade Natural</h3>
-      <p>Aprenda a determinar a umidade do solo em seu estado natural, um dos ensaios fundamentais para obras de terraplenagem e controle tecnológico.</p>
+      <p>Aprenda a determinar a umidade do solo em seu estado natural...</p>
     </div>
 
     <div class="learn-card revealUp">
       <img src="https://cdn-icons-png.flaticon.com/512/7409/7409406.png" alt="Granulometria">
       <h3>⛏️ Análise Granulométrica</h3>
-      <p>Entenda o peneiramento e a sedimentação para determinar a distribuição de partículas — base para qualquer classificação geotécnica.</p>
+      <p>Entenda o peneiramento e a sedimentação...</p>
     </div>
 
    <div class="learn-card revealUp">
       <img src="https://cdn-icons-png.flaticon.com/512/679/679720.png" alt="Cálculos automáticos">
       <h3>🧮 Cálculos Automatizados</h3>
-      <p>Use nossas calculadoras inteligentes integradas para obter resultados precisos sem depender de planilhas complexas.</p>
+      <p>Use nossas calculadoras inteligentes...</p>
     </div>
 
     <div class="learn-card revealUp">
       <img src="https://cdn-icons-png.flaticon.com/512/2991/2991159.png" alt="Certificado Digital">
       <h3>📜 Certificação Profissional</h3>
-      <p>Ao concluir o curso, gere seu certificado nominal autenticado — válido para portfólio e processos seletivos técnicos.</p>
+      <p>Ao concluir o curso, gere seu certificado nominal...</p>
     </div>
   </div>
   
   <div class="learn-card revealUp">
   <img src="https://cdn-icons-png.flaticon.com/512/992/992700.png" alt="Crescimento profissional">
   <h3>📈 Carreira e Oportunidades</h3>
-  <p>Descubra onde aplicar seus novos conhecimentos — aprenda como atuar em laboratórios, construtoras e obras, e torne-se um profissional indispensável.</p>
+  <p>Descubra onde aplicar seus novos conhecimentos...</p>
 </div>
-
 </section>
 
   <section id="portal-explicacao">
@@ -219,10 +187,11 @@
       <p>Veja como o curso funciona na prática — com módulos interativos, calculadoras e certificado automatizado.</p>
     </div>
     <div class="portal-grid">
-      <div class="portal-card revealUp"><img src="assets/1.png" alt="Login e Acesso Seguro"><h4>Login e Acesso Seguro</h4><p>Autenticação simples e protegida para começar seu estudo.</p></div>
-      <div class="portal-card revealUp"><img src="assets/2.png" alt="Progresso em Tempo Real"><h4>Progresso em Tempo Real</h4><p>Seu avanço fica salvo — volte exatamente de onde parou.</p></div>
-      <div class="portal-card revealUp"><img src="assets/3.png" alt="Calculadoras Inteligentes"><h4>Calculadoras Inteligentes</h4><p>Simuladores aplicados aos ensaios — sem dor de cabeça com fórmulas.</p></div>
-      <div class="portal-card revealUp"><img src="assets/5.png" alt="Certificado Digital"><h4>Certificado Digital</h4><p>Conclua e gere seu certificado nominal — pronto para o currículo.</p></div>
+      <div class="portal-card revealUp"><img src="assets/1.jpg" alt="Login e Acesso Seguro"><h4>Login e Acesso Seguro</h4><p>Autenticação simples e protegida para começar seu estudo.</p></div>
+      <div class="portal-card revealUp"><img src="assets/2.jpg" alt="Progresso em Tempo Real"><h4>Progresso em Tempo Real</h4><p>Seu avanço fica salvo — volte exatamente de onde parou.</p></div>
+      <div class="portal-card revealUp"><img src="assets/3.jpg" alt="Calculadoras Inteligentes"><h4>Calculadoras Inteligentes</h4><p>Simuladores aplicados aos ensaios — sem dor de cabeça com fórmulas.</p></div>
+      <div class="portal-card revealUp"><img src="assets/5.jpg" alt="Certificado Digital"><h4>Certificado Digital</h4><p>Conclua e gere seu certificado nominal — pronto para o currículo.</p></div>
+      <div class="portal-card revealUp"><img src="assets/6.jpg" alt="Aulas em Vídeo"><h4>Aulas em Vídeo</h4><p>Assista a aulas em vídeo diretamente no portal e aprenda de forma interativa.</p></div>
     </div>
   </section>
 
@@ -231,113 +200,16 @@
       <h2>Quem já está na obra confirma</h2>
     </div>
     <div class="test-grid">
-      <div class="quote main revealUp"><p>“Entrar no laboratório sem experiência era meu medo. Com o portal, em 2 semanas eu já dominava umidade natural e granulometria. O certificado abriu portas.”</p></div>
-      <div class="quote revealUp"><div class="person"><div class="ava">VA</div><div><strong>Victor A.</strong><div class="role">Técnico de obras</div></div></div><p>“As calculadoras e checklists salvaram meu dia. Tudo direto ao ponto.”</p></div>
-      <div class="quote revealUp"><div class="person"><div class="ava">GF</div><div><strong>Gabriel F.</strong><div class="role">Eng. Geotécnico</div></div></div><p>“Excelente base para quem quer começar no laboratório com segurança.”</p></div>
+      <div class="quote main revealUp"><p>“Entrar no laboratório sem experiência era meu medo...</p></div>
+      <div class="quote revealUp"><div class="person"><div class="ava">VA</div><div><strong>Victor A.</strong><div class="role">Técnico de obras</div></div></div><p>“As calculadoras e checklists salvaram meu dia...”</p></div>
+      <div class="quote revealUp"><div class="person"><div class="ava">GF</div><div><strong>Gabriel F.</strong><div class="role">Eng. Geotécnico</div></div></div><p>“Excelente base para quem quer começar no laboratório...”</p></div>
       <div class="quote revealUp"><div class="person"><div class="ava">AJ</div><div><strong>Antônio J.</strong><div class="role">Consultor</div></div></div><p>“Design premium e conteúdo prático. Dá gosto indicar.”</p></div>
-    </div>
-  </section>
-
-  <!-- Seção de chamada final para ação: reforça a conversão -->
-  <section id="bottom-cta" class="reveal">
-    <div class="cta-inner">
-      <h2>Pronto para dominar os ensaios de solos?</h2>
-      <p>Garanta sua vaga no portal interativo hoje mesmo e transforme sua carreira com um investimento simbólico.</p>
-      <a href="https://mpago.la/1JsMZZy" class="btn-primary btn-pulse">Quero me inscrever agora</a>
     </div>
   </section>
 
   <footer>© <span id="year"></span> Ensaios de Solos — Todos os direitos reservados.</footer>
 <script>
   document.getElementById('year').textContent = new Date().getFullYear();
-
-  // ===== Navbar dinâmica =====
-  const nav = document.getElementById('nav');
-  window.addEventListener('scroll', () => {
-    nav.classList.toggle('scrolled', window.scrollY > 10);
-  }, { passive: true });
-
-  // ===== Reveal (agora com replay infinito) =====
-  const observeElements = (selector, className) => {
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add(className);
-        } else {
-          entry.target.classList.remove(className);
-        }
-      });
-    }, { threshold: 0.15 });
-    document.querySelectorAll(selector).forEach(el => observer.observe(el));
-  };
-  observeElements('.reveal', 'inview');
-  observeElements('.revealUp', 'visible');
-
-  // ===== Mockup 3D com limite de FPS =====
-  const item = document.getElementById('mock3d');
-  if (item) {
-    let rx = 0, ry = 0, tx = 0, ty = 0, last = 0;
-    const loop = (t) => {
-      if (t - last > 33) { // ~30 fps
-        rx += (ty - rx) * 0.08;
-        ry += (tx - ry) * 0.08;
-        item.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg)`;
-        last = t;
-      }
-      requestAnimationFrame(loop);
-    };
-    requestAnimationFrame(loop);
-
-    if (window.matchMedia('(pointer:fine)').matches) {
-      item.addEventListener('mousemove', (e) => {
-        const r = item.getBoundingClientRect();
-        tx = ((e.clientX - r.left) / r.width - 0.5) * 10;
-        ty = (0.5 - (e.clientY - r.top) / r.height) * 8;
-      });
-      item.addEventListener('mouseleave', () => { tx = 0; ty = 0; });
-    } else {
-      let a = 0;
-      const tilt = () => {
-        a += 0.015;
-        tx = Math.sin(a) * 4;
-        ty = Math.cos(a * 1.3) * 3;
-        requestAnimationFrame(tilt);
-      };
-      tilt();
-    }
-  }
 </script>
-
-<script>
-  // Detecta rolagem e aplica a classe "scrolled" na navbar
-  window.addEventListener('scroll', () => {
-    const nav = document.querySelector('.nav');
-    if (window.scrollY > 30) {
-      nav.classList.add('scrolled');
-    } else {
-      nav.classList.remove('scrolled');
-    }
-  });
-</script>
-
-<script>
-  // Garante que a página comece sempre no topo com os efeitos de entrada
-  window.addEventListener('load', () => {
-    setTimeout(() => {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }, 100);
-  });
-</script>
-
-<script>
-  // Força o início no topo e executa o fade cinematográfico
-  window.addEventListener('load', () => {
-    document.body.classList.add('loaded');
-    setTimeout(() => {
-      window.scrollTo({ top: 0, behavior: 'instant' });
-    }, 200);
-  });
-</script>
-  
 </body>
 </html>
