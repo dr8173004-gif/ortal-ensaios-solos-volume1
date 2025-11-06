@@ -845,64 +845,75 @@ do operador e a data do ensaio.</div>
         const doc=new JSPDF({orientation:'landscape', unit:'pt', format:'a4'});
         const W=doc.internal.pageSize.getWidth();
         const H=doc.internal.pageSize.getHeight();
-        // Fundo sutil tipo pergaminho
+        // --- Layout do certificado premium ---
+        // Fundo bege claro
         doc.setFillColor(248,246,239);
         doc.rect(0,0,W,H,'F');
-        /*
-         * Medidas decorativas: por solicitação do usuário, removemos a marca d'água
-         * baseada em imagem para evitar erros de PNG corrompido. Em vez disso,
-         * inserimos três estrelas douradas abaixo do cabeçalho como medalhas
-         * simbólicas. Essa abordagem utiliza apenas texto Unicode, garantindo que
-         * o PDF seja gerado de forma consistente em qualquer dispositivo.
-         */
-        // Moldura premium dourada
-        doc.setLineWidth(4);
-        doc.setDrawColor(212,175,55); // dourado
-        doc.roundedRect(24,24,W-48,H-48,14,14,'S');
-        // Cabeçalho
-        doc.setFont('helvetica','bold'); doc.setFontSize(36);
-        doc.setTextColor(212,175,55);
-        doc.text('CERTIFICADO', W/2, 96, {align:'center'});
-        doc.setFontSize(22);
-        doc.setTextColor(33,67,90);
-        doc.text('de Conclusão', W/2, 126, {align:'center'});
 
-        // Medalhas decorativas (três estrelas douradas centradas)
+        // Borda externa espessa (dourado)
+        doc.setDrawColor(244,194,60);
+        doc.setLineWidth(6);
+        doc.roundedRect(24, 24, W - 48, H - 48, 16, 16, 'S');
+        // Borda interna fina (dourado claro)
+        doc.setDrawColor(248,214,86);
+        doc.setLineWidth(2);
+        doc.roundedRect(40, 40, W - 80, H - 80, 12, 12, 'S');
+
+        // Cabeçalho: título do certificado
         doc.setFont('helvetica','bold');
-        doc.setFontSize(32);
-        doc.setTextColor(212,175,55);
-        // Use estrelas unicode "★" espaçadas; caracteres extras entre elas evitam colagem
-        doc.text('★   ★   ★', W/2, 160, {align:'center'});
-        // Nome do formando
-        doc.setFont('helvetica','bold'); doc.setFontSize(34);
+        doc.setFontSize(28);
+        doc.setTextColor(0,77,128); // azul escuro
+        doc.text('Certificado de Conclusão', W/2, 100, {align:'center'});
+
+        // Nome do formando em destaque
+        doc.setFontSize(36);
         doc.setTextColor(0,0,0);
-        doc.text(nome.toUpperCase(), W/2, 186, {align:'center'});
-        // Curso e mensagem
-        doc.setFont('helvetica','normal'); doc.setFontSize(16);
+        doc.text(nome.toUpperCase(), W/2, 160, {align:'center'});
+
+        // Mensagem principal
+        doc.setFont('helvetica','normal');
+        doc.setFontSize(16);
         doc.setTextColor(55,55,55);
-        const mensagem = 'Concluiu o Curso Interativo – Ensaios de Solos (Volume 1) com êxito, abordando Teor de Umidade Natural e Granulometria (peneiramento e sedimentação), demonstrando competência técnica essencial em laboratório.';
-        doc.text(doc.splitTextToSize(mensagem, W-220), W/2, 230, {align:'center'});
-        // Linha de assinatura e identificação do instrutor
-        doc.setDrawColor(80,80,80);
-        doc.setLineWidth(1);
-        const signY = H - 90;
-        doc.line(60, signY, 260, signY);
-        doc.setFont('helvetica','italic'); doc.setFontSize(12);
-        doc.setTextColor(55,55,55);
-        doc.text('Assinatura do Instrutor', 60, signY - 6);
-        doc.setFont('helvetica','bold'); doc.setFontSize(12);
-        doc.setTextColor(33,67,90);
-        doc.text('Diego R. Jesus', 60, signY + 14);
-        // Rodapé com título do curso
-        doc.setFont('helvetica','normal'); doc.setFontSize(10);
+        const mensagem = 'Concluiu o curso Interativo — Ensaios de Solos (Volume 1), abrangendo Teor de Umidade Natural e Granulometria (peneiramento + sedimentação), demonstrando competência técnica fundamental em laboratório.';
+        const linhas = doc.splitTextToSize(mensagem, W - 200);
+        doc.text(linhas, W/2, 210, {align:'center'});
+
+        // Linha horizontal acima das assinaturas
+        const linhaY = 340;
+        doc.setDrawColor(200,200,200);
+        doc.setLineWidth(0.5);
+        doc.line(80, linhaY, W - 80, linhaY);
+
+        // Identificação do instrutor (centralizada)
+        doc.setFont('helvetica','bold');
+        doc.setFontSize(14);
+        doc.setTextColor(0,0,0);
+        doc.text('Diego R. Jesus — Instrutor Responsável', W/2, linhaY + 26, {align:'center'});
+        doc.setFont('helvetica','normal');
+        doc.setFontSize(12);
+        doc.setTextColor(50,50,50);
+        doc.text('Portal Interativo de Ensaios de Solos', W/2, linhaY + 42, {align:'center'});
+
+        // Data e código de verificação no rodapé esquerdo
+        const d = new Date();
+        const dataStr = `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`;
+        // Gera código de verificação aleatório (7 caracteres alfanuméricos)
+        const codigo = Math.random().toString(36).substring(2, 9).toUpperCase();
+        doc.setFont('helvetica','normal');
+        doc.setFontSize(10);
         doc.setTextColor(80,80,80);
-        doc.text('Portal Interativo de Ensaios de Solos – Volume 1', 60, H-50);
-        // Data
-        const d=new Date();
-        const data=`${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`;
-        doc.setFont('helvetica','italic'); doc.setFontSize(12);
-        doc.setTextColor(80,80,80);
-        doc.text(`Emitido em: ${data}`, W-180, H-50);
+        doc.text(`Data: ${dataStr}`, 60, H - 50);
+        doc.text(`Código de verificação: ${codigo}`, 60, H - 32);
+
+        // Créditos no rodapé direito
+        doc.setFont('helvetica','normal');
+        doc.setFontSize(10);
+        doc.setTextColor(0,77,128);
+        const copyright = '© Ensaios de Solos — Vol. 1';
+        // mede o texto para alinhamento à direita com margem
+        const cw = doc.getTextWidth(copyright);
+        doc.text(copyright, W - 60 - cw, H - 32);
+
         doc.save(`Certificado - ${nome}.pdf`);
         // Atualiza progresso do módulo 4
         setKV('m4_progress_pct','100'); updateXP(); mirrorIndex();
